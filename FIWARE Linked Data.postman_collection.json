@@ -119,7 +119,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{orion}}/ngsi-ld/v1/entities/urn:ngsi-ld:Building:001?options=keyValues",
+					"raw": "http://{{orion}}/ngsi-ld/v1/entities/urn:ngsi-ld:Building:store001?options=keyValues",
 					"protocol": "http",
 					"host": [
 						"{{orion}}"
@@ -128,7 +128,7 @@
 						"ngsi-ld",
 						"v1",
 						"entities",
-						"urn:ngsi-ld:Building:001"
+						"urn:ngsi-ld:Building:store001"
 					],
 					"query": [
 						{
@@ -160,7 +160,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{orion}}/ngsi-ld/v1/entities?type=Store&options=keyValues",
+					"raw": "http://{{orion}}/ngsi-ld/v1/entities?options=keyValues&type=Building",
 					"protocol": "http",
 					"host": [
 						"{{orion}}"
@@ -172,11 +172,6 @@
 					],
 					"query": [
 						{
-							"key": "type",
-							"value": "Store",
-							"description": "Entity type, to avoid ambiguity in case there are several entities with the same entity id"
-						},
-						{
 							"key": "options",
 							"value": "keyValues",
 							"description": "* `keyValues` option in order to get a more compact and brief representation, including just attribute values\n* `values` option combined with a list of attribute values  `attrs`  for an ordered list of attributes only"
@@ -186,6 +181,10 @@
 							"value": "name",
 							"description": "Ordered list of attribute names to display",
 							"disabled": true
+						},
+						{
+							"key": "type",
+							"value": "Building"
 						}
 					]
 				},
@@ -199,7 +198,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{orion}}/ngsi-ld/v1/entities/?q=address.addressLocality==Kreuzberg&type=Store&options=keyValues",
+					"raw": "http://{{orion}}/ngsi-ld/v1/entities/?q=address.addressLocality==Kreuzberg&options=keyValues&type=Building",
 					"protocol": "http",
 					"host": [
 						"{{orion}}"
@@ -216,11 +215,6 @@
 							"value": "address.addressLocality==Kreuzberg"
 						},
 						{
-							"key": "type",
-							"value": "Store",
-							"description": "Entity type, to avoid ambiguity in case there are several entities with the same entity id"
-						},
-						{
 							"key": "options",
 							"value": "keyValues",
 							"description": "* `keyValues` option in order to get a more compact and brief representation, including just attribute values\n* `values` option combined with a list of attribute values  `attrs`  for an ordered list of attributes only"
@@ -230,6 +224,10 @@
 							"value": "name",
 							"description": "Ordered list of attribute names to display",
 							"disabled": true
+						},
+						{
+							"key": "type",
+							"value": "Building"
 						}
 					]
 				},
