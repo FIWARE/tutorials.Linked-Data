@@ -29,7 +29,7 @@ services:
       - default
     ports:
       - "1026:1026"
-    command: -dbhost mongo-db -logLevel DEBUG -noCache
+    command: -dbhost mongo-db -logLevel DEBUG
     healthcheck:
       test: curl --fail -s http://orion:1026/version || exit 1
 
@@ -45,7 +45,7 @@ services:
       - "27017:27017"
     networks:
       - default
-    command: --bind_ip_all --smallfiles
+    command: --nojournal
     volumes:
       - mongo-db:/data
 
