@@ -164,9 +164,15 @@
 			"name": "Obtain Entity Data by type",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Link",
+						"value": "<https://schema.lab.fiware.org/ld/context>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "http://{{orion}}/ngsi-ld/v1/entities?type=https://uri.fiware.org/ns/datamodels/Building",
+					"raw": "http://{{orion}}/ngsi-ld/v1/entities?type=Building",
 					"protocol": "http",
 					"host": [
 						"{{orion}}"
@@ -191,7 +197,7 @@
 						},
 						{
 							"key": "type",
-							"value": "https://uri.fiware.org/ns/datamodels/Building"
+							"value": "Building"
 						}
 					]
 				},
