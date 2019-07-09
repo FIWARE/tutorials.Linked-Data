@@ -38,7 +38,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": \"urn:ngsi-ld:Building:store001\",\n    \"type\": \"Building\",\n    \"category\":{\n    \t\"type\": \"Property\",\n        \"value\": [\"commercial\"]\n    },\n    \"address\": {\n        \"type\": \"Property\",\n        \"value\": {\n            \"streetAddress\": \"Bornholmer Straße 65\",\n            \"addressRegion\": \"Berlin\",\n            \"addressLocality\": \"Prenzlauer Berg\",\n            \"postalCode\": \"10439\"\n        }\n    },\n    \"location\": {\n        \"type\": \"GeoProperty\",\n        \"value\": {\n             \"type\": \"Point\",\n             \"coordinates\": [13.3986, 52.5547]\n        }\n    },\n    \"name\": {\n        \"type\": \"Property\",\n        \"value\": \"Bösebrücke Einkauf\"\n    },\n    \"@context\": [\n        \"https://schema.lab.fiware.org/ld/context\",\n        \"http://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld\"\n    ]\n}"
+					"raw": "{\n    \"id\": \"urn:ngsi-ld:Building:store001\",\n    \"type\": \"Building\",\n    \"category\": {\n    \t\"type\": \"Property\",\n        \"value\": [\"commercial\"]\n    },\n    \"address\": {\n        \"type\": \"Property\",\n        \"value\": {\n            \"streetAddress\": \"Bornholmer Straße 65\",\n            \"addressRegion\": \"Berlin\",\n            \"addressLocality\": \"Prenzlauer Berg\",\n            \"postalCode\": \"10439\"\n        }\n    },\n    \"location\": {\n        \"type\": \"GeoProperty\",\n        \"value\": {\n             \"type\": \"Point\",\n             \"coordinates\": [13.3986, 52.5547]\n        }\n    },\n    \"name\": {\n        \"type\": \"Property\",\n        \"value\": \"Bösebrücke Einkauf\"\n    },\n    \"@context\": [\n        \"http://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld\",\n        \"https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld\"\n    ]\n}"
 				},
 				"url": {
 					"raw": "http://{{orion}}/ngsi-ld/v1/entities",
@@ -68,7 +68,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": \"urn:ngsi-ld:Building:store002\",\n    \"type\": \"Building\",\n    \n    \"category\":{\n    \t\"type\": \"Property\",\n        \"value\": [\"commercial\"]\n    },\n    \n    \"address\": {\n        \"type\": \"Property\",\n        \"value\": {\n            \"streetAddress\": \"Friedrichstraße 44\",\n            \"addressRegion\": \"Berlin\",\n            \"addressLocality\": \"Kreuzberg\",\n            \"postalCode\": \"10969\"\n        }\n    },\n     \"location\": {\n        \"type\": \"GeoProperty\",\n        \"value\": {\n             \"type\": \"Point\",\n              \"coordinates\": [13.3903, 52.5075]\n        }\n    },\n    \"name\": {\n        \"type\": \"Property\",\n        \"value\": \"Checkpoint Markt\"\n    },\n    \"@context\": [\n        \"https://schema.lab.fiware.org/ld/context\",\n        \"http://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld\"\n    ]\n}"
+					"raw": "{\n    \"id\": \"urn:ngsi-ld:Building:store002\",\n    \"type\": \"Building\",\n    \"category\": {\n    \t\"type\": \"Property\",\n        \"value\": [\"commercial\"]\n    },\n    \"address\": {\n        \"type\": \"Property\",\n        \"value\": {\n            \"streetAddress\": \"Friedrichstraße 44\",\n            \"addressRegion\": \"Berlin\",\n            \"addressLocality\": \"Kreuzberg\",\n            \"postalCode\": \"10969\"\n        }\n    },\n     \"location\": {\n        \"type\": \"GeoProperty\",\n        \"value\": {\n             \"type\": \"Point\",\n              \"coordinates\": [13.3903, 52.5075]\n        }\n    },\n    \"name\": {\n        \"type\": \"Property\",\n        \"value\": \"Checkpoint Markt\"\n    },\n    \"@context\": [\n\t\t\"http://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld\",\n        \"https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld\"\n    ]\n}"
 				},
 				"url": {
 					"raw": "http://{{orion}}/ngsi-ld/v1/entities/",
@@ -90,7 +90,13 @@
 			"name": "Retrieving Context Information",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Link",
+						"value": "<https://schema.lab.fiware.org/ld/context>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "http://{{orion}}/ngsi-ld/v1/entities?type=Building",
 					"protocol": "http",
@@ -160,7 +166,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{orion}}/ngsi-ld/v1/entities?options=keyValues&type=Building",
+					"raw": "http://{{orion}}/ngsi-ld/v1/entities?type=https://uri.fiware.org/ns/datamodels/Building",
 					"protocol": "http",
 					"host": [
 						"{{orion}}"
@@ -174,7 +180,8 @@
 						{
 							"key": "options",
 							"value": "keyValues",
-							"description": "* `keyValues` option in order to get a more compact and brief representation, including just attribute values\n* `values` option combined with a list of attribute values  `attrs`  for an ordered list of attributes only"
+							"description": "* `keyValues` option in order to get a more compact and brief representation, including just attribute values\n* `values` option combined with a list of attribute values  `attrs`  for an ordered list of attributes only",
+							"disabled": true
 						},
 						{
 							"key": "attrs",
@@ -184,7 +191,7 @@
 						},
 						{
 							"key": "type",
-							"value": "Building"
+							"value": "https://uri.fiware.org/ns/datamodels/Building"
 						}
 					]
 				},
@@ -241,7 +248,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{orion}}/ngsi-ld/v1/entities/?georel=near;maxDistance:1500&geometry=point&coords=52.5162,13.3777&type=Store&options=keyValues",
+					"raw": "http://{{orion}}/ngsi-ld/v1/entities/?georel=near;maxDistance:1500&geometry=point&coords=52.5162,13.3777&type=Building&options=keyValues",
 					"protocol": "http",
 					"host": [
 						"{{orion}}"
@@ -267,7 +274,7 @@
 						},
 						{
 							"key": "type",
-							"value": "Store",
+							"value": "Building",
 							"description": "Entity type, to avoid ambiguity in case there are several entities with the same entity id"
 						},
 						{
