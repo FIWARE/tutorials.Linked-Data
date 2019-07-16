@@ -126,7 +126,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{orion}}/ngsi-ld/v1/entities/urn:ngsi-ld:Building:store001?options=keyValues",
+					"raw": "http://{{orion}}/ngsi-ld/v1/entities/urn:ngsi-ld:Building:store001",
 					"protocol": "http",
 					"host": [
 						"{{orion}}"
@@ -138,11 +138,6 @@
 						"urn:ngsi-ld:Building:store001"
 					],
 					"query": [
-						{
-							"key": "options",
-							"value": "keyValues",
-							"description": "* `keyValues` option in order to get a more compact and brief representation, including just attribute values\n* `values` option combined with a list of attribute values  `attrs`  for an ordered list of attributes only"
-						},
 						{
 							"key": "type",
 							"value": "Store",
@@ -447,7 +442,7 @@
 	],
 	"variable": [
 		{
-			"id": "ae057c06-a8ca-4095-82d0-c22229f70dd7",
+			"id": "3390757e-95e8-4100-a614-25b4e6c23789",
 			"key": "orion",
 			"value": "localhost:1026",
 			"type": "string"

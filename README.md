@@ -45,6 +45,24 @@ The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also a
 
 # Linked Data
 
+##  :arrow_forward: Video: What is Linked Data?
+
+[![](http://img.youtube.com/vi/4x_xzT5eF5Q/0.jpg)](https://www.youtube.com/watch?v=4x_xzT5eF5Q "Introduction")
+
+##  :arrow_forward: Video: What is JSON-LD?
+
+[![](http://img.youtube.com/vi/vioCbTo3C-4/0.jpg)](https://www.youtube.com/watch?v=vioCbTo3C-4 "JSON-LD")
+
+##  :arrow_forward: Video: JSON-LD: Compaction and Expansion
+
+[![](http://img.youtube.com/vi/Tm3fD89dqRE/0.jpg)](https://www.youtube.com/watch?v=Tm3fD89dqRE "JSON-LD: Compaction and Expansion")
+
+##  :arrow_forward: Video: JSON-LD: Core Markup
+
+[![](http://img.youtube.com/vi/UmvWk_TQ30A/0.jpg)](https://www.youtube.com/watch?v=UmvWk_TQ30A "JSON-LD: Core Markup")
+
+
+
 
 
 # Prerequisites
@@ -307,30 +325,51 @@ This example returns the data of `urn:ngsi-ld:Store:001`
 
 ```console
 curl -G -X GET \
-   'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Building:store001' \
-   -d 'options=keyValues'
+   'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Building:store001'
 ```
 
 #### Response:
 
-Because of the use of the `options=keyValues`, the response consists of JSON only without the attribute `type` and
-`metadata` elements.
+The response
 
 ```json
 {
-    "id": "urn:ngsi-ld:Store:001",
-    "type": "Store",
-    "address": {
-        "streetAddress": "Bornholmer Straße 65",
-        "addressRegion": "Berlin",
-        "addressLocality": "Prenzlauer Berg",
-        "postalCode": "10439"
+    "id": "urn:ngsi-ld:Building:store001",
+    "type": "https://uri.fiware.org/ns/datamodels/Building",
+    "http://schema.org/address": {
+        "type": "Property",
+        "value": {
+            "streetAddress": "Bornholmer Straße 65",
+            "addressRegion": "Berlin",
+            "addressLocality": "Prenzlauer Berg",
+            "postalCode": "10439"
+        },
+        "verified": {
+            "type": "Property",
+            "value": true
+        }
+    },
+    "http://schema.org/name": {
+        "type": "Property",
+        "value": "Bösebrücke Einkauf"
+    },
+    "https://uri.fiware.org/ns/datamodels/category": {
+        "type": "Property",
+        "value": [
+            "commercial"
+        ]
     },
     "location": {
-        "type": "Point",
-        "coordinates": [13.3986, 52.5547]
+        "type": "GeoProperty",
+        "value": {
+            "type": "Point",
+            "coordinates": [
+                13.3986,
+                52.5547
+            ]
+        }
     },
-    "name": "Bösebrücke Einkauf"
+    "@context": "https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld"
 }
 ```
 
