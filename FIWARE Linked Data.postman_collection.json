@@ -38,7 +38,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": \"urn:ngsi-ld:Building:store001\",\n    \"type\": \"Building\",\n    \"category\": {\n    \t\"type\": \"Property\",\n        \"value\": [\"commercial\"]\n    },\n    \"address\": {\n        \"type\": \"Property\",\n        \"value\": {\n            \"streetAddress\": \"Bornholmer Straße 65\",\n            \"addressRegion\": \"Berlin\",\n            \"addressLocality\": \"Prenzlauer Berg\",\n            \"postalCode\": \"10439\"\n        }\n    },\n    \"location\": {\n        \"type\": \"GeoProperty\",\n        \"value\": {\n             \"type\": \"Point\",\n             \"coordinates\": [13.3986, 52.5547]\n        }\n    },\n    \"name\": {\n        \"type\": \"Property\",\n        \"value\": \"Bösebrücke Einkauf\"\n    },\n    \"@context\": [\n        \"http://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld\",\n        \"https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld\"\n    ]\n}"
+					"raw": "{\n    \"id\": \"urn:ngsi-ld:Building:store001\",\n    \"type\": \"Building\",\n    \"category\": {\n    \t\"type\": \"Property\",\n        \"value\": [\"commercial\"]\n    },\n    \"address\": {\n        \"type\": \"Property\",\n        \"value\": {\n            \"streetAddress\": \"Bornholmer Straße 65\",\n            \"addressRegion\": \"Berlin\",\n            \"addressLocality\": \"Prenzlauer Berg\",\n            \"postalCode\": \"10439\"\n        },\n        \"verified\": {\n\t\t\t\"type\": \"Property\",\n\t\t\t\"value\": true\n\t\t}\n    },\n    \"location\": {\n        \"type\": \"GeoProperty\",\n        \"value\": {\n             \"type\": \"Point\",\n             \"coordinates\": [13.3986, 52.5547]\n        }\n    },\n    \"name\": {\n        \"type\": \"Property\",\n        \"value\": \"Bösebrücke Einkauf\"\n    },\n    \"@context\": [\n        \"https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld\",\n        \"https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld\"\n    ]\n}"
 				},
 				"url": {
 					"raw": "http://{{orion}}/ngsi-ld/v1/entities",
@@ -68,7 +68,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": \"urn:ngsi-ld:Building:store002\",\n    \"type\": \"Building\",\n    \"category\": {\n    \t\"type\": \"Property\",\n        \"value\": [\"commercial\"]\n    },\n    \"address\": {\n        \"type\": \"Property\",\n        \"value\": {\n            \"streetAddress\": \"Friedrichstraße 44\",\n            \"addressRegion\": \"Berlin\",\n            \"addressLocality\": \"Kreuzberg\",\n            \"postalCode\": \"10969\"\n        }\n    },\n     \"location\": {\n        \"type\": \"GeoProperty\",\n        \"value\": {\n             \"type\": \"Point\",\n              \"coordinates\": [13.3903, 52.5075]\n        }\n    },\n    \"name\": {\n        \"type\": \"Property\",\n        \"value\": \"Checkpoint Markt\"\n    },\n    \"@context\": [\n\t\t\"http://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld\",\n        \"https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld\"\n    ]\n}"
+					"raw": "{\n    \"id\": \"urn:ngsi-ld:Building:store002\",\n    \"type\": \"Building\",\n    \"category\": {\n    \t\"type\": \"Property\",\n        \"value\": [\"commercial\"]\n    },\n    \"address\": {\n        \"type\": \"Property\",\n        \"value\": {\n            \"streetAddress\": \"Friedrichstraße 44\",\n            \"addressRegion\": \"Berlin\",\n            \"addressLocality\": \"Kreuzberg\",\n            \"postalCode\": \"10969\"\n        },\n        \"verified\": {\n\t\t\t\"type\": \"Property\",\n\t\t\t\"value\": true\n\t\t}\n    },\n     \"location\": {\n        \"type\": \"GeoProperty\",\n        \"value\": {\n             \"type\": \"Point\",\n              \"coordinates\": [13.3903, 52.5075]\n        }\n    },\n    \"name\": {\n        \"type\": \"Property\",\n        \"value\": \"Checkpoint Markt\"\n    },\n    \"@context\": [\n\t\t\"https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld\",\n        \"https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld\"\n    ]\n}"
 				},
 				"url": {
 					"raw": "http://{{orion}}/ngsi-ld/v1/entities/",
@@ -87,18 +87,19 @@
 			"response": []
 		},
 		{
-			"name": "Retrieving Context Information",
+			"name": "Obtain Entity Data by FNQ type",
 			"request": {
 				"method": "GET",
 				"header": [
 					{
 						"key": "Link",
-						"value": "<https://schema.lab.fiware.org/ld/context>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
-						"type": "text"
+						"value": "<https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+						"type": "text",
+						"disabled": true
 					}
 				],
 				"url": {
-					"raw": "http://{{orion}}/ngsi-ld/v1/entities?type=Building",
+					"raw": "http://{{orion}}/ngsi-ld/v1/entities?type=https://uri.fiware.org/ns/datamodels/Building",
 					"protocol": "http",
 					"host": [
 						"{{orion}}"
@@ -111,11 +112,11 @@
 					"query": [
 						{
 							"key": "type",
-							"value": "Building"
+							"value": "https://uri.fiware.org/ns/datamodels/Building"
 						}
 					]
 				},
-				"description": "This example returns the full data context"
+				"description": "This example returns the data of all `Store` entities within the context data"
 			},
 			"response": []
 		},
@@ -161,18 +162,18 @@
 			"response": []
 		},
 		{
-			"name": "Obtain Entity Data by type",
+			"name": "Obtain Entity Data by type and linked context",
 			"request": {
 				"method": "GET",
 				"header": [
 					{
 						"key": "Link",
-						"value": "<https://schema.lab.fiware.org/ld/context>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+						"value": "<https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
 						"type": "text"
 					}
 				],
 				"url": {
-					"raw": "http://{{orion}}/ngsi-ld/v1/entities?type=Building",
+					"raw": "http://{{orion}}/ngsi-ld/v1/entities?type=Building&options=keyValues",
 					"protocol": "http",
 					"host": [
 						"{{orion}}"
@@ -184,20 +185,13 @@
 					],
 					"query": [
 						{
-							"key": "options",
-							"value": "keyValues",
-							"description": "* `keyValues` option in order to get a more compact and brief representation, including just attribute values\n* `values` option combined with a list of attribute values  `attrs`  for an ordered list of attributes only",
-							"disabled": true
-						},
-						{
-							"key": "attrs",
-							"value": "name",
-							"description": "Ordered list of attribute names to display",
-							"disabled": true
-						},
-						{
 							"key": "type",
 							"value": "Building"
+						},
+						{
+							"key": "options",
+							"value": "keyValues",
+							"description": "* `keyValues` option in order to get a more compact and brief representation, including just attribute values\n* `values` option combined with a list of attribute values  `attrs`  for an ordered list of attributes only"
 						}
 					]
 				},
@@ -206,12 +200,18 @@
 			"response": []
 		},
 		{
-			"name": "Filter context data by text value",
+			"name": "Filter context data by attribute value",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Link",
+						"value": "<https://schema.lab.fiware.org/ld/context>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "http://{{orion}}/ngsi-ld/v1/entities/?q=address.addressLocality==Kreuzberg&options=keyValues&type=Building",
+					"raw": "http://{{orion}}/ngsi-ld/v1/entities/?type=Building&q=name=='Checkpoint Markt'&options=keyValues",
 					"protocol": "http",
 					"host": [
 						"{{orion}}"
@@ -224,23 +224,17 @@
 					],
 					"query": [
 						{
+							"key": "type",
+							"value": "Building"
+						},
+						{
 							"key": "q",
-							"value": "address.addressLocality==Kreuzberg"
+							"value": "name=='Checkpoint Markt'"
 						},
 						{
 							"key": "options",
 							"value": "keyValues",
 							"description": "* `keyValues` option in order to get a more compact and brief representation, including just attribute values\n* `values` option combined with a list of attribute values  `attrs`  for an ordered list of attributes only"
-						},
-						{
-							"key": "attrs",
-							"value": "name",
-							"description": "Ordered list of attribute names to display",
-							"disabled": true
-						},
-						{
-							"key": "type",
-							"value": "Building"
 						}
 					]
 				},
@@ -249,12 +243,18 @@
 			"response": []
 		},
 		{
-			"name": "Filter context data by distance",
+			"name": "Filter context data by attribute in an Array",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Link",
+						"value": "<https://schema.lab.fiware.org/ld/context>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "http://{{orion}}/ngsi-ld/v1/entities/?georel=near;maxDistance:1500&geometry=point&coords=52.5162,13.3777&type=Building&options=keyValues",
+					"raw": "http://{{orion}}/ngsi-ld/v1/entities/?type=Building&q=category=='commercial','office'&options=keyValues",
 					"protocol": "http",
 					"host": [
 						"{{orion}}"
@@ -267,32 +267,154 @@
 					],
 					"query": [
 						{
-							"key": "georel",
-							"value": "near;maxDistance:1500"
-						},
-						{
-							"key": "geometry",
-							"value": "point"
-						},
-						{
-							"key": "coords",
-							"value": "52.5162,13.3777"
-						},
-						{
 							"key": "type",
-							"value": "Building",
-							"description": "Entity type, to avoid ambiguity in case there are several entities with the same entity id"
+							"value": "Building"
+						},
+						{
+							"key": "q",
+							"value": "category=='commercial','office'"
 						},
 						{
 							"key": "options",
 							"value": "keyValues",
 							"description": "* `keyValues` option in order to get a more compact and brief representation, including just attribute values\n* `values` option combined with a list of attribute values  `attrs`  for an ordered list of attributes only"
+						}
+					]
+				},
+				"description": "## Filter context data by comparing the values of an attribute\n\nThis example returns the data of all `Store` entities found in the **Kreuzberg** district of Berlin."
+			},
+			"response": []
+		},
+		{
+			"name": "Filter context data by sub-attribute value",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Link",
+						"type": "text",
+						"value": "<https://schema.lab.fiware.org/ld/context>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+					}
+				],
+				"url": {
+					"raw": "http://{{orion}}/ngsi-ld/v1/entities/?type=Building&q=address[addressLocality]==Kreuzberg&options=keyValues",
+					"protocol": "http",
+					"host": [
+						"{{orion}}"
+					],
+					"path": [
+						"ngsi-ld",
+						"v1",
+						"entities",
+						""
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "Building"
 						},
 						{
-							"key": "attrs",
-							"value": "name",
-							"description": "Ordered list of attribute names to display",
-							"disabled": true
+							"key": "q",
+							"value": "address[addressLocality]==Kreuzberg"
+						},
+						{
+							"key": "options",
+							"value": "keyValues",
+							"description": "* `keyValues` option in order to get a more compact and brief representation, including just attribute values\n* `values` option combined with a list of attribute values  `attrs`  for an ordered list of attributes only"
+						}
+					]
+				},
+				"description": "## Filter context data by comparing the values of an attribute\n\nThis example returns the data of all `Store` entities found in the **Kreuzberg** district of Berlin."
+			},
+			"response": []
+		},
+		{
+			"name": "Filter context data by metadata value",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Link",
+						"value": "<https://schema.lab.fiware.org/ld/context>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{orion}}/ngsi-ld/v1/entities/?type=Building&q=address.verified==true&options=keyValues",
+					"protocol": "http",
+					"host": [
+						"{{orion}}"
+					],
+					"path": [
+						"ngsi-ld",
+						"v1",
+						"entities",
+						""
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "Building"
+						},
+						{
+							"key": "q",
+							"value": "address.verified==true"
+						},
+						{
+							"key": "options",
+							"value": "keyValues",
+							"description": "* `keyValues` option in order to get a more compact and brief representation, including just attribute values\n* `values` option combined with a list of attribute values  `attrs`  for an ordered list of attributes only"
+						}
+					]
+				},
+				"description": "## Filter context data by comparing the values of a metadata attribute\n\nThis example returns the data of all `Store` entities found in the **Kreuzberg** district of Berlin."
+			},
+			"response": []
+		},
+		{
+			"name": "Filter context data by distance",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Link",
+						"value": "<https://schema.lab.fiware.org/ld/context>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{orion}}/ngsi-ld/v1/entities/?type=Building&geometry=Point&coordinates=[52.5162,13.3777]&georel=within&options=keyValues",
+					"protocol": "http",
+					"host": [
+						"{{orion}}"
+					],
+					"path": [
+						"ngsi-ld",
+						"v1",
+						"entities",
+						""
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "Building"
+						},
+						{
+							"key": "geometry",
+							"value": "Point"
+						},
+						{
+							"key": "coordinates",
+							"value": "[52.5162,13.3777]"
+						},
+						{
+							"key": "georel",
+							"value": "within",
+							"description": "Ordered list of attribute names to display"
+						},
+						{
+							"key": "options",
+							"value": "keyValues"
 						}
 					]
 				},
@@ -325,7 +447,7 @@
 	],
 	"variable": [
 		{
-			"id": "df0c7c83-8325-4d8f-8b3f-bea47630872d",
+			"id": "ae057c06-a8ca-4095-82d0-c22229f70dd7",
 			"key": "orion",
 			"value": "localhost:1026",
 			"type": "string"
