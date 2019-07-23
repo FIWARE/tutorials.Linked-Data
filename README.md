@@ -1,4 +1,4 @@
-[![FIWARE Banner](https://fiware.github.io/tutorials.Linked-Data/img/Fiware.png)](https://www.fiware.org/developers)
+[![FIWARE Banner](https://jason-fox.github.io/tutorials.Linked-Data/img/Fiware.png)](https://www.fiware.org/developers)
 
 [![FIWARE Core Context Management](https://nexus.lab.fiware.org/repository/raw/public/badges/chapters/core.svg)](https://github.com/FIWARE/catalogue/blob/master/core/README.md)
 [![License: MIT](https://img.shields.io/github/license/fiware/tutorials.Linked-Data.svg)](https://opensource.org/licenses/MIT)
@@ -12,7 +12,7 @@ discussed. The tutorial is a direct analogue of the original getting started tut
 **NGSI-LD** interface.
 
 The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also available as
-[Postman documentation](https://fiware.github.io/tutorials.Linked-Data/)
+[Postman documentation](https://jason-fox.github.io/tutorials.Linked-Data/)
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/d6671a59a7e892629d2b)
 
@@ -46,7 +46,7 @@ The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also a
 # Adding Linked Data concepts to FIWARE Data Entities.
 
 The introduction to FIWARE [Getting Started tutorial](https://github.com/FIWARE/tutorials.Getting-Started) introduced
-the [NSGI v2](https://fiware.github.io/specifications/OpenAPI/ngsiv2) interface that is commonly used to create and
+the [NSGI v2](https://jason-fox.github.io/specifications/OpenAPI/ngsiv2) interface that is commonly used to create and
 manipulate context data entities. An evolution of that interface has created a supplementary specification called
 [NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/spec/updated/full_api.json)
 as a mechanism to enhance context data entities though adding the concept of **linked data**. This tutorial will
@@ -114,7 +114,7 @@ attribute and its value. Relationships allow to establish associations between i
 
 As a reminder, the NGSI v2 data model is quite simple. It can be summarized as shown below:
 
-![](https://fiware.github.io/tutorials.Linked-Data/img/ngsi-v2.png)
+![](https://jason-fox.github.io/tutorials.Linked-Data/img/ngsi-v2.png)
 
 The core element of NGSI v2 is the data _entity_, typically a real object with a changing state (such as a **Store**, a
 **Shelf** and so on) Entities have _attributes_ (such as `name` and `location`) and these in turn hold _metadata_ such
@@ -133,7 +133,7 @@ purely a naming convention with no real weight.
 
 The NGSI LD data model is more complex, with more rigid definitions of use which lead to a navigable knowledge graph.
 
-![](https://fiware.github.io/tutorials.Linked-Data/img/ngsi-ld.png)
+![](https://jason-fox.github.io/tutorials.Linked-Data/img/ngsi-ld.png)
 
 Once again, _entity_ can be considered to be the core element. Every entity must use a unique '`id`
 [URN](https://en.wikipedia.org/wiki/Uniform_resource_name), there is also a `type`, to define the structure of the data
@@ -157,7 +157,7 @@ An NGSI LD Data Entity (e.g. a supermarket):
 -   Has an `address` which is a _property_ of the entity. This can be expanded into `http://schema.org/address`, which
     is a fully qualified name,
 -   Has _value_ corresponding to the _property_ `address` (e.g. _Bornholmer Straße 65, 10439 Prenzlauer Berg, Berlin_
--   Has a _property-of-a-property_ (e.g. `validity` of an `address`)
+-   Has a _property-of-a-property_ (e.g. `verified` field for an `address`)
 -   Has a _relationship_ `managedBy`, where the relationship `managedBy` corresponds to another data entity :
     `urn:ngsi-ld:Person:bob-the-manager`
 -   The relationship `managedBy`, may itself have a _property-of-a-relationship_ (e.g. `since`), this holds the date Bob
@@ -210,7 +210,7 @@ persistence of the context data it holds. Therefore, the architecture will consi
 Since all interactions between the two elements are initiated by HTTP requests, the entities can be containerized and
 run from exposed ports.
 
-![](https://fiware.github.io/tutorials.Linked-Data/img/architecture.png)
+![](https://jason-fox.github.io/tutorials.Linked-Data/img/architecture.png)
 
 The necessary configuration information can be seen in the services section of the associated `docker-compose.yml` file:
 
