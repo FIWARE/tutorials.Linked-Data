@@ -1,0 +1,32 @@
+@startuml
+
+skinparam object {
+  BackgroundColor #f5f5f5
+  ArrowColor #4c4c4c
+  BorderColor #233c68
+}
+
+object Entity
+
+Entity : EntityId 
+Entity : EntityType 
+
+
+object Attributes
+
+Attributes : Name 
+Attributes : Type
+Attributes : Value
+
+
+object Metadata
+
+Metadata : Name 
+Metadata : Type
+Metadata : Value
+
+Entity o- Attributes : has >
+Attributes o- Metadata  : has >
+
+
+@enduml

@@ -1,0 +1,36 @@
+@startuml
+
+skinparam object {
+  BackgroundColor #f5f5f5
+  ArrowColor #4c4c4c
+  BorderColor #233c68
+}
+
+object Entity
+
+Entity : id:URI 
+Entity : type:EntityType 
+
+object Value
+
+Value : dataType:URI 
+
+
+object Property
+
+Property : id:URI 
+
+object Relationship
+
+Relationship : id:URI 
+
+
+Entity -- Relationship : "has Relationship"
+Entity  -- Relationship : "has Object" 
+Entity  -- Property : "has Object" 
+Relationship  --- Relationship : "has Subject" 
+Property  --  Value : "has Value"
+Property ---  Relationship : "has Property"
+Property ---  Relationship : "has Relationship"
+Property  ---   Property : "has Subject"
+
