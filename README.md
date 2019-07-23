@@ -102,11 +102,72 @@ Click on the image above to watch a video describing the basic concepts behind J
 
 ## What is NGSI-LD?
 
-```text
+**NGSI-LD** is an evolution of the **NGSI v2** information model, which has been modified to improve support for linked
+data (entity relationships), property graphs and semantics (exploiting the capabilities offered by JSON-LD). This work
+has been conducted under the ETSI ISG CIM initiative and the updated specification hhas been branded as
+[NGSI-LD](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.01.01_60/gs_CIM009v010101p.pdf). The main constructs
+of NGSI-LD are: _Entity_, _Property_ and _Relationship_. NGSI-LD Entities (instances) can be the subject of Properties
+or Relationships. In terms of the traditional NGSI v2 data model, Properties can be seen as the combination of an
+attribute and its value. Relationships allow to establish associations between instances using linked data.
 
-TO DO
+### NGSI v2 Data Model
 
-```
+As a reminder, the NGSI v2 data model is quite simple. It can be summarized as shown below:
+
+![](https://fiware.github.io/tutorials.Linked-Data/img/ngsi-v2.png)
+
+The core element of NGSI v2 is the data _entity_, typically a real object with a changing state (such as a **Store**, a
+**Shelf** and so on) Entities have _attributes_ (such as `name` and `location`) and these in turn hold _metadata_ such
+as `accuracy` - i.e. the accuracy of a `location` reading.
+
+Every _entity_ must have a `type` which defines the sort of thing the entity describes, but giving an NGSI v2 entity the
+`type=Store` is relatively meaningless as no-one is obliged to give shape their own **Store** entities in the same
+fashion. Similarly adding a `name` attribute doesn't suddenly make it hold the same data as someone else's `name`
+attribute.
+
+Relationships can be defined using NGSI v2, but only so far as giving the attribute a well-defined attribute name (by
+convention starting with `ref`, such as `refManagedBy`) and defining the attribute `type=Relationship` which again is
+purely a naming convention with no real weight.
+
+### NGSI LD Data Model
+
+The NGSI LD data model is more complex, with more rigid definitions of use which lead to a navigable knowledge graph.
+
+![](https://fiware.github.io/tutorials.Linked-Data/img/ngsi-ld.png)
+
+Once again, _entity_ can be considered to be the core element. Every entity must use a unique '`id`
+[URN](https://en.wikipedia.org/wiki/Uniform_resource_name), there is also a `type`, to define the structure of the data
+held, which is a URN, whcih should correspond to a well-defined data model which can be found on the web. For example
+the URN `https://uri.fiware.org/ns/datamodels/Building` is used to define common data model for a
+[building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html).
+
+_Entities_ can have _properties_ and _relationships_. Ideally the name of each _property_ should be a well defined URN
+which corresponds to a common concept found across the web (e.g. `http://schema.org/address` is a common URN for the
+physical address of an item). The _property_ will also have a value which will reflect the state of that property.
+Finally a property may itself have further properties (a.k.a. _properties-of-properties_) which reflect furthe
+information about the property itself. Properties and relationships may in turn have a linked embedded structure (of
+_properties-of-properties_ or _properties-of-relationships or relationships-of-properties_ or
+_relationships-of-relationships_) which lead to the following:
+
+An NGSI LD Data Entity (e.g. a supermarket):
+
+-   Has an `id`: e.g. `urn:ngsi-ld:Building:store001`, which must be unique
+-   Has `type` which should be a fully qualified URN of a well defined data model : e.g.
+    `https://uri.fiware.org/ns/datamodels/Building`
+-   Has an `address` which is a _property_ of the entity. This can be expanded into `http://schema.org/address`, which
+    is a fully qualified name,
+-   Has _value_ corresponding to the _property_ `address` (e.g. _Bornholmer Straße 65, 10439 Prenzlauer Berg, Berlin_
+-   Has a _property-of-a-property_ (e.g. `validity` of an `address`)
+-   Has a _relationship_ `managedBy`, where the relationship `managedBy` corresponds to another data entity :
+    `urn:ngsi-ld:Person:bob-the-manager`
+-   The relationship `managedBy`, may itself have a _property-of-a-relationship_ (e.g. `since`), this holds the date Bob
+    started working.
+-   The relationship `managedBy`, may itself have a _relationship-of-a-relationship_ (e.g. `subordinateTo`), this holds
+    the URN of the area manager above Bob in the hierarchy.
+
+As you can see the knowledge graph is well defined and can be expanded indefinitely.
+
+Relationships will be dealt with in more detail in a subsequent tutorial.
 
 # Prerequisites
 
@@ -257,11 +318,8 @@ work with the requests defined below.
 When creating linked data entities, it is important to use common data models. This will allow us to easily combine data
 from multiple sources
 
-
 ```text
-
 TO DO
-
 ```
 
 The `type=Store` example used in the getting....
