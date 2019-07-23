@@ -6,14 +6,15 @@
 [![NGSI LD](https://img.shields.io/badge/NGSI-ld-red.svg)](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/004/01.01.01_60/gs_CIM004v010101p.pdf)
 <br/> [![Documentation](https://img.shields.io/readthedocs/fiware-tutorials.svg)](https://fiware-tutorials.rtfd.io)
 
-This tutorial introduces linked data concepts to the FIWARE Platform. The supermarket chain’s store
-finder application is recreated using **NGSI-LD** the differences between the **NSGI v2** and **NGSI-LD** interfaces are highlighted and discussed.
+This tutorial introduces linked data concepts to the FIWARE Platform. The supermarket chain’s store finder application
+is recreated using **NGSI-LD** the differences between the **NSGI v2** and **NGSI-LD** interfaces are highlighted and
+discussed. The tutorial is a direct analogue of the original getting started tutorial but uses API calls from the
+**NGSI-LD** interface.
 
 The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also available as
 [Postman documentation](https://fiware.github.io/tutorials.Linked-Data/)
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/d6671a59a7e892629d2b)
-
 
 ## Contents
 
@@ -42,28 +43,70 @@ The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also a
 
 </details>
 
+# Adding Linked Data concepts to FIWARE Data Entities.
 
-# Linked Data
+The introduction to FIWARE [Getting Started tutorial](https://github.com/FIWARE/tutorials.Getting-Started) introduced
+the [NSGI v2](https://fiware.github.io/specifications/OpenAPI/ngsiv2) interface that is commonly used to create and
+manipulate context data entities. An evolution of that interface has created a supplementary specification called
+[NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/spec/updated/full_api.json)
+as a mechanism to enhance context data entities though adding the concept of **linked data**. This tutorial will
+introduce the background of the ideas behind the new interface and compare and contrast how to create and manipulate
+data entites as linked data.
 
-##  :arrow_forward: Video: What is Linked Data?
+Addtional tutorials in the series will further discuss data relationships an how to create context data entities using
+linked data enabling the full knowledge graph to be traversed.
+
+## What is Linked Data?
+
+All users of the Internet will be familiar with the concept of hypertext links, the way that a link on one web page is
+able to guide the browser to loading another page from a known location.
+
+Whilst humans are able to understand relationship discoverability and how links work, computers find this much more
+difficult, and require a well-defined protocol to be able to traverse from one data element to another held in a
+separate location.
+
+Creating a system of readable links for computers requires the use of a well defined data format
+([JSON-LD](http://json-ld.org/)) and assignation of unique IDs (URNs) for both data entities and the relationships
+between entities so that semantic meaning can be programmatically retrieved from the data itself.
+
+Properly defined linked data can be used to help answer big data questions, and the data relationships can be traversed
+to answer questions like _"Which products are currently avaiable on the shelves of Store X and what prices are they sold
+at?"_
+
+### :arrow_forward: Video: What is Linked Data?
 
 [![](http://img.youtube.com/vi/4x_xzT5eF5Q/0.jpg)](https://www.youtube.com/watch?v=4x_xzT5eF5Q "Introduction")
 
-##  :arrow_forward: Video: What is JSON-LD?
+Click on the image above to watch an introductory video on linked data concepts
+
+JSON-LD is an extension of JSON , it is a standard way of avoiding ambiguity when expressing linked data in JSON so that
+the data is structured in a format which is parsable by machines. It is a method of ensuring that all data attributes
+can be easily compared when coming from a multitude of separate data sources, which could have a different idea as to
+what each attribute means. For example, when two data entities have a `name` attribute how can the computer be certain
+that is refers to a _"Name of a thing"_ in the same sense (rather than a **Username** or a **Surname** or something).
+URLs and datamodels are used to remove ambiguity by allowing attributes to have a both short form (such as `name`) and a
+fully specified long form (such `http://schema.org/name`) which means it is easy to discover which attribute have a
+common meaning within a data structure.
+
+JSON-LD introduces the concept of the `@context` element which provides additional information allowing the computer to
+interpret the rest of the data with more clarity and depth.
+
+Furthermore the JSON-LD specification enables you to define a unique `@type` associating a well-defined
+[data model](https://fiware-datamodels.readthedocs.io/en/latest/guidelines/index.html) to the data itself.
+
+## :arrow_forward: Video: What is JSON-LD?
 
 [![](http://img.youtube.com/vi/vioCbTo3C-4/0.jpg)](https://www.youtube.com/watch?v=vioCbTo3C-4 "JSON-LD")
 
-##  :arrow_forward: Video: JSON-LD: Compaction and Expansion
+Click on the image above to watch a video describing the basic concepts behind JSON-LD.
 
-[![](http://img.youtube.com/vi/Tm3fD89dqRE/0.jpg)](https://www.youtube.com/watch?v=Tm3fD89dqRE "JSON-LD: Compaction and Expansion")
+## What is NGSI-LD?
 
-##  :arrow_forward: Video: JSON-LD: Core Markup
+```text
 
-[![](http://img.youtube.com/vi/UmvWk_TQ30A/0.jpg)](https://www.youtube.com/watch?v=UmvWk_TQ30A "JSON-LD: Core Markup")
+TO DO
 
-
-
-
+```
 
 # Prerequisites
 
@@ -89,9 +132,10 @@ to provide a command-line functionality similar to a Linux distribution on Windo
 
 # Architecture
 
-Our demo application will only make use of one FIWARE component - the
-[Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/). Usage of the Orion Context Broker is sufficient
-for an application to qualify as _“Powered by FIWARE”_.
+The demo application will send and receive NGSI-LD calls to a compliant context broker. Since both NSGI v2 and NSGI-LD
+interfaces are available to an experimental version fo the
+[Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/), our demo application will only make use of one
+FIWARE component.
 
 Currently, the Orion Context Broker relies on open source [MongoDB](https://www.mongodb.com/) technology to keep
 persistence of the context data it holds. Therefore, the architecture will consist of two elements:
@@ -107,11 +151,77 @@ run from exposed ports.
 
 ![](https://fiware.github.io/tutorials.Linked-Data/img/architecture.png)
 
+The necessary configuration information can be seen in the services section of the associated `docker-compose.yml` file:
+
+```yaml
+orion:
+    image: fiware/orion-ld
+    hostname: orion
+    container_name: fiware-orion
+    depends_on:
+        - mongo-db
+    networks:
+        - default
+    ports:
+        - "1026:1026"
+    command: -dbhost mongo-db -logLevel DEBUG
+    healthcheck:
+        test: curl --fail -s http://orion:1026/version || exit 1
+```
+
+```yaml
+mongo-db:
+    image: mongo:3.6
+    hostname: mongo-db
+    container_name: db-mongo
+    expose:
+        - "27017"
+    ports:
+        - "27017:27017"
+    networks:
+        - default
+    command: --nojournal
+```
+
+Both containers are residing on the same network - the Orion Context Broker is listening on Port `1026` and MongoDB is
+listening on the default port `27071`. Both containers are also exposing the same ports externally - this is purely for
+the tutorial access - so that cUrl or Postman can access them without being part of the same network. The command-line
+initialization should be self explanatory.
+
+The only notable difference to the introductory tutorials is that the required image name is currently
+`fiware/orion-ld`.
+
+# Start Up
+
+All services can be initialised from the command-line by running the
+[services](https://github.com/FIWARE/tutorials.Linked-Data/blob/master/services) Bash script provided within the
+repository. Please clone the repository and create the necessary images by running the commands as shown:
+
+```bash
+git clone git@github.com:FIWARE/tutorials.Linked-Data.git
+cd tutorials.Linked-Data
+
+./services start
+```
+
+This command will also import seed data from the previous [Store Finder tutorial](getting-started.md) on startup.
+
+> **Note:** If you want to clean up and start over again you can do so with the following command:
+>
+> ```
+> ./services stop
+> ```
+
+---
+
 # Creating a "Powered by FIWARE" app based on Linked Data
+
+This tutorial recreates the same data entities as the intial _"Powered by FIWARE"_ supermarket finder app, but using
+NGSI-LD linked data entities rather than NGSI v2.
 
 ## Checking the service health
 
-You can check if the Orion Context Broker is running by making an HTTP request to the exposed port:
+As usual, you can check if the Orion Context Broker is running by making an HTTP request to the exposed port:
 
 #### :one: Request:
 
@@ -127,19 +237,34 @@ The response will look similar to the following:
 ```json
 {
     "orion": {
-        "version": "1.12.0-next",
-        "uptime": "0 d, 0 h, 3 m, 21 s",
-        "git_hash": "e2ff1a8d9515ade24cf8d4b90d27af7a616c7725",
-        "compile_time": "Wed Apr 4 19:08:02 UTC 2018",
+        "version": "1.15.0-next",
+        "uptime": "0 d, 3 h, 1 m, 51 s",
+        "git_hash": "af440c6e316075266094c2a5f3f4e4f8e3bb0668",
+        "compile_time": "Tue Jul 16 15:46:18 UTC 2019",
         "compiled_by": "root",
-        "compiled_in": "2f4a69bdc191",
-        "release_date": "Wed Apr 4 19:08:02 UTC 2018",
+        "compiled_in": "51b4d802385a",
+        "release_date": "Tue Jul 16 15:46:18 UTC 2019",
         "doc": "https://fiware-orion.readthedocs.org/en/master/"
     }
 }
 ```
 
+The format of the version response has not changed. The `release_date` must be 16th July 2019 or later to be able to
+work with the requests defined below.
+
 ## Creating Context Data
+
+When creating linked data entities, it is important to use common data models. This will allow us to easily combine data
+from multiple sources
+
+
+```text
+
+TO DO
+
+```
+
+The `type=Store` example used in the getting....
 
 At its heart, FIWARE is a system for managing context information, so lets add some context data into the system by
 creating two new entities (stores in **Berlin**). Any entity must have a `id` and `type` attributes, additional
@@ -316,7 +441,6 @@ curl -G -X GET \
   -d 'type=https://uri.fiware.org/ns/datamodels/Building'
 ```
 
-
 ### Obtain entity data by ID
 
 This example returns the data of `urn:ngsi-ld:Store:001`
@@ -355,18 +479,13 @@ The response
     },
     "https://uri.fiware.org/ns/datamodels/category": {
         "type": "Property",
-        "value": [
-            "commercial"
-        ]
+        "value": ["commercial"]
     },
     "location": {
         "type": "GeoProperty",
         "value": {
             "type": "Point",
-            "coordinates": [
-                13.3986,
-                52.5547
-            ]
+            "coordinates": [13.3986, 52.5547]
         }
     },
     "@context": "https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld"
@@ -406,15 +525,10 @@ Because of the use of the `options=keyValues`, the response consists of JSON onl
             "postalCode": "10439"
         },
         "name": "Bösebrücke Einkauf",
-        "category": [
-            "commercial"
-        ],
+        "category": ["commercial"],
         "location": {
             "type": "Point",
-            "coordinates": [
-                13.3986,
-                52.5547
-            ]
+            "coordinates": [13.3986, 52.5547]
         },
         "@context": "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld"
     },
@@ -428,15 +542,10 @@ Because of the use of the `options=keyValues`, the response consists of JSON onl
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": [
-            "commercial"
-        ],
+        "category": ["commercial"],
         "location": {
             "type": "Point",
-            "coordinates": [
-                13.3903,
-                52.5075
-            ]
+            "coordinates": [13.3903, 52.5075]
         },
         "@context": "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld"
     }
@@ -476,15 +585,10 @@ Because of the use of the `options=keyValues`, the response consists of JSON onl
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": [
-            "commercial"
-        ],
+        "category": ["commercial"],
         "location": {
             "type": "Point",
-            "coordinates": [
-                13.3903,
-                52.5075
-            ]
+            "coordinates": [13.3903, 52.5075]
         },
         "@context": "https://schema.lab.fiware.org/ld/context"
     }
@@ -514,15 +618,10 @@ curl -G -X GET \
             "postalCode": "10439"
         },
         "name": "Bösebrücke Einkauf",
-        "category": [
-            "commercial"
-        ],
+        "category": ["commercial"],
         "location": {
             "type": "Point",
-            "coordinates": [
-                13.3986,
-                52.5547
-            ]
+            "coordinates": [13.3986, 52.5547]
         },
         "@context": "https://schema.lab.fiware.org/ld/context"
     },
@@ -536,15 +635,10 @@ curl -G -X GET \
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": [
-            "commercial"
-        ],
+        "category": ["commercial"],
         "location": {
             "type": "Point",
-            "coordinates": [
-                13.3903,
-                52.5075
-            ]
+            "coordinates": [13.3903, 52.5075]
         },
         "@context": "https://schema.lab.fiware.org/ld/context"
     }
@@ -586,15 +680,10 @@ Because of the use of the `options=keyValues`, the response consists of JSON onl
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": [
-            "commercial"
-        ],
+        "category": ["commercial"],
         "location": {
             "type": "Point",
-            "coordinates": [
-                13.3903,
-                52.5075
-            ]
+            "coordinates": [13.3903, 52.5075]
         },
         "@context": "https://schema.lab.fiware.org/ld/context"
     }
@@ -636,10 +725,7 @@ Because of the use of the `options=keyValues`, the response consists of JSON onl
         },
         "location": {
             "type": "Point",
-            "coordinates": [
-                13.3986,
-                52.5547
-            ]
+            "coordinates": [13.3986, 52.5547]
         },
         "name": "Bösebrücke Einkauf"
     },
@@ -654,10 +740,7 @@ Because of the use of the `options=keyValues`, the response consists of JSON onl
         },
         "location": {
             "type": "Point",
-            "coordinates": [
-                13.3903,
-                52.5075
-            ]
+            "coordinates": [13.3903, 52.5075]
         },
         "name": "Checkpoint Markt"
     }
@@ -681,7 +764,6 @@ curl -G -X GET \
   -d 'options=keyValues'
 ```
 
-
 #### Response:
 
 Because of the use of the `options=keyValues`, the response consists of JSON only without the attribute `type` and
@@ -700,10 +782,7 @@ Because of the use of the `options=keyValues`, the response consists of JSON onl
         },
         "location": {
             "type": "Point",
-            "coordinates": [
-                13.3903,
-                52.5075
-            ]
+            "coordinates": [13.3903, 52.5075]
         },
         "name": "Checkpoint Markt"
     }
