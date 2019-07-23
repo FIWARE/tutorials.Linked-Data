@@ -115,6 +115,7 @@ attribute and its value. Relationships allow to establish associations between i
 As a reminder, the NGSI v2 data model is quite simple. It can be summarized as shown below:
 
 ![](https://jason-fox.github.io/tutorials.Linked-Data/img/ngsi-v2.png)
+https://jason-fox.github.io/tutorial.Linked-Data/img/ngsi-v2.png
 
 The core element of NGSI v2 is the data _entity_, typically a real object with a changing state (such as a **Store**, a
 **Shelf** and so on) Entities have _attributes_ (such as `name` and `location`) and these in turn hold _metadata_ such
@@ -135,19 +136,19 @@ The NGSI LD data model is more complex, with more rigid definitions of use which
 
 ![](https://jason-fox.github.io/tutorials.Linked-Data/img/ngsi-ld.png)
 
-Once again, _entity_ can be considered to be the core element. Every entity must use a unique '`id`
-[URN](https://en.wikipedia.org/wiki/Uniform_resource_name), there is also a `type`, to define the structure of the data
-held, which is a URN, whcih should correspond to a well-defined data model which can be found on the web. For example
-the URN `https://uri.fiware.org/ns/datamodels/Building` is used to define common data model for a
+Once again, _entity_ can be considered to be the core element. Every entity must use a unique `id`
+[URN](https://en.wikipedia.org/wiki/Uniform_resource_name), there is also a `type`, used to define the structure of the
+data held, which is also a URN. This URN should correspond to a well-defined data model which can be found on the web.
+For example the URN `https://uri.fiware.org/ns/datamodels/Building` is used to define common data model for a
 [building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html).
 
-_Entities_ can have _properties_ and _relationships_. Ideally the name of each _property_ should be a well defined URN
-which corresponds to a common concept found across the web (e.g. `http://schema.org/address` is a common URN for the
-physical address of an item). The _property_ will also have a value which will reflect the state of that property.
-Finally a property may itself have further properties (a.k.a. _properties-of-properties_) which reflect furthe
-information about the property itself. Properties and relationships may in turn have a linked embedded structure (of
-_properties-of-properties_ or _properties-of-relationships or relationships-of-properties_ or
-_relationships-of-relationships_) which lead to the following:
+_Entities_ can have _properties_ and _relationships_. Ideally the name of each _property_ should also be a well defined
+URN which corresponds to a common concept found across the web (e.g. `http://schema.org/address` is a common URN for the
+physical address of an item). The _property_ will also have a value which will reflect the state of that property (e.g
+`name="Checkpoint Markt"`). Finally a property may itself have further properties (a.k.a. _properties-of-properties_)
+which reflect further information about the property itself. Properties and relationships may in turn have a linked
+embedded structure (of _properties-of-properties_ or _properties-of-relationships or relationships-of-properties_ or
+_relationships-of-relationships_ etc.) which lead to the following:
 
 An NGSI LD Data Entity (e.g. a supermarket):
 
