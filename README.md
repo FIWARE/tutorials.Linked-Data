@@ -341,14 +341,14 @@ the following `@context` would be required
 
 ### Core Context
 
-`[https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld)`
+[https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld)
 refers to the Core `@context` of NSGI-LD, this defines element such as `id` and `type` which are common to all NGSI
 entities, as well as defining terms such as `Property` and `Relationship`. The core context is so fundamental to
 NGSI-LD, that it is added by default to any `@context` sent to a request.
 
 ### FIWARE Data Models
 
-`[https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld](https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld)`
+[https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld](https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld)
 refers to the definition of standard data models supplied by FIWARE. Adding this to the `@context` will load all the
 [data models](https://fiware-datamodels.readthedocs.io) defined by the FIWARE Foundation, a summary of the FQNs related
 to **Building** can be seen below:
