@@ -476,9 +476,9 @@ element containing two attributes, a `type` and a `value`.
 
 The `type` of a _property_ attribute must be one of the following:
 
--   `"GeoProperty"`: "http://uri.etsi.org/ngsi-ld/GeoProperty" for locations.
--   `"TemporalProperty"`: "http://uri.etsi.org/ngsi-ld/TemporalProperty" for time-based values
--   `"Property"`: "http://uri.etsi.org/ngsi-ld/Property" - for everything else
+-   `"GeoProperty"`: `"http://uri.etsi.org/ngsi-ld/GeoProperty"` for locations.
+-   `"TemporalProperty"`: `"http://uri.etsi.org/ngsi-ld/TemporalProperty"` for time-based values
+-   `"Property"`: `"http://uri.etsi.org/ngsi-ld/Property"` - for everything else
 
 > **Note:** that for simplicity, this data entity has no relationships defined. Relationships must be given the
 > `type="Relationship`. Relationships will be discusssed in a subsequent tutorial.
@@ -521,7 +521,6 @@ curl -G -X GET \
 The returns the Core `@context` by default and all attributes are expanded when necessary.
 
 -   `id`, `type` and `location` are defined in the core context
-
 -   `address` has been mapped to `http://schema.org/address`
 -   `name` has been mapped to `http://schema.org/name`
 -   `category` has been mapped to `https://uri.fiware.org/ns/datamodels/category`
