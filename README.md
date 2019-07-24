@@ -3,7 +3,7 @@
 [![FIWARE Core Context Management](https://nexus.lab.fiware.org/repository/raw/public/badges/chapters/core.svg)](https://github.com/FIWARE/catalogue/blob/master/core/README.md)
 [![License: MIT](https://img.shields.io/github/license/fiware/tutorials.Linked-Data.svg)](https://opensource.org/licenses/MIT)
 [![Support badge](https://nexus.lab.fiware.org/repository/raw/public/badges/stackoverflow/fiware.svg)](https://stackoverflow.com/questions/tagged/fiware)
-[![NGSI LD](https://img.shields.io/badge/NGSI-ld-red.svg)](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/004/01.01.01_60/gs_CIM004v010101p.pdf)
+[![NGSI LD](https://img.shields.io/badge/NGSI-linked_data-red.svg)](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/004/01.01.01_60/gs_CIM004v010101p.pdf)
 <br/> [![Documentation](https://img.shields.io/readthedocs/fiware-tutorials.svg)](https://fiware-tutorials.rtfd.io)
 
 This tutorial introduces linked data concepts to the FIWARE Platform. The supermarket chain’s store finder application
@@ -66,8 +66,10 @@ difficult, and require a well-defined protocol to be able to traverse from one d
 separate location.
 
 Creating a system of readable links for computers requires the use of a well defined data format
-([JSON-LD](http://json-ld.org/)) and assignation of unique IDs (URNs) for both data entities and the relationships
-between entities so that semantic meaning can be programmatically retrieved from the data itself.
+([JSON-LD](http://json-ld.org/)) and assignation of unique IDs
+([URLs or URNs](https://stackoverflow.com/questions/4913343/what-is-the-difference-between-uri-url-and-urn)) for both
+data entities and the relationships between entities so that semantic meaning can be programmatically retrieved from the
+data itself.
 
 Properly defined linked data can be used to help answer big data questions, and the data relationships can be traversed
 to answer questions like _"Which products are currently avaiable on the shelves of Store X and what prices are they sold
@@ -115,20 +117,19 @@ attribute and its value. Relationships allow to establish associations between i
 As a reminder, the NGSI v2 data model is quite simple. It can be summarized as shown below:
 
 ![](https://jason-fox.github.io/tutorials.Linked-Data/img/ngsi-v2.png)
-https://jason-fox.github.io/tutorial.Linked-Data/img/ngsi-v2.png
 
 The core element of NGSI v2 is the data _entity_, typically a real object with a changing state (such as a **Store**, a
-**Shelf** and so on) Entities have _attributes_ (such as `name` and `location`) and these in turn hold _metadata_ such
+**Shelf** and so on). Entities have _attributes_ (such as `name` and `location`) and these in turn hold _metadata_ such
 as `accuracy` - i.e. the accuracy of a `location` reading.
 
 Every _entity_ must have a `type` which defines the sort of thing the entity describes, but giving an NGSI v2 entity the
-`type=Store` is relatively meaningless as no-one is obliged to give shape their own **Store** entities in the same
-fashion. Similarly adding a `name` attribute doesn't suddenly make it hold the same data as someone else's `name`
+`type=Store` is relatively meaningless as no-one is obliged to shape their own **Store** entities in the same fashion.
+Similarly adding an attribute called `name` doesn't suddenly make it hold the same data as someone else's `name`
 attribute.
 
-Relationships can be defined using NGSI v2, but only so far as giving the attribute a well-defined attribute name (by
-convention starting with `ref`, such as `refManagedBy`) and defining the attribute `type=Relationship` which again is
-purely a naming convention with no real weight.
+Relationships can be defined using NGSI v2, but only so far as giving the attribute an appropriate attribute name
+defined by convention ( e.g. starting with `ref`, such as `refManagedBy`) and assigning the attribute
+`type=Relationship` which again is purely a naming convention with no real semantic weight.
 
 ### NGSI LD Data Model
 
@@ -152,17 +153,19 @@ _relationships-of-relationships_ etc.) which lead to the following:
 
 An NGSI LD Data Entity (e.g. a supermarket):
 
--   Has an `id`: e.g. `urn:ngsi-ld:Building:store001`, which must be unique
--   Has `type` which should be a fully qualified URN of a well defined data model : e.g.
+-   Has an `id` which must be unique. For example `urn:ngsi-ld:Building:store001`,
+-   Has `type` which should be a fully qualified URN of a well defined data model. For example
     `https://uri.fiware.org/ns/datamodels/Building`
--   Has an `address` which is a _property_ of the entity. This can be expanded into `http://schema.org/address`, which
-    is a fully qualified name,
--   Has _value_ corresponding to the _property_ `address` (e.g. _Bornholmer Straße 65, 10439 Prenzlauer Berg, Berlin_
--   Has a _property-of-a-property_ (e.g. `verified` field for an `address`)
--   Has a _relationship_ `managedBy`, where the relationship `managedBy` corresponds to another data entity :
-    `urn:ngsi-ld:Person:bob-the-manager`
+-   Has _property_ of the entity, for example, an `address` attribute which holds the adress of the store. This can be
+    expanded into `http://schema.org/address`, which is known as a fully qualified name
+    ([FQN](https://en.wikipedia.org/wiki/Fully_qualified_name)).
+-   The `address`, like any _property_ will have a _value_ corresponding to the _property_ `address` (e.g. _Bornholmer
+    Straße 65, 10439 Prenzlauer Berg, Berlin_
+-   Has a _property-of-a-property_ of the entity, for example a `verified` field for the `address`.
+-   Has a _relationship_ of the entity, for example, a `managedBy` field where the relationship `managedBy` corresponds
+    to another data entity : `urn:ngsi-ld:Person:bob-the-manager`
 -   The relationship `managedBy`, may itself have a _property-of-a-relationship_ (e.g. `since`), this holds the date Bob
-    started working.
+    started working the store
 -   The relationship `managedBy`, may itself have a _relationship-of-a-relationship_ (e.g. `subordinateTo`), this holds
     the URN of the area manager above Bob in the hierarchy.
 
@@ -317,18 +320,59 @@ work with the requests defined below.
 ## Creating Context Data
 
 When creating linked data entities, it is important to use common data models. This will allow us to easily combine data
-from multiple sources
+from multiple sources and remove ambiguity when comparing data coming from different sources.
 
-```text
-TO DO
+Creating linked data using full qualified names throughout would be painful, as each attribute would need to be a URN,
+so JSON-LD introduces the idea of an `@context` attribute which can hold pointers to context definitions. To add a
+FIWARE [building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html) data entity,
+the following `@context` would be required
+
+```json
+{
+    "id": "urn:ngsi-ld:Building:store001",
+    "type": "Building",
+    ...  other data attributes
+    "@context": [
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+        "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld"
+    ]
+}
 ```
 
-The `type=Store` example used in the getting....
+### Core Context
 
-At its heart, FIWARE is a system for managing context information, so lets add some context data into the system by
-creating two new entities (stores in **Berlin**). Any entity must have a `id` and `type` attributes, additional
-attributes are optional and will depend on the system being described. Each additional attribute should also have a
-defined `type` and a `value` attribute.
+`[https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld)`
+refers to the Core `@context` of NSGI-LD, this defines element such as `id` and `type` which are common to all NGSI
+entities, as well as defining terms such as `Property` and `Relationship`. The core context is so fundamental to
+NGSI-LD, that it is added by default to any `@context` sent to a request.
+
+### FIWARE Data Models
+
+`[https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld](https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld)`
+refers to the definition of standard data models supplied by FIWARE. Adding this to the `@context` will load all the
+[data models](https://fiware-datamodels.readthedocs.io) defined by the FIWARE Foundation, a summary of the FQNs related
+to **Building** can be seen below:
+
+```json
+{
+    "@context": {
+        "Building": "https://uri.fiware.org/ns/datamodels/Building",
+        ... etc
+        "address": "http://schema.org/address",
+        "category": "https://uri.fiware.org/ns/datamodels/category",
+        "location": "http://uri.etsi.org/ngsi-ld/location",
+        "name": "http://schema.org/name",
+        ...etc
+    }
+}
+```
+
+If we include this data model, this means that we will be able to use short names for `Building`, `address`, `location`
+for our entities, but computers will also be able to read the FNQs when comparing with other sources.
+
+To create a valid **Building** data entity in the context broker, make a POST request to the
+`http://localhost:1026/ngsi-ld/v1/entities` endpoint as shown below. It is essential that the appropriate
+`Content-Type: application/ld+json` is also used, so that the data entity is recognized as Linked data.
 
 #### :two: Request:
 
@@ -373,6 +417,9 @@ curl -iX POST \
     ]
 }'
 ```
+
+The first request will take some time, as the context broker must navigate and load all of the files mentioned in the
+`@context`.
 
 #### :three: Request:
 
@@ -420,84 +467,134 @@ curl -iX POST \
 }'
 ```
 
-### Data Model Guidelines
+### Defining Properties within the NGSI-LD entity definition
 
-Although the each data entity within your context will vary according to your use case, the common structure within each
-data entity should be standardized order to promote reuse. The full FIWARE data model guidelines can be found
-[here](https://fiware-datamodels.readthedocs.io/en/latest/guidelines/index.html). This tutorial demonstrates the usage
-of the following recommendations:
+The attributes `id` and `type` should be familiar to anyone who has used NSGI v2, and these have not changed. As
+mentioned above, the type should refer to an included data model, in this case `Building` is being used as a short name
+for the inclued URN `https://uri.fiware.org/ns/datamodels/Building`. Thereafter each _property_ is defined as a JSON
+element containing two attributes, a `type` and a `value`.
 
-#### All terms are defined in American English
+The `type` of a _property_ attribute must be one of the following:
 
-Although the `value` fields of the context data may be in any language, all attributes and types are written using the
-English language.
+-   `"GeoProperty"`: "http://uri.etsi.org/ngsi-ld/GeoProperty" for locations.
+-   `"TemporalProperty"`: "http://uri.etsi.org/ngsi-ld/TemporalProperty" for time-based values
+-   `"Property"`: "http://uri.etsi.org/ngsi-ld/Property" - for everything else
 
-#### Entity type names must start with a Capital letter
+> **Note:** that for simplicity, this data entity has no relationships defined. Relationships must be given the
+> `type="Relationship`. Relationships will be discusssed in a subsequent tutorial.
 
-In this case we only have one entity type - **Store**
+### Defining Properties-of-Properties within the NGSI-LD entity definition
 
-#### Entity IDs should be a URN following NGSI-LD guidelines
+_Properties-of-Properties_ is the NGSI-LD equivalent of metadata (i.e. _"data about data"_), it is use to describe
+properties of the attribute value itself like accuracy, provider, or the units to be used. Two built-in metadata
+attribute already exist and these names are reserved
 
-NGSI-LD has recently been published as a full ETSI
-[specification](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.01.01_60/gs_CIM009v010101p.pdf), the proposal is
-that each `id` is a URN follows a standard format: `urn:ngsi-ld:<entity-type>:<entity-id>`. This will mean that every
-`id` in the system will be unique
+-   `createdAt` (type: DateTime): attribute creation date as an ISO 8601 string.
+-   `modifiedAt` (type: DateTime): attribute modification date as an ISO 8601 string.
 
-#### Data type names should reuse schema.org data types where possible
+Additionally `observedAt` may optionally be added in some cases.
 
-[Schema.org](http://schema.org/) is an initiative to create common structured data schemas. In order to promote reuse we
-have deliberately used the [`Text`](http://schema.org/PostalAddress) and
-[`PostalAddress`](http://schema.org/PostalAddress) type names within our **Store** entity. Other existing standards such
-as [Open311](http://www.open311.org/) (for civic issue tracking) or [Datex II](http://www.datex2.eu/) (for transport
-systems) can also be used, but the point is to check for the existence of the same attribute on existing data models and
-reuse it.
-
-#### Use camel case syntax for attribute names
-
-The `streetAddress`, `addressRegion`, `addressLocality` and `postalCode` are all examples of attributes using camel
-casing
-
-#### Location information should be defined using `address` and `location` attributes
-
--   We have used an `address` attribute for civic locations as per [schema.org](http://schema.org/)
--   We have used a `location` attribute for geographical coordinates.
-
-#### Use GeoJSON for codifying geospatial properties
-
-[GeoJSON](http://geojson.org) is an open standard format designed for representing simple geographical features. The
-`location` attribute has been encoded as a geoJSON `Point` location.
-
-### Attribute Metadata
-
-Metadata is _"data about data"_, it is additionl data used to describe properties of the attribute value itself like
-accuracy, provider, or a timestamp. Several built-in metadata attribute already exist and these names are reserved
-
--   `dateCreated` (type: DateTime): attribute creation date as an ISO 8601 string.
--   `dateModified` (type: DateTime): attribute modification date as an ISO 8601 string.
--   `previousValue` (type: any): only in notifications. The value of this
--   `actionType` (type: Text): only in notifications.
-
-One element of metadata can be found within the `address` attribute. a `verified` flag indicates whether the address has
-been confirmed.
+In the examples given above, one element of metadata (i.e. a _property-of-a-property_) can be found within the `address`
+attribute. a `verified` flag indicates whether the address has been confirmed.
 
 ## Querying Context Data
 
-A consuming application can now request context data by making HTTP requests to the Orion Context Broker. The existing
-NGSI interface enables us to make complex queries and filter results.
+A consuming application can now request context data by making NGSI-LD HTTP requests to the Orion Context Broker. The
+existing NGSI-LD interface enables us to make complex queries and filter results and retrieve data with FNQs or with
+short names.
 
-At the moment, for the store finder demo all the context data is being added directly via HTTP requests, however in a
-more complex smart solution, the Orion Context Broker will also retrieve context directly from attached sensors
-associated to each entity.
+### Obtain entity data by FNQ Type
 
-Here are a few examples, in each case the `options=keyValues` query parameter has been used shorten the responses by
-stripping out the type elements from each attribute
+This example returns the data of all `Building` entities within the context data The `type` parameter is mandatory for
+NGSI-LD and is used to filter the response.
 
-### FNQ Type
+#### :four: Request:
 
 ```console
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
   -d 'type=https://uri.fiware.org/ns/datamodels/Building'
+```
+
+#### Response:
+
+The returns the Core `@context` by default and all attributes are expanded when necessary.
+
+-   `id`, `type` and `location` are defined in the core context
+
+-   `address` has been mapped to `http://schema.org/address`
+-   `name` has been mapped to `http://schema.org/name`
+-   `category` has been mapped to `https://uri.fiware.org/ns/datamodels/category`
+
+```json
+[
+    {
+        "id": "urn:ngsi-ld:Building:store001",
+        "type": "https://uri.fiware.org/ns/datamodels/Building",
+        "http://schema.org/address": {
+            "type": "Property",
+            "value": {
+                "streetAddress": "Bornholmer Straße 65",
+                "addressRegion": "Berlin",
+                "addressLocality": "Prenzlauer Berg",
+                "postalCode": "10439"
+            },
+            "verified": {
+                "type": "Property",
+                "value": true
+            }
+        },
+        "http://schema.org/name": {
+            "type": "Property",
+            "value": "Bösebrücke Einkauf"
+        },
+        "https://uri.fiware.org/ns/datamodels/category": {
+            "type": "Property",
+            "value": ["commercial"]
+        },
+        "location": {
+            "type": "GeoProperty",
+            "value": {
+                "type": "Point",
+                "coordinates": [13.3986, 52.5547]
+            }
+        },
+        "@context": "https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld"
+    },
+    {
+        "id": "urn:ngsi-ld:Building:store002",
+        "type": "https://uri.fiware.org/ns/datamodels/Building",
+        "http://schema.org/address": {
+            "type": "Property",
+            "value": {
+                "streetAddress": "Friedrichstraße 44",
+                "addressRegion": "Berlin",
+                "addressLocality": "Kreuzberg",
+                "postalCode": "10969"
+            },
+            "verified": {
+                "type": "Property",
+                "value": true
+            }
+        },
+        "http://schema.org/name": {
+            "type": "Property",
+            "value": "Checkpoint Markt"
+        },
+        "https://uri.fiware.org/ns/datamodels/category": {
+            "type": "Property",
+            "value": ["commercial"]
+        },
+        "location": {
+            "type": "GeoProperty",
+            "value": {
+                "type": "Point",
+                "coordinates": [13.3903, 52.5075]
+            }
+        },
+        "@context": "https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld"
+    }
+]
 ```
 
 ### Obtain entity data by ID
@@ -555,6 +652,9 @@ The response
 
 This example returns the data of all `Store` entities within the context data The `type` parameter limits the response
 to store entities only.
+
+Here are a few examples, in each case the `options=keyValues` query parameter has been used shorten the responses by
+stripping out the type elements from each attribute
 
 #### :five: Request:
 
