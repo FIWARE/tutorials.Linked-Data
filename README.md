@@ -141,7 +141,7 @@ Once again, _entity_ can be considered to be the core element. Every entity must
 [URN](https://en.wikipedia.org/wiki/Uniform_resource_name), there is also a `type`, used to define the structure of the
 data held, which is also a URN. This URN should correspond to a well-defined data model which can be found on the web.
 For example the URN `https://uri.fiware.org/ns/datamodels/Building` is used to define common data model for a
-[building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html).
+[Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html).
 
 _Entities_ can have _properties_ and _relationships_. Ideally the name of each _property_ should also be a well defined
 URN which corresponds to a common concept found across the web (e.g. `http://schema.org/address` is a common URN for the
@@ -324,7 +324,7 @@ from multiple sources and remove ambiguity when comparing data coming from diffe
 
 Creating linked data using full qualified names throughout would be painful, as each attribute would need to be a URN,
 so JSON-LD introduces the idea of an `@context` attribute which can hold pointers to context definitions. To add a
-FIWARE [building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html) data entity,
+FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html) data entity,
 the following `@context` would be required
 
 ```json
