@@ -476,8 +476,12 @@ element containing two attributes, a `type` and a `value`.
 
 The `type` of a _property_ attribute must be one of the following:
 
--   `"GeoProperty"`: `"http://uri.etsi.org/ngsi-ld/GeoProperty"` for locations.
--   `"TemporalProperty"`: `"http://uri.etsi.org/ngsi-ld/TemporalProperty"` for time-based values
+-   `"GeoProperty"`: `"http://uri.etsi.org/ngsi-ld/GeoProperty"` for locations. Locations should be specified as
+    Longitude-Latitude pairs in [GeoJSON format](https://tools.ietf.org/html/rfc7946). The preferred name for the
+    primary location attribute is `location`
+-   `"TemporalProperty"`: `"http://uri.etsi.org/ngsi-ld/TemporalProperty"` for time-based values. Temporal properties
+    should be Date, Time or DateTime strings encoded be [ISO 8601 format](https://en.wikipedia.org/wiki/ISO_8601) - e.g.
+    `YYYY-MM-DDThh:mm:ssZ`
 -   `"Property"`: `"http://uri.etsi.org/ngsi-ld/Property"` - for everything else
 
 > **Note:** that for simplicity, this data entity has no relationships defined. Relationships must be given the
@@ -486,16 +490,19 @@ The `type` of a _property_ attribute must be one of the following:
 ### Defining Properties-of-Properties within the NGSI-LD entity definition
 
 _Properties-of-Properties_ is the NGSI-LD equivalent of metadata (i.e. _"data about data"_), it is use to describe
-properties of the attribute value itself like accuracy, provider, or the units to be used. Two built-in metadata
-attribute already exist and these names are reserved
+properties of the attribute value itself like accuracy, provider, or the units to be used. Some built-in metadata
+attributes already exist and these names are reserved:
 
 -   `createdAt` (type: DateTime): attribute creation date as an ISO 8601 string.
 -   `modifiedAt` (type: DateTime): attribute modification date as an ISO 8601 string.
 
-Additionally `observedAt` may optionally be added in some cases.
+Additionally `observedAt`, `datasetId` and `instanceId` may optionally be added in some cases, and `location`,
+`observationSpace` and `operationSpace` have special meaning for Geoproperties.
 
 In the examples given above, one element of metadata (i.e. a _property-of-a-property_) can be found within the `address`
-attribute. a `verified` flag indicates whether the address has been confirmed.
+attribute. a `verified` flag indicates whether the address has been confirmed. The commonest _property-of-a-property_ is
+`unitCode` which should be used to hold the UN/CEFACT
+[Common Codes](http://wiki.goodrelations-vocabulary.org/Documentation/UN/CEFACT_Common_Codes) for Units of Measurement.
 
 ## Querying Context Data
 
@@ -518,12 +525,17 @@ curl -G -X GET \
 
 #### Response:
 
-The returns the Core `@context` by default and all attributes are expanded when necessary.
+The response returns the Core `@context` by default
+(`https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld`) and all attributes are
+expanded whenever possible.
 
--   `id`, `type` and `location` are defined in the core context
+-   `id`, `type` and `location` are defined in the core context and are not expanded.
 -   `address` has been mapped to `http://schema.org/address`
 -   `name` has been mapped to `http://schema.org/name`
 -   `category` has been mapped to `https://uri.fiware.org/ns/datamodels/category`
+
+Note that if an attribute has not been not associated to an FNQ when the entity was created, the short name will
+**always** be displayed.
 
 ```json
 [
@@ -600,7 +612,7 @@ The returns the Core `@context` by default and all attributes are expanded when 
 
 This example returns the data of `urn:ngsi-ld:Store:001`
 
-#### :four: Request:
+#### :five: Request:
 
 ```console
 curl -G -X GET \
@@ -609,7 +621,9 @@ curl -G -X GET \
 
 #### Response:
 
-The response
+The response returns the Core `@context` by default
+(`https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld`) and all attributes are
+expanded whenever possible.
 
 ```json
 {
@@ -649,13 +663,22 @@ The response
 
 ### Obtain entity data by type
 
-This example returns the data of all `Store` entities within the context data The `type` parameter limits the response
-to store entities only.
+If a reference to the supplied data is supplied, it is possible to return short name data and limit responses to a
+specific `type` of data. For example, the request below returns the data of all `Building` entities within the context
+data. Use of the `type` parameter limits the response to `Building` entities only, use of the `options=keyValues` query
+parameter reduces the response down to standard JSON-LD.
 
-Here are a few examples, in each case the `options=keyValues` query parameter has been used shorten the responses by
-stripping out the type elements from each attribute
+A [`Link` header](https://www.w3.org/wiki/LinkHeader) must be supplied to associate the short form `Building` with the
+FNQ `https://uri.fiware.org/ns/datamodels/Building`. The link header syntax is as shown below
 
-#### :five: Request:
+```text
+Link: <https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
+```
+
+The standard HTTP `Link` header allows metadata (i.e. the `@context`) to be given without actually touching the resource
+in question. In the case of NGSI-LD, the meta data is itself a file of in `application/ld+json` format.
+
+#### :six: Request:
 
 ```console
 curl -G -X GET \
@@ -668,8 +691,9 @@ curl -G -X GET \
 
 #### Response:
 
-Because of the use of the `options=keyValues`, the response consists of JSON only without the attribute `type` and
-`metadata` elements.
+Because of the use of the `options=keyValues`, the response consists of JSON only without the attribute `type` or
+_properties-of-properties_ elements. You can see that `Link` header from the request has been used as the `@context`
+returned in the response.
 
 ```json
 [
@@ -712,10 +736,11 @@ Because of the use of the `options=keyValues`, the response consists of JSON onl
 
 ### Filter context data by comparing the values of an attribute
 
-This example returns all stores with the `name` attribute _Checkpoint Markt_. Filtering can be done using the `q`
-parameter - if a string has spaces in it, it can be URL encoded and held within single quote characters `'` = `%27`
+This example returns all `Building` entiies with the `name` attribute _Checkpoint Markt_. Filtering can be done using
+the `q` parameter - if a string has spaces in it, it can be URL encoded and held within single quote characters `'` =
+`%27`.
 
-#### :six: Request:
+#### :seven: Request:
 
 ```console
 curl -G -X GET \
@@ -728,8 +753,21 @@ curl -G -X GET \
 
 #### Response:
 
-Because of the use of the `options=keyValues`, the response consists of JSON only without the attribute `type` and
-`metadata` elements.
+The `Link` header `https://schema.lab.fiware.org/ld/context` holds an array of `@context` as shown:
+
+```json
+{
+    "@context": [
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+        "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld"
+    ]
+}
+```
+
+and therefore includes the FIWARE Building model.
+
+This means that use of the `Link` header and the `options=keyValues` parameter reduces the response to JSON-LD. as
+shown:
 
 ```json
 [
@@ -755,6 +793,12 @@ Because of the use of the `options=keyValues`, the response consists of JSON onl
 
 ### Filter context data by comparing the values of an attribute in an Array
 
+Within the standard `Building` model, the `category` attribute refers to an array of strings. This example returns all
+`Building` entities with a `category` attribute which contains either `commercial` or `office` strings. Filtering can be
+done using the `q` parameter, comma separating the acceptable values.
+
+#### :eight: Request:
+
 ```console
 curl -G -X GET \
     'http://localhost:1026/v2/entities' \
@@ -763,6 +807,10 @@ curl -G -X GET \
     -d 'q=category==%27commercial%27,%27office%27 \
     -d 'options=keyValues'
 ```
+
+#### Response:
+
+The response is returned in JSON-LD format with short form attribute names:
 
 ```json
 [
@@ -808,23 +856,22 @@ curl -G -X GET \
 This example returns all stores found in the Kreuzberg District.
 
 Filtering can be done using the `q` parameter - sub-attributes are annotated using the bracket syntax e.g.
-`q=address[addressLocality]==Kreuzberg`
+`q=address[addressLocality]==Kreuzberg`. This differs from NGSI v2 where dot syntax was used.
 
-#### :seven: Request:
+#### :nine: Request:
 
 ```console
 curl -G -X GET \
     'http://localhost:1026/v2/entities' \
     -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -d 'type=Building' \
-    -d 'q=q=address[addressLocality]==Kreuzberg' \
+    -d 'q=address[addressLocality]==Kreuzberg' \
     -d 'options=keyValues'
 ```
 
 #### Response:
 
-Because of the use of the `options=keyValues`, the response consists of JSON only without the attribute `type` and
-`metadata` elements.
+Use of the `Link` header and the `options=keyValues` parameter reduces the response to JSON-LD.
 
 ```json
 [
@@ -850,11 +897,13 @@ Because of the use of the `options=keyValues`, the response consists of JSON onl
 
 ### Filter context data by querying metadata
 
-This example returns the data of all `Store` entities with a verified address.
+This example returns the data of all `Building` entities with a verified address. The `verified` attribute is an example
+of a _Property-of-a-Property_
 
-Metadata queries (i.e. Properties of Properties) are annotated using the dot syntax e.g. `q=address.verified==true`
+Metadata queries (i.e. Properties of Properties) are annotated using the dot syntax e.g. `q=address.verified==true`.
+This supercedes the `mq` parameter from NGSI v2.
 
-#### :eight: Request:
+#### :one::zero: Request:
 
 ```console
 curl -G -X GET \
@@ -907,9 +956,17 @@ Because of the use of the `options=keyValues`, the response consists of JSON onl
 
 ### Filter context data by comparing the values of a geo:json attribute
 
-This example return all Stores within 1.5km the **Brandenburg Gate** in **Berlin** (_52.5162N 13.3777W_)
+This example return all Stores within 2km the **Brandenburg Gate** in **Berlin** (_52.5162N 13.3777W_). To make a
+geo-query request, three parameters must be specified, `geometry`, `coordinates` and `georel`.
 
-#### :nine: Request:
+The syntax for NGSI-LD has been updated, the `coordinates` parameter is noq represented in
+[geoJSON](https://tools.ietf.org/html/rfc7946) including the square brackets rather than the simple lat-long pairs
+required in NGSI v2.
+
+Note that by default the geo-query will be applied to the `location` attribute, as this is default specified in NGSI-LD.
+If another attribute is is to be used, an additional `geoproperty` parameter is required.
+
+#### :one::one: Request:
 
 ```console
 curl -G -X GET \
@@ -917,8 +974,8 @@ curl -G -X GET \
   -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
   -d 'type=Building' \
   -d 'geometry=Point' \
-  -d 'coordinates=[52.5162,13.3777]' \
-  -d 'georel=within' \
+  -d 'coordinates=[13.3777,52.5162]' \
+  -d 'georel=near;maxDistance==2000' \
   -d 'options=keyValues'
 ```
 
