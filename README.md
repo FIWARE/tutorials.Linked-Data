@@ -87,7 +87,7 @@ data entities and the relationships between entities so that semantic meaning ca
 data itself.
 
 Properly defined linked data can be used to help answer big data questions, and the data relationships can be traversed
-to answer questions like _"Which products are currently avaiable on the shelves of Store X and what prices are they sold
+to answer questions like _"Which products are currently available on the shelves of Store X and what prices are they sold
 at?"_
 
 ### :arrow_forward: Video: What is Linked Data?
