@@ -1,4 +1,4 @@
-[![FIWARE Banner](https://jason-fox.github.io/tutorials.Linked-Data/img/Fiware.png)](https://www.fiware.org/developers)
+[![FIWARE Banner](https://fiware.github.io/tutorials.Linked-Data/img/fiware.png)](https://www.fiware.org/developers)
 
 [![FIWARE Core Context Management](https://nexus.lab.fiware.org/repository/raw/public/badges/chapters/core.svg)](https://github.com/FIWARE/catalogue/blob/master/core/README.md)
 [![License: MIT](https://img.shields.io/github/license/fiware/tutorials.Linked-Data.svg)](https://opensource.org/licenses/MIT)
@@ -12,7 +12,7 @@ discussed. The tutorial is a direct analogue of the original getting started tut
 **NGSI-LD** interface.
 
 The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also available as
-[Postman documentation](https://jason-fox.github.io/tutorials.Linked-Data/)
+[Postman documentation](https://fiware.github.io/tutorials.Linked-Data/)
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/d6671a59a7e892629d2b)
 
