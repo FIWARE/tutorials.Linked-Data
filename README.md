@@ -14,7 +14,7 @@ discussed. The tutorial is a direct analogue of the original getting started tut
 The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also available as
 [Postman documentation](https://fiware.github.io/tutorials.Linked-Data/)
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/d6671a59a7e892629d2b)
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/125db8d3a1ea3dab8e3f)
 
 ## Contents
 
@@ -87,8 +87,8 @@ data entities and the relationships between entities so that semantic meaning ca
 data itself.
 
 Properly defined linked data can be used to help answer big data questions, and the data relationships can be traversed
-to answer questions like _"Which products are currently available on the shelves of Store X and what prices are they sold
-at?"_
+to answer questions like _"Which products are currently available on the shelves of Store X and what prices are they
+sold at?"_
 
 ### :arrow_forward: Video: What is Linked Data?
 
@@ -625,7 +625,7 @@ Note that if an attribute has not been not associated to an FNQ when the entity 
 
 ### Obtain entity data by ID
 
-This example returns the data of `urn:ngsi-ld:Store:001`
+This example returns the data of `urn:ngsi-ld:Building:store001`
 
 #### :five: Request:
 
@@ -937,8 +937,8 @@ Because of the use of the `options=keyValues`, the response consists of JSON onl
 ```json
 [
     {
-        "id": "urn:ngsi-ld:Store:001",
-        "type": "Store",
+        "id": "urn:ngsi-ld:Building:store001",
+        "type": "Building",
         "address": {
             "streetAddress": "Bornholmer Straße 65",
             "addressRegion": "Berlin",
@@ -952,8 +952,8 @@ Because of the use of the `options=keyValues`, the response consists of JSON onl
         "name": "Bösebrücke Einkauf"
     },
     {
-        "id": "urn:ngsi-ld:Store:002",
-        "type": "Store",
+        "id": "urn:ngsi-ld:Building:store002",
+        "type": "Building",
         "address": {
             "streetAddress": "Friedrichstraße 44",
             "addressRegion": "Berlin",
@@ -974,7 +974,7 @@ Because of the use of the `options=keyValues`, the response consists of JSON onl
 This example return all Stores within 2km the **Brandenburg Gate** in **Berlin** (_52.5162N 13.3777W_). To make a
 geo-query request, three parameters must be specified, `geometry`, `coordinates` and `georel`.
 
-The syntax for NGSI-LD has been updated, the `coordinates` parameter is noq represented in
+The syntax for NGSI-LD has been updated, the `coordinates` parameter is now represented in
 [geoJSON](https://tools.ietf.org/html/rfc7946) including the square brackets rather than the simple lat-long pairs
 required in NGSI v2.
 
@@ -1002,8 +1002,8 @@ Because of the use of the `options=keyValues`, the response consists of JSON onl
 ```json
 [
     {
-        "id": "urn:ngsi-ld:Store:002",
-        "type": "Store",
+        "id": "urn:ngsi-ld:Building:store002",
+        "type": "Building",
         "address": {
             "streetAddress": "Friedrichstraße 44",
             "addressRegion": "Berlin",
