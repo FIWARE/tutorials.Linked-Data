@@ -61,7 +61,7 @@ The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also a
 > ― Malcolm Gladwell, The Tipping Point
 
 The introduction to FIWARE [Getting Started tutorial](https://github.com/FIWARE/tutorials.Getting-Started) introduced
-the [NSGI v2](https://jason-fox.github.io/specifications/OpenAPI/ngsiv2) interface that is commonly used to create and
+the [NSGI v2](https://fiware.github.io/specifications/OpenAPI/ngsiv2) interface that is commonly used to create and
 manipulate context data entities. An evolution of that interface has created a supplementary specification called
 [NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/spec/updated/full_api.json)
 as a mechanism to enhance context data entities though adding the concept of **linked data**. This tutorial will
@@ -283,8 +283,6 @@ cd tutorials.Linked-Data
 
 ./services start
 ```
-
-This command will also import seed data from the previous [Store Finder tutorial](getting-started.md) on startup.
 
 > **Note:** If you want to clean up and start over again you can do so with the following command:
 >
