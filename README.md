@@ -68,7 +68,7 @@ as a mechanism to enhance context data entities though adding the concept of **l
 introduce the background of the ideas behind the new interface and compare and contrast how to create and manipulate
 data entites as linked data.
 
-Addtional tutorials in the series will further discuss data relationships an how to create context data entities using
+Additional tutorials in the series will further discuss data relationships an how to create context data entities using
 linked data enabling the full knowledge graph to be traversed.
 
 ## What is Linked Data?
@@ -171,7 +171,7 @@ An NGSI LD Data Entity (e.g. a supermarket):
 -   Has an `id` which must be unique. For example `urn:ngsi-ld:Building:store001`,
 -   Has `type` which should be a fully qualified URN of a well defined data model. For example
     `https://uri.fiware.org/ns/datamodels/Building`
--   Has _property_ of the entity, for example, an `address` attribute which holds the adress of the store. This can be
+-   Has _property_ of the entity, for example, an `address` attribute which holds the address of the store. This can be
     expanded into `http://schema.org/address`, which is known as a fully qualified name
     ([FQN](https://en.wikipedia.org/wiki/Fully_qualified_name)).
 -   The `address`, like any _property_ will have a _value_ corresponding to the _property_ `address` (e.g. _Bornholmer
@@ -296,7 +296,7 @@ This command will also import seed data from the previous [Store Finder tutorial
 
 # Creating a "Powered by FIWARE" app based on Linked Data
 
-This tutorial recreates the same data entities as the intial _"Powered by FIWARE"_ supermarket finder app, but using
+This tutorial recreates the same data entities as the initial _"Powered by FIWARE"_ supermarket finder app, but using
 NGSI-LD linked data entities rather than NGSI v2.
 
 ## Checking the service health
@@ -979,7 +979,7 @@ The syntax for NGSI-LD has been updated, the `coordinates` parameter is now repr
 required in NGSI v2.
 
 Note that by default the geo-query will be applied to the `location` attribute, as this is default specified in NGSI-LD.
-If another attribute is is to be used, an additional `geoproperty` parameter is required.
+If another attribute is to be used, an additional `geoproperty` parameter is required.
 
 #### :one::one: Request:
 
