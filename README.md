@@ -21,29 +21,44 @@ The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also a
 <details>
 <summary><strong>Details</strong></summary>
 
--   [Architecture](#architecture)
+-   [Adding Linked Data concepts to FIWARE Data Entities.](#adding-linked-data-concepts-to-fiware-data-entities)
+    -   [What is Linked Data?](#what-is-linked-data)
+        -   [:arrow_forward: Video: What is Linked Data?](#arrow_forward-video-what-is-linked-data)
+        -   [:arrow_forward: Video: What is JSON-LD?](#arrow_forward-video-what-is-json-ld)
+    -   [What is NGSI-LD?](#what-is-ngsi-ld)
+        -   [NGSI v2 Data Model](#ngsi-v2-data-model)
+        -   [NGSI LD Data Model](#ngsi-ld-data-model)
 -   [Prerequisites](#prerequisites)
     -   [Docker](#docker)
-    -   [Docker Compose (Optional)](#docker-compose-optional)
--   [Starting the containers](#starting-the-containers)
-    -   [Option 1) Using Docker commands directly](#option-1-using-docker-commands-directly)
-    -   [Option 2) Using Docker Compose](#option-2-using-docker-compose)
--   [Creating your first "Powered by FIWARE" app](#creating-your-first-powered-by-fiware-app)
+    -   [Cygwin](#cygwin)
+-   [Architecture](#architecture)
+-   [Start Up](#start-up)
+-   [Creating a "Powered by FIWARE" app based on Linked Data](#creating-a-powered-by-fiware-app-based-on-linked-data)
     -   [Checking the service health](#checking-the-service-health)
     -   [Creating Context Data](#creating-context-data)
-        -   [Data Model Guidelines](#data-model-guidelines)
-        -   [Attribute Metadata](#attribute-metadata)
+        -   [Core Context](#core-context)
+        -   [FIWARE Data Models](#fiware-data-models)
+        -   [Defining Properties within the NGSI-LD entity definition](#defining-properties-within-the-ngsi-ld-entity-definition)
+        -   [Defining Properties-of-Properties within the NGSI-LD entity definition](#defining-properties-of-properties-within-the-ngsi-ld-entity-definition)
     -   [Querying Context Data](#querying-context-data)
+        -   [Obtain entity data by FNQ Type](#obtain-entity-data-by-fnq-type)
         -   [Obtain entity data by ID](#obtain-entity-data-by-id)
         -   [Obtain entity data by type](#obtain-entity-data-by-type)
         -   [Filter context data by comparing the values of an attribute](#filter-context-data-by-comparing-the-values-of-an-attribute)
+        -   [Filter context data by comparing the values of an attribute in an Array](#filter-context-data-by-comparing-the-values-of-an-attribute-in-an-array)
+        -   [Filter context data by comparing the values of a sub-attribute](#filter-context-data-by-comparing-the-values-of-a-sub-attribute)
+        -   [Filter context data by querying metadata](#filter-context-data-by-querying-metadata)
         -   [Filter context data by comparing the values of a geo:json attribute](#filter-context-data-by-comparing-the-values-of-a-geojson-attribute)
--   [Next Steps](#next-steps)
-    -   [Iterative Development](#iterative-development)
 
 </details>
 
 # Adding Linked Data concepts to FIWARE Data Entities.
+
+> “Six degrees of separation doesn't mean that everyone is linked to everyone else in just six steps. It means that a
+> very small number of people are linked to everyone else in a few steps, and the rest of us are linked to the world
+> through those special few.”
+>
+> ― Malcolm Gladwell, The Tipping Point
 
 The introduction to FIWARE [Getting Started tutorial](https://github.com/FIWARE/tutorials.Getting-Started) introduced
 the [NSGI v2](https://jason-fox.github.io/specifications/OpenAPI/ngsiv2) interface that is commonly used to create and
@@ -96,7 +111,7 @@ interpret the rest of the data with more clarity and depth.
 Furthermore the JSON-LD specification enables you to define a unique `@type` associating a well-defined
 [data model](https://fiware-datamodels.readthedocs.io/en/latest/guidelines/index.html) to the data itself.
 
-## :arrow_forward: Video: What is JSON-LD?
+### :arrow_forward: Video: What is JSON-LD?
 
 [![](http://img.youtube.com/vi/vioCbTo3C-4/0.jpg)](https://www.youtube.com/watch?v=vioCbTo3C-4 "JSON-LD")
 
@@ -349,9 +364,9 @@ NGSI-LD, that it is added by default to any `@context` sent to a request.
 ### FIWARE Data Models
 
 [https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld](https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld)
-refers to the definition of standard data models supplied by FIWARE. Adding this to the `@context` will load all the
-[data models](https://fiware-datamodels.readthedocs.io) defined by the FIWARE Foundation, a summary of the FQNs related
-to **Building** can be seen below:
+refers to the definition of standard data models supplied by FIWARE. Adding this to the `@context` will load the
+definitions of all the [data models](https://fiware-datamodels.readthedocs.io) defined by the FIWARE Foundation, a
+summary of the FQNs related to **Building** can be seen below:
 
 ```json
 {
@@ -367,8 +382,8 @@ to **Building** can be seen below:
 }
 ```
 
-If we include this data model, this means that we will be able to use short names for `Building`, `address`, `location`
-for our entities, but computers will also be able to read the FNQs when comparing with other sources.
+If we include this context definition, it means that we will be able to use short names for `Building`, `address`,
+`location` for our entities, but computers will also be able to read the FNQs when comparing with other sources.
 
 To create a valid **Building** data entity in the context broker, make a POST request to the
 `http://localhost:1026/ngsi-ld/v1/entities` endpoint as shown below. It is essential that the appropriate
@@ -668,15 +683,15 @@ specific `type` of data. For example, the request below returns the data of all 
 data. Use of the `type` parameter limits the response to `Building` entities only, use of the `options=keyValues` query
 parameter reduces the response down to standard JSON-LD.
 
-A [`Link` header](https://www.w3.org/wiki/LinkHeader) must be supplied to associate the short form `Building` with the
-FNQ `https://uri.fiware.org/ns/datamodels/Building`. The link header syntax is as shown below
+A [`Link` header](https://www.w3.org/wiki/LinkHeader) must be supplied to associate the short form `type="Building"`
+with the FNQ `https://uri.fiware.org/ns/datamodels/Building`. The full link header syntax can be seen below:
 
 ```text
 Link: <https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
 ```
 
-The standard HTTP `Link` header allows metadata (i.e. the `@context`) to be given without actually touching the resource
-in question. In the case of NGSI-LD, the meta data is itself a file of in `application/ld+json` format.
+The standard HTTP `Link` header allows metadata (in this case the `@context`) to be passed in without actually touching
+the resource in question. In the case of NGSI-LD, the metadata is a file of in `application/ld+json` format.
 
 #### :six: Request:
 
@@ -691,9 +706,9 @@ curl -G -X GET \
 
 #### Response:
 
-Because of the use of the `options=keyValues`, the response consists of JSON only without the attribute `type` or
-_properties-of-properties_ elements. You can see that `Link` header from the request has been used as the `@context`
-returned in the response.
+Because of the use of the `options=keyValues`, the response consists of JSON only without the attribute defintions
+`type="Property"` or any _properties-of-properties_ elements. You can see that `Link` header from the request has been
+used as the `@context` returned in the response.
 
 ```json
 [
@@ -766,8 +781,8 @@ The `Link` header `https://schema.lab.fiware.org/ld/context` holds an array of `
 
 and therefore includes the FIWARE Building model.
 
-This means that use of the `Link` header and the `options=keyValues` parameter reduces the response to JSON-LD. as
-shown:
+This means that use of the `Link` header and the `options=keyValues` parameter reduces the response to short form
+JSON-LD as shown:
 
 ```json
 [
