@@ -7,7 +7,7 @@
 <br/> [![Documentation](https://img.shields.io/readthedocs/fiware-tutorials.svg)](https://fiware-tutorials.rtfd.io)
 
 This tutorial introduces linked data concepts to the FIWARE Platform. The supermarket chain’s store finder application
-is recreated using **NGSI-LD** the differences between the **NSGI v2** and **NGSI-LD** interfaces are highlighted and
+is recreated using **NGSI-LD** and the differences between the **NSGI v2** and **NGSI-LD** interfaces are highlighted and
 discussed. The tutorial is a direct analogue of the original getting started tutorial but uses API calls from the
 **NGSI-LD** interface.
 
