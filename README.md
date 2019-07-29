@@ -16,6 +16,8 @@ The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also a
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/125db8d3a1ea3dab8e3f)
 
+-   このチュートリアルは[日本語](README.ja.md)でもご覧いただけます。
+
 ## Contents
 
 <details>
@@ -41,7 +43,7 @@ The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also a
         -   [Defining Properties within the NGSI-LD entity definition](#defining-properties-within-the-ngsi-ld-entity-definition)
         -   [Defining Properties-of-Properties within the NGSI-LD entity definition](#defining-properties-of-properties-within-the-ngsi-ld-entity-definition)
     -   [Querying Context Data](#querying-context-data)
-        -   [Obtain entity data by FNQ Type](#obtain-entity-data-by-fnq-type)
+        -   [Obtain entity data by FQN Type](#obtain-entity-data-by-fqn-type)
         -   [Obtain entity data by ID](#obtain-entity-data-by-id)
         -   [Obtain entity data by type](#obtain-entity-data-by-type)
         -   [Filter context data by comparing the values of an attribute](#filter-context-data-by-comparing-the-values-of-an-attribute)
@@ -66,7 +68,7 @@ manipulate context data entities. An evolution of that interface has created a s
 [NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/spec/updated/full_api.json)
 as a mechanism to enhance context data entities though adding the concept of **linked data**. This tutorial will
 introduce the background of the ideas behind the new interface and compare and contrast how to create and manipulate
-data entites as linked data.
+data entities as linked data.
 
 Additional tutorials in the series will further discuss data relationships an how to create context data entities using
 linked data enabling the full knowledge graph to be traversed.
@@ -121,7 +123,7 @@ Click on the image above to watch a video describing the basic concepts behind J
 
 **NGSI-LD** is an evolution of the **NGSI v2** information model, which has been modified to improve support for linked
 data (entity relationships), property graphs and semantics (exploiting the capabilities offered by JSON-LD). This work
-has been conducted under the ETSI ISG CIM initiative and the updated specification hhas been branded as
+has been conducted under the ETSI ISG CIM initiative and the updated specification has been branded as
 [NGSI-LD](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.01.01_60/gs_CIM009v010101p.pdf). The main constructs
 of NGSI-LD are: _Entity_, _Property_ and _Relationship_. NGSI-LD Entities (instances) can be the subject of Properties
 or Relationships. In terms of the traditional NGSI v2 data model, Properties can be seen as the combination of an
@@ -131,7 +133,7 @@ attribute and its value. Relationships allow to establish associations between i
 
 As a reminder, the NGSI v2 data model is quite simple. It can be summarized as shown below:
 
-![](https://jason-fox.github.io/tutorials.Linked-Data/img/ngsi-v2.png)
+![](https://fiware.github.io/tutorials.Linked-Data/img/ngsi-v2.png)
 
 The core element of NGSI v2 is the data _entity_, typically a real object with a changing state (such as a **Store**, a
 **Shelf** and so on). Entities have _attributes_ (such as `name` and `location`) and these in turn hold _metadata_ such
@@ -150,7 +152,7 @@ defined by convention ( e.g. starting with `ref`, such as `refManagedBy`) and as
 
 The NGSI LD data model is more complex, with more rigid definitions of use which lead to a navigable knowledge graph.
 
-![](https://jason-fox.github.io/tutorials.Linked-Data/img/ngsi-ld.png)
+![](https://fiware.github.io/tutorials.Linked-Data/img/ngsi-ld.png)
 
 Once again, _entity_ can be considered to be the core element. Every entity must use a unique `id`
 [URN](https://en.wikipedia.org/wiki/Uniform_resource_name), there is also a `type`, used to define the structure of the
@@ -160,7 +162,7 @@ For example the URN `https://uri.fiware.org/ns/datamodels/Building` is used to d
 
 _Entities_ can have _properties_ and _relationships_. Ideally the name of each _property_ should also be a well defined
 URN which corresponds to a common concept found across the web (e.g. `http://schema.org/address` is a common URN for the
-physical address of an item). The _property_ will also have a value which will reflect the state of that property (e.g
+physical address of an item). The _property_ will also have a value which will reflect the state of that property (e.g.
 `name="Checkpoint Markt"`). Finally a property may itself have further properties (a.k.a. _properties-of-properties_)
 which reflect further information about the property itself. Properties and relationships may in turn have a linked
 embedded structure (of _properties-of-properties_ or _properties-of-relationships or relationships-of-properties_ or
@@ -226,10 +228,10 @@ persistence of the context data it holds. Therefore, the architecture will consi
     -   Used by the Orion Context Broker to hold context data information such as data entities, subscriptions and
         registrations
 
-Since all interactions between the two elements are initiated by HTTP requests, the entities can be containerized and
+Since all interactions between the two elements are initiated by HTTP requests, the elements can be containerized and
 run from exposed ports.
 
-![](https://jason-fox.github.io/tutorials.Linked-Data/img/architecture.png)
+![](https://fiware.github.io/tutorials.Linked-Data/img/architecture.png)
 
 The necessary configuration information can be seen in the services section of the associated `docker-compose.yml` file:
 
@@ -381,7 +383,7 @@ summary of the FQNs related to **Building** can be seen below:
 ```
 
 If we include this context definition, it means that we will be able to use short names for `Building`, `address`,
-`location` for our entities, but computers will also be able to read the FNQs when comparing with other sources.
+`location` for our entities, but computers will also be able to read the FQNs when comparing with other sources.
 
 To create a valid **Building** data entity in the context broker, make a POST request to the
 `http://localhost:1026/ngsi-ld/v1/entities` endpoint as shown below. It is essential that the appropriate
@@ -484,7 +486,7 @@ curl -iX POST \
 
 The attributes `id` and `type` should be familiar to anyone who has used NSGI v2, and these have not changed. As
 mentioned above, the type should refer to an included data model, in this case `Building` is being used as a short name
-for the inclued URN `https://uri.fiware.org/ns/datamodels/Building`. Thereafter each _property_ is defined as a JSON
+for the included URN `https://uri.fiware.org/ns/datamodels/Building`. Thereafter each _property_ is defined as a JSON
 element containing two attributes, a `type` and a `value`.
 
 The `type` of a _property_ attribute must be one of the following:
@@ -498,7 +500,7 @@ The `type` of a _property_ attribute must be one of the following:
 -   `"Property"`: `"http://uri.etsi.org/ngsi-ld/Property"` - for everything else
 
 > **Note:** that for simplicity, this data entity has no relationships defined. Relationships must be given the
-> `type="Relationship`. Relationships will be discusssed in a subsequent tutorial.
+> `type="Relationship`. Relationships will be discussed in a subsequent tutorial.
 
 ### Defining Properties-of-Properties within the NGSI-LD entity definition
 
@@ -520,10 +522,10 @@ attribute. a `verified` flag indicates whether the address has been confirmed. T
 ## Querying Context Data
 
 A consuming application can now request context data by making NGSI-LD HTTP requests to the Orion Context Broker. The
-existing NGSI-LD interface enables us to make complex queries and filter results and retrieve data with FNQs or with
+existing NGSI-LD interface enables us to make complex queries and filter results and retrieve data with FQNs or with
 short names.
 
-### Obtain entity data by FNQ Type
+### Obtain entity data by FQN Type
 
 This example returns the data of all `Building` entities within the context data The `type` parameter is mandatory for
 NGSI-LD and is used to filter the response.
@@ -547,7 +549,7 @@ expanded whenever possible.
 -   `name` has been mapped to `http://schema.org/name`
 -   `category` has been mapped to `https://uri.fiware.org/ns/datamodels/category`
 
-Note that if an attribute has not been not associated to an FNQ when the entity was created, the short name will
+Note that if an attribute has not been not associated to an FQN when the entity was created, the short name will
 **always** be displayed.
 
 ```json
@@ -682,7 +684,7 @@ data. Use of the `type` parameter limits the response to `Building` entities onl
 parameter reduces the response down to standard JSON-LD.
 
 A [`Link` header](https://www.w3.org/wiki/LinkHeader) must be supplied to associate the short form `type="Building"`
-with the FNQ `https://uri.fiware.org/ns/datamodels/Building`. The full link header syntax can be seen below:
+with the FQN `https://uri.fiware.org/ns/datamodels/Building`. The full link header syntax can be seen below:
 
 ```text
 Link: <https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
@@ -704,7 +706,7 @@ curl -G -X GET \
 
 #### Response:
 
-Because of the use of the `options=keyValues`, the response consists of JSON only without the attribute defintions
+Because of the use of the `options=keyValues`, the response consists of JSON only without the attribute definitions
 `type="Property"` or any _properties-of-properties_ elements. You can see that `Link` header from the request has been
 used as the `@context` returned in the response.
 
@@ -749,7 +751,7 @@ used as the `@context` returned in the response.
 
 ### Filter context data by comparing the values of an attribute
 
-This example returns all `Building` entiies with the `name` attribute _Checkpoint Markt_. Filtering can be done using
+This example returns all `Building` entities with the `name` attribute _Checkpoint Markt_. Filtering can be done using
 the `q` parameter - if a string has spaces in it, it can be URL encoded and held within single quote characters `'` =
 `%27`.
 
@@ -914,7 +916,7 @@ This example returns the data of all `Building` entities with a verified address
 of a _Property-of-a-Property_
 
 Metadata queries (i.e. Properties of Properties) are annotated using the dot syntax e.g. `q=address.verified==true`.
-This supercedes the `mq` parameter from NGSI v2.
+This supersedes the `mq` parameter from NGSI v2.
 
 #### :one::zero: Request:
 
