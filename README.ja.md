@@ -134,12 +134,12 @@ JSON-LD の背後にある基本概念を説明したビデオを見るには、
 
 **NGSI-LD** は、リンクト・データ (エンティティのリレーションシップ)、プロパティ・グラフ、およびセマンティクス (JSON-LD
 が提供する機能を利用) のサポートを改善するために修正された **NGSI v2** 情報モデルの進化です。この作業は ETSI ISG CIM
-イニシアチブの下で行われており、更新された仕様は 
+イニシアチブの下で行われており、更新された仕様は
 [NGSI-LD](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.01.01_60/gs_CIM009v010101p.pdf)
 としてブランド設定されています。NGSI-LD の主な構成要素は、_Entity_, _Property_ および _Relationship_ です。NGSI-LD
 エンティティ (インスタンス) は、プロパティまたはリレーションシップの対象になります。伝統的な NGSI v2 データ・モデルに
 関しては、プロパティは属性とその値の組み合わせと見なすことができます。リレーションシップは、リンクト・データを
-使用してインスタンス間の関連付けを確立することを可能にします。  
+使用してインスタンス間の関連付けを確立することを可能にします。
 
 <a name="ngsi-v2-data-model"></a>
 
@@ -189,7 +189,7 @@ _relationships-of-relationships_ など) を持つことができます :
 NGSI LD データ・エンティティ (スーパーマーケットなど) :
 
 -   一意でなければならない `id` を持っています。例えば `urn:ngsi-ld:Building:store001`
--   明確に定義されたデータ・モデルの完全修飾 URN であるべきである `type` を持ちます。例えば 
+-   明確に定義されたデータ・モデルの完全修飾 URN であるべきである `type` を持ちます。例えば
     `https://uri.fiware.org/ns/datamodels/Building`
 -   エンティティの _property_ を持ちます。例えば、店舗のアドレスを保持する `address` 属性です。これは
     `http://schema.org/address` に展開することができ、これは完全修飾名
@@ -748,7 +748,7 @@ Link: <https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld>; rel="
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
     -H 'Link: <https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
-    'http://localhost:1026/v2/entities' \
+    'http://localhost:1026/ngsi-ld/v1/entities' \
     -d 'type=Building' \
     -d 'options=keyValues'
 ```
@@ -810,7 +810,7 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
 
 ```console
 curl -G -X GET \
-    'http://localhost:1026/v2/entities' \
+    'http://localhost:1026/ngsi-ld/v1/entities' \
     -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -d 'type=Building' \
     -d 'q=name==%27Checkpoint%20Markt%27' \
@@ -869,7 +869,7 @@ curl -G -X GET \
 
 ```console
 curl -G -X GET \
-    'http://localhost:1026/v2/entities' \
+    'http://localhost:1026/ngsi-ld/v1/entities' \
     -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -d 'type=Building' \
     -d 'q=category==%27commercial%27,%27office%27 \
@@ -932,7 +932,7 @@ curl -G -X GET \
 
 ```console
 curl -G -X GET \
-    'http://localhost:1026/v2/entities' \
+    'http://localhost:1026/ngsi-ld/v1/entities' \
     -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -d 'type=Building' \
     -d 'q=address[addressLocality]==Kreuzberg' \
@@ -979,7 +979,7 @@ _Property-of-a-Property_ の例です
 
 ```console
 curl -G -X GET \
-    'http://localhost:1026/v2/entities' \
+    'http://localhost:1026/ngsi-ld/v1/entities' \
     -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -d 'type=Building' \
     -d 'mq=address.verified==true' \
@@ -1042,7 +1042,7 @@ geo-query は デフォルトで `location` 属性に適用されることに注
 
 ```console
 curl -G -X GET \
-  'http://localhost:1026/v2/entities' \
+  'http://localhost:1026/ngsi-ld/v1/entities' \
   -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
   -d 'type=Building' \
   -d 'geometry=Point' \
