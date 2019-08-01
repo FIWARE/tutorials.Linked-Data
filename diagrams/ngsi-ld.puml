@@ -25,12 +25,14 @@ object Relationship
 Relationship : id:URI 
 
 
-Entity -- Relationship : "has Relationship"
-Entity  -- Relationship : "has Object" 
-Entity  -- Property : "has Object" 
-Relationship  --- Relationship : "has Subject" 
-Property  --  Value : "has Value"
-Property ---  Relationship : "has Property"
-Property ---  Relationship : "has Relationship"
-Property  ---   Property : "has Subject"
+Entity -- Relationship : "⬇ has Relationship"
+Entity  -- Relationship : "⬆ has Object" 
+Entity  -- Property : "⬋ has Property" 
+Relationship  --- Relationship : "↩ has Relationship" 
+Property  --  Value : "⬇ has Value"
+Property ---  Relationship : "⬆ has Property"
+Property ---  Relationship : "⬊ has Relationship"
+Property  ---   Property : "↩ has Property"
 
+
+@enduml
