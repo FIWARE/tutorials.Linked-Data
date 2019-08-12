@@ -155,8 +155,8 @@ The NGSI LD data model is more complex, with more rigid definitions of use which
 ![](https://fiware.github.io/tutorials.Linked-Data/img/ngsi-ld.png)
 
 Once again, _entity_ can be considered to be the core element. Every entity must use a unique `id`
-which can be a URI, often a [URN](https://en.wikipedia.org/wiki/Uniform_resource_name), there is also a `type`, used to define the structure of the
-data held, which is also a URI. This URI should correspond to a well-defined data model which can be found on the web.
+which must be a URI, often a [URN](https://en.wikipedia.org/wiki/Uniform_resource_name), there is also a `type`, used to define the structure of the
+data held, which must also be a URI. This URI should correspond to a well-defined data model which can be found on the web.
 For example the URI `https://uri.fiware.org/ns/datamodels/Building` is used to define common data model for a
 [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html).
 
@@ -476,8 +476,8 @@ curl -iX POST \
         "value": "Checkpoint Markt"
     },
     "@context": [
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-        "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld"
+        "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }'
 ```
@@ -527,13 +527,14 @@ short names.
 ### Obtain entity data by FQN Type
 
 This example returns the data of all `Building` entities within the context data The `type` parameter is mandatory for
-NGSI-LD and is used to filter the response.
+NGSI-LD and is used to filter the response. The Accept HTTP header is needed to retrieve JSON-LD content. 
 
 #### :four: Request:
 
 ```console
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
+  -H 'Accept: application/ld+json' \
   -d 'type=https://uri.fiware.org/ns/datamodels/Building'
 ```
 
@@ -631,6 +632,7 @@ This example returns the data of `urn:ngsi-ld:Building:store001`
 ```console
 curl -G -X GET \
    'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Building:store001'
+   -H 'Accept: application/ld+json' \
 ```
 
 #### Response:
@@ -698,7 +700,7 @@ the resource in question. In the case of NGSI-LD, the metadata is a file of in `
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
     -H 'Link: <https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
-    'http://localhost:1026/ngsi-ld/v1/entities' \
+    -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'options=keyValues'
 ```
@@ -760,6 +762,7 @@ the `q` parameter - if a string has spaces in it, it can be URL encoded and held
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
     -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=name==%27Checkpoint%20Markt%27' \
     -d 'options=keyValues'
@@ -772,8 +775,8 @@ The `Link` header `https://schema.lab.fiware.org/ld/context` holds an array of `
 ```json
 {
     "@context": [
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-        "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld"
+        "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }
 ```
@@ -817,6 +820,7 @@ done using the `q` parameter, comma separating the acceptable values.
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
     -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=category==%27commercial%27,%27office%27 \
     -d 'options=keyValues'
@@ -878,6 +882,7 @@ Filtering can be done using the `q` parameter - sub-attributes are annotated usi
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
     -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=address[addressLocality]==Kreuzberg' \
     -d 'options=keyValues'
@@ -923,6 +928,7 @@ This supersedes the `mq` parameter from NGSI v2.
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
     -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Accept: application/json' \
     -d 'type=Building' \
     -d 'mq=address.verified==true' \
     -d 'options=keyValues'
@@ -986,6 +992,7 @@ If another attribute is to be used, an additional `geoproperty` parameter is req
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
   -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+  -H 'Accept: application/json' \
   -d 'type=Building' \
   -d 'geometry=Point' \
   -d 'coordinates=[13.3777,52.5162]' \
