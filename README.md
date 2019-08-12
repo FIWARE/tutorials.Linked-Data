@@ -155,13 +155,13 @@ The NGSI LD data model is more complex, with more rigid definitions of use which
 ![](https://fiware.github.io/tutorials.Linked-Data/img/ngsi-ld.png)
 
 Once again, _entity_ can be considered to be the core element. Every entity must use a unique `id`
-[URN](https://en.wikipedia.org/wiki/Uniform_resource_name), there is also a `type`, used to define the structure of the
-data held, which is also a URN. This URN should correspond to a well-defined data model which can be found on the web.
-For example the URN `https://uri.fiware.org/ns/datamodels/Building` is used to define common data model for a
+which can be a URI, often a [URN](https://en.wikipedia.org/wiki/Uniform_resource_name), there is also a `type`, used to define the structure of the
+data held, which is also a URI. This URI should correspond to a well-defined data model which can be found on the web.
+For example the URI `https://uri.fiware.org/ns/datamodels/Building` is used to define common data model for a
 [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html).
 
 _Entities_ can have _properties_ and _relationships_. Ideally the name of each _property_ should also be a well defined
-URN which corresponds to a common concept found across the web (e.g. `http://schema.org/address` is a common URN for the
+URI which corresponds to a common concept found across the web (e.g. `http://schema.org/address` is a common URI for the
 physical address of an item). The _property_ will also have a value which will reflect the state of that property (e.g.
 `name="Checkpoint Markt"`). Finally a property may itself have further properties (a.k.a. _properties-of-properties_)
 which reflect further information about the property itself. Properties and relationships may in turn have a linked
@@ -171,8 +171,8 @@ _relationships-of-relationships_ etc.) which lead to the following:
 An NGSI LD Data Entity (e.g. a supermarket):
 
 -   Has an `id` which must be unique. For example `urn:ngsi-ld:Building:store001`,
--   Has `type` which should be a fully qualified URN of a well defined data model. For example
-    `https://uri.fiware.org/ns/datamodels/Building`
+-   Has `type` which should be a fully qualified URI of a well defined data model. For example
+    `https://uri.fiware.org/ns/datamodels/Building`. Authors can also use type names, as short hand strings for types, mapped to fully qualified URIs through the JSON-LD @context. 
 -   Has _property_ of the entity, for example, an `address` attribute which holds the address of the store. This can be
     expanded into `http://schema.org/address`, which is known as a fully qualified name
     ([FQN](https://en.wikipedia.org/wiki/Fully_qualified_name)).
@@ -348,8 +348,8 @@ the following `@context` would be required
     "type": "Building",
     ...  other data attributes
     "@context": [
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-        "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld"
+      "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld",
+      "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }
 ```
@@ -357,7 +357,7 @@ the following `@context` would be required
 ### Core Context
 
 [https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld)
-refers to the Core `@context` of NSGI-LD, this defines element such as `id` and `type` which are common to all NGSI
+refers to the Core `@context` of NSGI-LD, this defines terms such as `id` and `type` which are common to all NGSI
 entities, as well as defining terms such as `Property` and `Relationship`. The core context is so fundamental to
 NGSI-LD, that it is added by default to any `@context` sent to a request.
 
@@ -427,8 +427,8 @@ curl -iX POST \
         "value": "Bösebrücke Einkauf"
     },
     "@context": [
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-        "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld"
+        "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }'
 ```
