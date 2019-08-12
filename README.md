@@ -936,7 +936,7 @@ curl -G -X GET \
 
 #### Response:
 
-Because of the use of the `options=keyValues`, the response consists of JSON only without the attribute `type` and
+Because of the use of the `options=keyValues` together with the Accept HTTP header, the response consists of JSON only without the attribute `type` and
 `metadata` elements.
 
 ```json
@@ -1002,7 +1002,7 @@ curl -G -X GET \
 
 #### Response:
 
-Because of the use of the `options=keyValues`, the response consists of JSON only without the attribute `type` and
+Because of the use of the `options=keyValues` together with the Accept HTTP header, the response consists of JSON only without the attribute `type` and
 `metadata` elements.
 
 ```json
