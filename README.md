@@ -374,7 +374,7 @@ summary of the FQNs related to **Building** can be seen below:
         "Building": "https://uri.fiware.org/ns/datamodels#Building",
         ... etc
         "address": "http://schema.org/address",
-        "category": "https://uri.fiware.org/ns/datamodels/category",
+        "category": "https://uri.fiware.org/ns/datamodels#category",
         "location": "http://uri.etsi.org/ngsi-ld/location",
         "name": "http://schema.org/name",
         ...etc
@@ -547,7 +547,7 @@ expanded whenever possible.
 -   `id`, `type` and `location` are defined in the core context and are not expanded.
 -   `address` has been mapped to `http://schema.org/address`
 -   `name` has been mapped to `http://schema.org/name`
--   `category` has been mapped to `https://uri.fiware.org/ns/datamodels/category`
+-   `category` has been mapped to `https://uri.fiware.org/ns/datamodels#category`
 
 Note that if an attribute has not been not associated to an FQN when the entity was created, the short name will
 **always** be displayed.
