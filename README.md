@@ -157,7 +157,7 @@ The NGSI LD data model is more complex, with more rigid definitions of use which
 Once again, _entity_ can be considered to be the core element. Every entity must use a unique `id`
 which must be a URI, often a [URN](https://en.wikipedia.org/wiki/Uniform_resource_name), there is also a `type`, used to define the structure of the
 data held, which must also be a URI. This URI should correspond to a well-defined data model which can be found on the web.
-For example the URI `https://uri.fiware.org/ns/datamodels/Building` is used to define common data model for a
+For example the URI `https://uri.fiware.org/ns/datamodels#Building` is used to define common data model for a
 [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html).
 
 _Entities_ can have _properties_ and _relationships_. Ideally the name of each _property_ should also be a well defined
@@ -172,7 +172,7 @@ An NGSI LD Data Entity (e.g. a supermarket):
 
 -   Has an `id` which must be unique. For example `urn:ngsi-ld:Building:store001`,
 -   Has `type` which should be a fully qualified URI of a well defined data model. For example
-    `https://uri.fiware.org/ns/datamodels/Building`. Authors can also use type names, as short hand strings for types, mapped to fully qualified URIs through the JSON-LD @context. 
+    `https://uri.fiware.org/ns/datamodels#Building`. Authors can also use type names, as short hand strings for types, mapped to fully qualified URIs through the JSON-LD @context. 
 -   Has _property_ of the entity, for example, an `address` attribute which holds the address of the store. This can be
     expanded into `http://schema.org/address`, which is known as a fully qualified name
     ([FQN](https://en.wikipedia.org/wiki/Fully_qualified_name)).
@@ -371,7 +371,7 @@ summary of the FQNs related to **Building** can be seen below:
 ```json
 {
     "@context": {
-        "Building": "https://uri.fiware.org/ns/datamodels/Building",
+        "Building": "https://uri.fiware.org/ns/datamodels#Building",
         ... etc
         "address": "http://schema.org/address",
         "category": "https://uri.fiware.org/ns/datamodels/category",
@@ -486,7 +486,7 @@ curl -iX POST \
 
 The attributes `id` and `type` should be familiar to anyone who has used NSGI v2, and these have not changed. As
 mentioned above, the type should refer to an included data model, in this case `Building` is being used as a short name
-for the included URN `https://uri.fiware.org/ns/datamodels/Building`. Thereafter each _property_ is defined as a JSON
+for the included URN `https://uri.fiware.org/ns/datamodels#Building`. Thereafter each _property_ is defined as a JSON
 element containing two attributes, a `type` and a `value`.
 
 The `type` of a _property_ attribute must be one of the following:
@@ -535,7 +535,7 @@ NGSI-LD and is used to filter the response. The Accept HTTP header is needed to 
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
   -H 'Accept: application/ld+json' \
-  -d 'type=https://uri.fiware.org/ns/datamodels/Building'
+  -d 'type=https://uri.fiware.org/ns/datamodels#Building'
 ```
 
 #### Response:
@@ -556,7 +556,7 @@ Note that if an attribute has not been not associated to an FQN when the entity 
 [
     {
         "id": "urn:ngsi-ld:Building:store001",
-        "type": "https://uri.fiware.org/ns/datamodels/Building",
+        "type": "https://uri.fiware.org/ns/datamodels#Building",
         "http://schema.org/address": {
             "type": "Property",
             "value": {
@@ -574,7 +574,7 @@ Note that if an attribute has not been not associated to an FQN when the entity 
             "type": "Property",
             "value": "Bösebrücke Einkauf"
         },
-        "https://uri.fiware.org/ns/datamodels/category": {
+        "https://uri.fiware.org/ns/datamodels#category": {
             "type": "Property",
             "value": ["commercial"]
         },
@@ -589,7 +589,7 @@ Note that if an attribute has not been not associated to an FQN when the entity 
     },
     {
         "id": "urn:ngsi-ld:Building:store002",
-        "type": "https://uri.fiware.org/ns/datamodels/Building",
+        "type": "https://uri.fiware.org/ns/datamodels#Building",
         "http://schema.org/address": {
             "type": "Property",
             "value": {
@@ -607,7 +607,7 @@ Note that if an attribute has not been not associated to an FQN when the entity 
             "type": "Property",
             "value": "Checkpoint Markt"
         },
-        "https://uri.fiware.org/ns/datamodels/category": {
+        "https://uri.fiware.org/ns/datamodels#category": {
             "type": "Property",
             "value": ["commercial"]
         },
@@ -644,7 +644,7 @@ expanded whenever possible.
 ```json
 {
     "id": "urn:ngsi-ld:Building:store001",
-    "type": "https://uri.fiware.org/ns/datamodels/Building",
+    "type": "https://uri.fiware.org/ns/datamodels#Building",
     "http://schema.org/address": {
         "type": "Property",
         "value": {
@@ -662,7 +662,7 @@ expanded whenever possible.
         "type": "Property",
         "value": "Bösebrücke Einkauf"
     },
-    "https://uri.fiware.org/ns/datamodels/category": {
+    "https://uri.fiware.org/ns/datamodels#category": {
         "type": "Property",
         "value": ["commercial"]
     },
@@ -699,7 +699,7 @@ the resource in question. In the case of NGSI-LD, the metadata is a file of in `
 ```console
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+    -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'options=keyValues'
@@ -728,7 +728,7 @@ used as the `@context` returned in the response.
             "type": "Point",
             "coordinates": [13.3986, 52.5547]
         },
-        "@context": "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld"
+        "@context": "https://schema.lab.fiware.org/ld/context"
     },
     {
         "id": "urn:ngsi-ld:Building:store002",
@@ -745,7 +745,7 @@ used as the `@context` returned in the response.
             "type": "Point",
             "coordinates": [13.3903, 52.5075]
         },
-        "@context": "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld"
+        "@context": "https://schema.lab.fiware.org/ld/context"
     }
 ]
 ```
@@ -936,7 +936,7 @@ curl -G -X GET \
 
 #### Response:
 
-Because of the use of the `options=keyValues` together with the Accept HTTP header, the response consists of JSON only without the attribute `type` and
+Because of the use of the `options=keyValues` together with the Accept HTTP header (`application/json`), the response consists of JSON only without the attribute `type` and
 `metadata` elements.
 
 ```json
@@ -1002,7 +1002,7 @@ curl -G -X GET \
 
 #### Response:
 
-Because of the use of the `options=keyValues` together with the Accept HTTP header, the response consists of JSON only without the attribute `type` and
+Because of the use of the `options=keyValues` together with the Accept HTTP header (`application/json`), the response consists of JSON only without the attribute `type` and
 `metadata` elements.
 
 ```json
