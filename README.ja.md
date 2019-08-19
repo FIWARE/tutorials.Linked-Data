@@ -3,7 +3,7 @@
 [![FIWARE Core Context Management](https://nexus.lab.fiware.org/repository/raw/public/badges/chapters/core.svg)](https://github.com/FIWARE/catalogue/blob/master/core/README.md)
 [![License: MIT](https://img.shields.io/github/license/fiware/tutorials.Linked-Data.svg)](https://opensource.org/licenses/MIT)
 [![Support badge](https://nexus.lab.fiware.org/repository/raw/public/badges/stackoverflow/fiware.svg)](https://stackoverflow.com/questions/tagged/fiware)
-[![NGSI LD](https://img.shields.io/badge/NGSI-Linked_Data-red.svg)](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/004/01.01.01_60/gs_CIM004v010101p.pdf)
+[![NGSI LD](https://img.shields.io/badge/NGSI-Linked_Data-red.svg)](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.01.01_60/gs_CIM009v010101p.pdf)
 <br/> [![Documentation](https://img.shields.io/readthedocs/fiware-tutorials.svg)](https://fiware-tutorials.rtfd.io)
 
 <!-- prettier-ignore -->
@@ -174,7 +174,7 @@ NGSI LD データ・モデルはより複雑で、ナビゲート可能なナレ
 繰り返しになりますが、_entity_ はコア要素と見なすことができます。すべてのエンティティは一意の `id`
 [URN](https://en.wikipedia.org/wiki/Uniform_resource_name) を使用しなければなりません。保持されているデータの構造を
 定義するために使用される `type` もあります。これは URN でもあります。この URN は、Web 上にある明確なデータ・モデルに
-対応している必要があります。例えば、URN の `https://uri.fiware.org/ns/datamodels/Building` は
+対応している必要があります。例えば、URN の `https://uri.fiware.org/ns/datamodels#Building` は
 [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html) のための共通の
 データ・モデルを定義するために使われます。
 
@@ -190,7 +190,7 @@ NGSI LD データ・エンティティ (スーパーマーケットなど) :
 
 -   一意でなければならない `id` を持っています。例えば `urn:ngsi-ld:Building:store001`
 -   明確に定義されたデータ・モデルの完全修飾 URN であるべきである `type` を持ちます。例えば
-    `https://uri.fiware.org/ns/datamodels/Building`
+    `https://uri.fiware.org/ns/datamodels#Building`
 -   エンティティの _property_ を持ちます。例えば、店舗のアドレスを保持する `address` 属性です。これは
     `http://schema.org/address` に展開することができ、これは完全修飾名
     ([FQN](https://en.wikipedia.org/wiki/Fully_qualified_name)) として知られています
@@ -381,8 +381,8 @@ FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Bu
     "type": "Building",
     ...  other data attributes
     "@context": [
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-        "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld"
+        "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }
 ```
@@ -408,7 +408,7 @@ FIWARE Foundation によって定義されたすべての[データモデル](ht
 ```json
 {
     "@context": {
-        "Building": "https://uri.fiware.org/ns/datamodels/Building",
+        "Building": "https://uri.fiware.org/ns/datamodels#Building",
         ... etc
         "address": "http://schema.org/address",
         "category": "https://uri.fiware.org/ns/datamodels/category",
@@ -464,8 +464,8 @@ curl -iX POST \
         "value": "Bösebrücke Einkauf"
     },
     "@context": [
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-        "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld"
+        "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }'
 ```
@@ -513,8 +513,8 @@ curl -iX POST \
         "value": "Checkpoint Markt"
     },
     "@context": [
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-        "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld"
+        "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }'
 ```
@@ -525,7 +525,7 @@ curl -iX POST \
 
 `id` と `type` 属性は NSGI v2 を使ったことのある人なら誰でも知っているはずで、これらは変わっていません。上記のように、
 タイプはインクルードされたデータ・モデルを参照するべきです、この場合 `Building` はインクルードされた
-URN `https://uri.fiware.org/ns/datamodels/Building` の短い名前として使われています。その後、各 _property_ は2つの属性、
+URN `https://uri.fiware.org/ns/datamodels#Building` の短い名前として使われています。その後、各 _property_ は2つの属性、
 `type` と `value` を含む JSON 要素として定義されます。
 
 _property_ 属性の `type` は以下のいずれかでなければなりません :
@@ -581,7 +581,7 @@ _Properties-of-Properties_ (プロパティのプロパティ) は、メタデ�
 ```console
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
-  -d 'type=https://uri.fiware.org/ns/datamodels/Building'
+  -d 'type=https://uri.fiware.org/ns/datamodels#Building'
 ```
 
 #### レスポンス :
@@ -592,7 +592,7 @@ curl -G -X GET \
 -   `id`, `type` and `location` はコア・コンテキストで定義されており、展開されません
 -   `address` は `http://schema.org/address` にマッピングされました
 -   `name` は `http://schema.org/name` にマッピングされました
--   `category` は `https://uri.fiware.org/ns/datamodels/category` にマッピングされました
+-   `category` は `https://uri.fiware.org/ns/datamodels#category` にマッピングされました
 
 エンティティの作成時に属性が FQN に関連付けられていない場合は、短い名前が**常**に表示されます。
 
@@ -600,7 +600,7 @@ curl -G -X GET \
 [
     {
         "id": "urn:ngsi-ld:Building:store001",
-        "type": "https://uri.fiware.org/ns/datamodels/Building",
+        "type": "https://uri.fiware.org/ns/datamodels#Building",
         "http://schema.org/address": {
             "type": "Property",
             "value": {
@@ -618,7 +618,7 @@ curl -G -X GET \
             "type": "Property",
             "value": "Bösebrücke Einkauf"
         },
-        "https://uri.fiware.org/ns/datamodels/category": {
+        "https://uri.fiware.org/ns/datamodels#category": {
             "type": "Property",
             "value": ["commercial"]
         },
@@ -633,7 +633,7 @@ curl -G -X GET \
     },
     {
         "id": "urn:ngsi-ld:Building:store002",
-        "type": "https://uri.fiware.org/ns/datamodels/Building",
+        "type": "https://uri.fiware.org/ns/datamodels#Building",
         "http://schema.org/address": {
             "type": "Property",
             "value": {
@@ -689,7 +689,7 @@ curl -G -X GET \
 ```json
 {
     "id": "urn:ngsi-ld:Building:store001",
-    "type": "https://uri.fiware.org/ns/datamodels/Building",
+    "type": "https://uri.fiware.org/ns/datamodels#Building",
     "http://schema.org/address": {
         "type": "Property",
         "value": {
@@ -731,7 +731,7 @@ curl -G -X GET \
 返します。`type` パラメータの使用は `Building` エンティティのみにレスポンスを制限します、`options=keyValues`
 クエリパラメータの使用はレスポンスを標準の JSON-LD まで減らします。
 
-短い形式の `type="Building"` を FQN `https://uri.fiware.org/ns/datamodels/Building` に関連付けるために
+短い形式の `type="Building"` を FQN `https://uri.fiware.org/ns/datamodels#Building` に関連付けるために
 [`Link` ヘッダ](https://www.w3.org/wiki/LinkHeader) を供給しなければなりません。
 フル・リンク・ヘッダの構文は次のとおりです :
 

@@ -154,11 +154,11 @@ The NGSI LD data model is more complex, with more rigid definitions of use which
 
 ![](https://fiware.github.io/tutorials.Linked-Data/img/ngsi-ld.png)
 
-Once again, _entity_ can be considered to be the core element. Every entity must use a unique `id`
-which must be a URI, often a [URN](https://en.wikipedia.org/wiki/Uniform_resource_name), there is also a `type`, used to define the structure of the
-data held, which must also be a URI. This URI should correspond to a well-defined data model which can be found on the web.
-For example the URI `https://uri.fiware.org/ns/datamodels#Building` is used to define common data model for a
-[Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html).
+Once again, _entity_ can be considered to be the core element. Every entity must use a unique `id` which must be a URI,
+often a [URN](https://en.wikipedia.org/wiki/Uniform_resource_name), there is also a `type`, used to define the structure
+of the data held, which must also be a URI. This URI should correspond to a well-defined data model which can be found
+on the web. For example the URI `https://uri.fiware.org/ns/datamodels#Building` is used to define common data model for
+a [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html).
 
 _Entities_ can have _properties_ and _relationships_. Ideally the name of each _property_ should also be a well defined
 URI which corresponds to a common concept found across the web (e.g. `http://schema.org/address` is a common URI for the
@@ -172,7 +172,8 @@ An NGSI LD Data Entity (e.g. a supermarket):
 
 -   Has an `id` which must be unique. For example `urn:ngsi-ld:Building:store001`,
 -   Has `type` which should be a fully qualified URI of a well defined data model. For example
-    `https://uri.fiware.org/ns/datamodels#Building`. Authors can also use type names, as short hand strings for types, mapped to fully qualified URIs through the JSON-LD @context. 
+    `https://uri.fiware.org/ns/datamodels#Building`. Authors can also use type names, as short hand strings for types,
+    mapped to fully qualified URIs through the JSON-LD `@context`.
 -   Has _property_ of the entity, for example, an `address` attribute which holds the address of the store. This can be
     expanded into `http://schema.org/address`, which is known as a fully qualified name
     ([FQN](https://en.wikipedia.org/wiki/Fully_qualified_name)).
@@ -528,7 +529,7 @@ short names.
 ### Obtain entity data by FQN Type
 
 This example returns the data of all `Building` entities within the context data The `type` parameter is mandatory for
-NGSI-LD and is used to filter the response. The Accept HTTP header is needed to retrieve JSON-LD content. 
+NGSI-LD and is used to filter the response. The Accept HTTP header is needed to retrieve JSON-LD content.
 
 #### :four: Request:
 
@@ -937,8 +938,8 @@ curl -G -X GET \
 
 #### Response:
 
-Because of the use of the `options=keyValues` together with the Accept HTTP header (`application/json`), the response consists of JSON only without the attribute `type` and
-`metadata` elements.
+Because of the use of the `options=keyValues` together with the Accept HTTP header (`application/json`), the response
+consists of JSON only without the attribute `type` and `metadata` elements.
 
 ```json
 [
@@ -1003,8 +1004,8 @@ curl -G -X GET \
 
 #### Response:
 
-Because of the use of the `options=keyValues` together with the Accept HTTP header (`application/json`), the response consists of JSON only without the attribute `type` and
-`metadata` elements.
+Because of the use of the `options=keyValues` together with the Accept HTTP header (`application/json`), the response
+consists of JSON only without the attribute `type` and `metadata` elements.
 
 ```json
 [
