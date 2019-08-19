@@ -633,8 +633,8 @@ This example returns the data of `urn:ngsi-ld:Building:store001`
 
 ```console
 curl -G -X GET \
-   'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Building:store001'
    -H 'Accept: application/ld+json' \
+   'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Building:store001'
 ```
 
 #### Response:
