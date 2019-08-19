@@ -3,7 +3,7 @@
 [![FIWARE Core Context Management](https://nexus.lab.fiware.org/repository/raw/public/badges/chapters/core.svg)](https://github.com/FIWARE/catalogue/blob/master/core/README.md)
 [![License: MIT](https://img.shields.io/github/license/fiware/tutorials.Linked-Data.svg)](https://opensource.org/licenses/MIT)
 [![Support badge](https://nexus.lab.fiware.org/repository/raw/public/badges/stackoverflow/fiware.svg)](https://stackoverflow.com/questions/tagged/fiware)
-[![NGSI LD](https://img.shields.io/badge/NGSI-linked_data-red.svg)](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/004/01.01.01_60/gs_CIM004v010101p.pdf)
+[![NGSI LD](https://img.shields.io/badge/NGSI-Linked_Data-red.svg)](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/004/01.01.01_60/gs_CIM004v010101p.pdf)
 <br/> [![Documentation](https://img.shields.io/readthedocs/fiware-tutorials.svg)](https://fiware-tutorials.rtfd.io)
 
 <!-- prettier-ignore -->
@@ -401,8 +401,8 @@ FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Bu
 ### FIWARE データ・モデル
 
 [https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld](https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld)
-は、FIWARE が提供する標準データ・モデルの定義を指します。これを `@context` に追加すると、FIWARE Foundation によって定義されたすべての
-[データモデル](https://fiware-datamodels.readthedocs.io)の定義が読み込まれます。
+は、FIWARE が提供する標準データ・モデルの定義を指します。これを `@context` に追加すると、GSMA や TM Forum のような他の組織と共同で、
+FIWARE Foundation によって定義されたすべての[データモデル](https://fiware-datamodels.readthedocs.io)の定義が読み込まれます。
 **Building** に関連する FQNs の概要は以下のようになります :
 
 ```json
@@ -533,10 +533,10 @@ _property_ 属性の `type` は以下のいずれかでなければなりませ�
 -   `"GeoProperty"`: ロケーション については`"http://uri.etsi.org/ngsi-ld/GeoProperty"`。
     [GeoJSON 形式](https://tools.ietf.org/html/rfc7946)で経度と緯度のペアとして指定する必要があります。
    プライマリ・ロケーション属性の推奨名は `location` です
--   `"TemporalProperty"`: 時間ベースの値については `"http://uri.etsi.org/ngsi-ld/TemporalProperty"`。
-    時間プロパティ (Temporal properties) は、[ISO 8601形式](https://en.wikipedia.org/wiki/ISO_8601) にエンコードされた
-    Date, Time または DateTime 文字列でなければなりません。例えば `YYYY-MM-DDThh:mm:ssZ`
--   `"Property"`: `"http://uri.etsi.org/ngsi-ld/Property"` - その他すべて
+-   `"Property"`: `"http://uri.etsi.org/ngsi-ld/Property"` - 他のすべてのものについては。
+-   時間ベースの値の場合、`"Property"` も使用されますが、プロパティ値は、
+    [ISO 8601形式](https://en.wikipedia.org/wiki/ISO_8601) にエンコードされた Date, Time または DateTime
+    文字列でなければなりません。例えば `YYYY-MM-DDThh:mm:ssZ`
 
 > **注 :** 簡単にするために、このデータ・エンティティには定義されたリレーションシップはありません。リレーションシップは
 > `type="Relationship` で与えられなければなりません。リレーションシップは次のチュートリアルで議論されます。

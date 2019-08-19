@@ -7,8 +7,8 @@
 <br/> [![Documentation](https://img.shields.io/readthedocs/fiware-tutorials.svg)](https://fiware-tutorials.rtfd.io)
 
 This tutorial introduces linked data concepts to the FIWARE Platform. The supermarket chain’s store finder application
-is recreated using **NGSI-LD** and the differences between the **NSGI v2** and **NGSI-LD** interfaces are highlighted and
-discussed. The tutorial is a direct analogue of the original getting started tutorial but uses API calls from the
+is recreated using **NGSI-LD** and the differences between the **NSGI v2** and **NGSI-LD** interfaces are highlighted
+and discussed. The tutorial is a direct analogue of the original getting started tutorial but uses API calls from the
 **NGSI-LD** interface.
 
 The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also available as
@@ -365,8 +365,9 @@ NGSI-LD, that it is added by default to any `@context` sent to a request.
 
 [https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld](https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld)
 refers to the definition of standard data models supplied by FIWARE. Adding this to the `@context` will load the
-definitions of all the [data models](https://fiware-datamodels.readthedocs.io) defined by the FIWARE Foundation in collaboration with other organizations such as GSMA or TM Forum, a
-summary of the FQNs related to **Building** can be seen below:
+definitions of all the [data models](https://fiware-datamodels.readthedocs.io) defined by the FIWARE Foundation in
+collaboration with other organizations such as GSMA or TM Forum, a summary of the FQNs related to **Building** can be
+seen below:
 
 ```json
 {
@@ -495,8 +496,8 @@ The `type` of a _property_ attribute must be one of the following:
     Longitude-Latitude pairs in [GeoJSON format](https://tools.ietf.org/html/rfc7946). The preferred name for the
     primary location attribute is `location`
 -   `"Property"`: `"http://uri.etsi.org/ngsi-ld/Property"` - for everything else.
--   For time-based values, `"Property"` shall be used as well, but the property value should be Date, Time or DateTime strings encoded in the [ISO 8601 format](https://en.wikipedia.org/wiki/ISO_8601) - e.g.
-    `YYYY-MM-DDThh:mm:ssZ`
+-   For time-based values, `"Property"` shall be used as well, but the property value should be Date, Time or DateTime
+    strings encoded in the [ISO 8601 format](https://en.wikipedia.org/wiki/ISO_8601) - e.g. `YYYY-MM-DDThh:mm:ssZ`
 
 > **Note:** that for simplicity, this data entity has no relationships defined. Relationships must be given the
 > `type="Relationship`. Relationships will be discussed in a subsequent tutorial.
