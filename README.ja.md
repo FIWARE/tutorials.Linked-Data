@@ -581,6 +581,7 @@ _Properties-of-Properties_ (プロパティのプロパティ) は、メタデ�
 ```console
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
+  -H 'Accept: application/ld+json' \
   -d 'type=https://uri.fiware.org/ns/datamodels#Building'
 ```
 
@@ -677,6 +678,7 @@ curl -G -X GET \
 
 ```console
 curl -G -X GET \
+   -H 'Accept: application/ld+json' \
    'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Building:store001'
 ```
 
@@ -749,6 +751,7 @@ curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
     -H 'Link: <https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     'http://localhost:1026/ngsi-ld/v1/entities' \
+    -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'options=keyValues'
 ```
@@ -812,6 +815,7 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
     -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=name==%27Checkpoint%20Markt%27' \
     -d 'options=keyValues'
@@ -871,6 +875,7 @@ curl -G -X GET \
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
     -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=category==%27commercial%27,%27office%27 \
     -d 'options=keyValues'
@@ -934,6 +939,7 @@ curl -G -X GET \
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
     -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=address[addressLocality]==Kreuzberg' \
     -d 'options=keyValues'
@@ -981,6 +987,7 @@ _Property-of-a-Property_ の例です
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
     -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'mq=address.verified==true' \
     -d 'options=keyValues'
@@ -1044,6 +1051,7 @@ geo-query は デフォルトで `location` 属性に適用されることに注
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
   -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+  -H 'Accept: application/ld+json' \
   -d 'type=Building' \
   -d 'geometry=Point' \
   -d 'coordinates=[13.3777,52.5162]' \

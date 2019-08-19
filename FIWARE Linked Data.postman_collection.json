@@ -97,6 +97,11 @@
 						"type": "text",
 						"value": "<https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
 						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/ld+json",
+						"type": "text"
 					}
 				],
 				"url": {
@@ -125,7 +130,13 @@
 			"name": "Obtain Entity Data by id",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/ld+json",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "http://{{orion}}/ngsi-ld/v1/entities/urn:ngsi-ld:Building:store001",
 					"protocol": "http",
@@ -166,6 +177,12 @@
 						"key": "Link",
 						"type": "text",
 						"value": "<https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+					},
+					{
+						"key": "Accept",
+						"value": "application/ld+json",
+						"type": "text",
+						"name": "Accept"
 					}
 				],
 				"url": {
@@ -204,6 +221,12 @@
 						"key": "Link",
 						"type": "text",
 						"value": "<https://schema.lab.fiware.org/ld/context>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+					},
+					{
+						"key": "Accept",
+						"value": "application/ld+json",
+						"type": "text",
+						"name": "Accept"
 					}
 				],
 				"url": {
@@ -247,6 +270,12 @@
 						"key": "Link",
 						"type": "text",
 						"value": "<https://schema.lab.fiware.org/ld/context>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+					},
+					{
+						"key": "Accept",
+						"value": "application/ld+json",
+						"type": "text",
+						"name": "Accept"
 					}
 				],
 				"url": {
@@ -290,6 +319,11 @@
 						"key": "Link",
 						"type": "text",
 						"value": "<https://schema.lab.fiware.org/ld/context>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+					},
+					{
+						"key": "Accept",
+						"value": "application/ld+json",
+						"type": "text"
 					}
 				],
 				"url": {
@@ -333,6 +367,11 @@
 						"key": "Link",
 						"type": "text",
 						"value": "<https://schema.lab.fiware.org/ld/context>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+					},
+					{
+						"key": "Accept",
+						"value": "application/ld+json",
+						"type": "text"
 					}
 				],
 				"url": {
@@ -376,6 +415,11 @@
 						"key": "Link",
 						"type": "text",
 						"value": "<https://schema.lab.fiware.org/ld/context>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+					},
+					{
+						"key": "Accept",
+						"value": "application/ld+json",
+						"type": "text"
 					}
 				],
 				"url": {
@@ -443,7 +487,7 @@
 	],
 	"variable": [
 		{
-			"id": "41845674-5f4e-43a4-ace1-aa059dc3f136",
+			"id": "1960b27f-94a1-421a-8d22-62d7930dfaed",
 			"key": "orion",
 			"value": "localhost:1026",
 			"type": "string"
