@@ -327,7 +327,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://{{orion}}/ngsi-ld/v1/entities/?type=Building&q=address[addressLocality]==Kreuzberg&options=keyValues",
+					"raw": "http://{{orion}}/ngsi-ld/v1/entities/?type=Building&q=address[addressLocality]==\"Kreuzberg\"&options=keyValues",
 					"protocol": "http",
 					"host": [
 						"{{orion}}"
@@ -345,7 +345,7 @@
 						},
 						{
 							"key": "q",
-							"value": "address[addressLocality]==Kreuzberg"
+							"value": "address[addressLocality]==\"Kreuzberg\""
 						},
 						{
 							"key": "options",
@@ -487,7 +487,7 @@
 	],
 	"variable": [
 		{
-			"id": "2ef12dec-1fad-4124-9db0-8bd0be51799a",
+			"id": "74c62da3-e9cb-4458-b373-776079d6276f",
 			"key": "orion",
 			"value": "localhost:1026",
 			"type": "string"

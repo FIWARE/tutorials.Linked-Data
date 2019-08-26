@@ -931,7 +931,7 @@ curl -G -X GET \
 この例では、Kreuzberg (クロイツベルク) 地区にあるすべての店舗を返します。
 
 フィルタリングは `q` パラメータを使って行うことができます。サブ属性はブラケット構文を使って注釈を付けられます。
-例えば `q=address[addressLocality]==Kreuzberg`。これは、ドット・シンタックスが使用されていた NGSI v2 とは異なります。
+例えば `q=address[addressLocality]=="Kreuzberg"`。これは、ドット・シンタックスが使用されていた NGSI v2 とは異なります。
 
 #### :nine: リクエスト :
 
@@ -941,7 +941,7 @@ curl -G -X GET \
     -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
-    -d 'q=address[addressLocality]==Kreuzberg' \
+    -d 'q=address[addressLocality]==%22Kreuzberg%22' \
     -d 'options=keyValues'
 ```
 
