@@ -230,7 +230,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://{{orion}}/ngsi-ld/v1/entities/?type=Building&q=name=='Checkpoint Markt'&options=keyValues",
+					"raw": "http://{{orion}}/ngsi-ld/v1/entities/?type=Building&q=name==\"Checkpoint Markt\"&options=keyValues",
 					"protocol": "http",
 					"host": [
 						"{{orion}}"
@@ -248,7 +248,7 @@
 						},
 						{
 							"key": "q",
-							"value": "name=='Checkpoint Markt'"
+							"value": "name==\"Checkpoint Markt\""
 						},
 						{
 							"key": "options",
@@ -279,7 +279,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://{{orion}}/ngsi-ld/v1/entities/?type=Building&q=category=='commercial','office'&options=keyValues",
+					"raw": "http://{{orion}}/ngsi-ld/v1/entities/?type=Building&q=category==\"commercial\",\"office\"&options=keyValues",
 					"protocol": "http",
 					"host": [
 						"{{orion}}"
@@ -297,7 +297,7 @@
 						},
 						{
 							"key": "q",
-							"value": "category=='commercial','office'"
+							"value": "category==\"commercial\",\"office\""
 						},
 						{
 							"key": "options",
@@ -487,7 +487,7 @@
 	],
 	"variable": [
 		{
-			"id": "1960b27f-94a1-421a-8d22-62d7930dfaed",
+			"id": "2ef12dec-1fad-4124-9db0-8bd0be51799a",
 			"key": "orion",
 			"value": "localhost:1026",
 			"type": "string"

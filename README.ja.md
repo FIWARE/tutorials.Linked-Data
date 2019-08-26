@@ -806,7 +806,7 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
 ### 属性値を比較してコンテキスト・データをフィルタ
 
 この例は `name` 属性 _Checkpoint Markt_ を持つ全ての `Building` エンティティを返します。フィルタリングは `q`
-パラメータを使って行うことができます。文字列がスペースを含む場合、それは URL エンコードされ、単一引用符 `'` = `%27`
+パラメータを使って行うことができます。文字列がスペースを含む場合、それは URL エンコードされ、単一引用符 `"` = `%22`
 の中に保持されます。
 
 #### :seven: リクエスト :
@@ -817,7 +817,7 @@ curl -G -X GET \
     -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
-    -d 'q=name==%27Checkpoint%20Markt%27' \
+    -d 'q=name==%22Checkpoint%20Markt%22' \
     -d 'options=keyValues'
 ```
 
@@ -877,7 +877,7 @@ curl -G -X GET \
     -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
-    -d 'q=category==%27commercial%27,%27office%27 \
+    -d 'q=category==%22commercial%22,%22office%22 \
     -d 'options=keyValues'
 ```
 
