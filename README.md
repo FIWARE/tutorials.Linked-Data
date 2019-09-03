@@ -66,7 +66,7 @@ The introduction to FIWARE [Getting Started tutorial](https://github.com/FIWARE/
 the [NSGI v2](https://fiware.github.io/specifications/OpenAPI/ngsiv2) interface that is commonly used to create and
 manipulate context data entities. An evolution of that interface has created a supplementary specification called
 [NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/spec/updated/full_api.json)
-as a mechanism to enhance context data entities though adding the concept of **linked data**. This tutorial will
+as a mechanism to enhance context data entities through adding the concept of **linked data**. This tutorial will
 introduce the background of the ideas behind the new interface and compare and contrast how to create and manipulate
 data entities as linked data.
 
@@ -338,7 +338,7 @@ work with the requests defined below.
 When creating linked data entities, it is important to use common data models. This will allow us to easily combine data
 from multiple sources and remove ambiguity when comparing data coming from different sources.
 
-Creating linked data using full qualified names throughout would be painful, as each attribute would need to be a URN,
+Creating linked data using fully qualified names throughout would be painful, as each attribute would need to be a URI,
 so JSON-LD introduces the idea of an `@context` attribute which can hold pointers to context definitions. To add a
 FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html) data entity,
 the following `@context` would be required
@@ -367,7 +367,7 @@ NGSI-LD, that it is added by default to any `@context` sent to a request.
 [https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld](https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld)
 refers to the definition of standard data models supplied by FIWARE. Adding this to the `@context` will load the
 definitions of all the [data models](https://fiware-datamodels.readthedocs.io) defined by the FIWARE Foundation in
-collaboration with other organizations such as GSMA or TM Forum, a summary of the FQNs related to **Building** can be
+collaboration with other organizations such as GSMA or TM Forum. A summary of the FQNs related to **Building** can be
 seen below:
 
 ```json
@@ -377,8 +377,8 @@ seen below:
         ... etc
         "address": "http://schema.org/address",
         "category": "https://uri.fiware.org/ns/datamodels#category",
-        "location": "http://uri.etsi.org/ngsi-ld/location",
-        "name": "http://schema.org/name",
+        "location": "https://uri.etsi.org/ngsi-ld/location",
+        "name": "https://uri.etsi.org/ngsi-ld/name",
         ...etc
     }
 }
