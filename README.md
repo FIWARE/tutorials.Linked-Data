@@ -542,13 +542,12 @@ curl -G -X GET \
 
 #### Response:
 
-The response returns the Core `@context` by default
-(`https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld`) and all attributes are
+The response returns the Core `@context` by default 
+(`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`) and all attributes are
 expanded whenever possible.
 
--   `id`, `type` and `location` are defined in the core context and are not expanded.
+-   `id`, `type`, `location` and `name`are defined in the core context and are not expanded.
 -   `address` has been mapped to `http://schema.org/address`
--   `name` has been mapped to `http://schema.org/name`
 -   `category` has been mapped to `https://uri.fiware.org/ns/datamodels#category`
 
 Note that if an attribute has not been not associated to an FQN when the entity was created, the short name will
@@ -572,7 +571,7 @@ Note that if an attribute has not been not associated to an FQN when the entity 
                 "value": true
             }
         },
-        "http://schema.org/name": {
+        "name": {
             "type": "Property",
             "value": "Bösebrücke Einkauf"
         },
@@ -587,7 +586,7 @@ Note that if an attribute has not been not associated to an FQN when the entity 
                 "coordinates": [13.3986, 52.5547]
             }
         },
-        "@context": "https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld"
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     },
     {
         "id": "urn:ngsi-ld:Building:store002",
@@ -620,7 +619,7 @@ Note that if an attribute has not been not associated to an FQN when the entity 
                 "coordinates": [13.3903, 52.5075]
             }
         },
-        "@context": "https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld"
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     }
 ]
 ```
@@ -640,7 +639,7 @@ curl -G -X GET \
 #### Response:
 
 The response returns the Core `@context` by default
-(`https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld`) and all attributes are
+(`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`) and all attributes are
 expanded whenever possible.
 
 ```json
@@ -660,7 +659,7 @@ expanded whenever possible.
             "value": true
         }
     },
-    "http://schema.org/name": {
+    "name": {
         "type": "Property",
         "value": "Bösebrücke Einkauf"
     },
@@ -675,7 +674,7 @@ expanded whenever possible.
             "coordinates": [13.3986, 52.5547]
         }
     },
-    "@context": "https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld"
+    "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
 }
 ```
 
@@ -690,11 +689,11 @@ A [`Link` header](https://www.w3.org/wiki/LinkHeader) must be supplied to associ
 with the FQN `https://uri.fiware.org/ns/datamodels/Building`. The full link header syntax can be seen below:
 
 ```text
-Link: <https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
+Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
 ```
 
 The standard HTTP `Link` header allows metadata (in this case the `@context`) to be passed in without actually touching
-the resource in question. In the case of NGSI-LD, the metadata is a file of in `application/ld+json` format.
+the resource in question. In the case of NGSI-LD, the metadata is a file in `application/ld+json` format.
 
 #### :six: Request:
 
