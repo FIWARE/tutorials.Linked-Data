@@ -370,8 +370,8 @@ curl -X GET \
 リンクト・データ・エンティティを作成するときは、一般的なデータ・モデルを使用することが重要です。これにより、複数のソース
 からのデータを簡単に結合し、異なるソースからのデータを比較するときのあいまいさを取り除くことができます。
 
-各属性は URN である必要があるので、完全修飾名を使用してリンクト・データを作成するのは面倒です。そこで JSON-LD は
-コンテキスト定義へのポインタを保持できる `@context` 属性のアイデアを導入しました。
+各属性は URI である必要があるため、全体で完全修飾名を使用してリンクト・データを作成するのは困難です。
+そこで JSON-LD はコンテキスト定義へのポインタを保持できる `@context` 属性のアイデアを導入しました。
 FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html)
 データ・エンティティを追加するには、次の `@context` が必要です。
 
@@ -412,8 +412,8 @@ FIWARE Foundation によって定義されたすべての[データモデル](ht
         ... etc
         "address": "http://schema.org/address",
         "category": "https://uri.fiware.org/ns/datamodels/category",
-        "location": "http://uri.etsi.org/ngsi-ld/location",
-        "name": "http://schema.org/name",
+        "location": "https://uri.etsi.org/ngsi-ld/location",
+        "name": "https://uri.etsi.org/ngsi-ld/name",
         ...etc
     }
 }
@@ -587,12 +587,11 @@ curl -G -X GET \
 
 #### レスポンス :
 
-レスポンスはデフォルト (`https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld`)
+レスポンスはデフォルト (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`)
 でコアの `@context` を返し、すべての属性は可能な限り展開されます。
 
--   `id`, `type` and `location` はコア・コンテキストで定義されており、展開されません
+-   `id`, `type`, `location`, `name` はコア・コンテキストで定義されており、展開されません
 -   `address` は `http://schema.org/address` にマッピングされました
--   `name` は `http://schema.org/name` にマッピングされました
 -   `category` は `https://uri.fiware.org/ns/datamodels#category` にマッピングされました
 
 エンティティの作成時に属性が FQN に関連付けられていない場合は、短い名前が**常**に表示されます。
@@ -615,7 +614,7 @@ curl -G -X GET \
                 "value": true
             }
         },
-        "http://schema.org/name": {
+        "name": {
             "type": "Property",
             "value": "Bösebrücke Einkauf"
         },
@@ -630,7 +629,7 @@ curl -G -X GET \
                 "coordinates": [13.3986, 52.5547]
             }
         },
-        "@context": "https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld"
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     },
     {
         "id": "urn:ngsi-ld:Building:store002",
@@ -663,7 +662,7 @@ curl -G -X GET \
                 "coordinates": [13.3903, 52.5075]
             }
         },
-        "@context": "https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld"
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     }
 ]
 ```
@@ -685,7 +684,7 @@ curl -G -X GET \
 #### レスポンス :
 
 レスポンスはデフォルト
-(`https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld`)
+(`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`)
 で コアの `@context` を返し、すべての属性は可能な限り展開されます。
 
 ```json
@@ -705,7 +704,7 @@ curl -G -X GET \
             "value": true
         }
     },
-    "http://schema.org/name": {
+    "name": {
         "type": "Property",
         "value": "Bösebrücke Einkauf"
     },
@@ -720,7 +719,7 @@ curl -G -X GET \
             "coordinates": [13.3986, 52.5547]
         }
     },
-    "@context": "https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld"
+    "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
 }
 ```
 
@@ -738,7 +737,7 @@ curl -G -X GET \
 フル・リンク・ヘッダの構文は次のとおりです :
 
 ```text
-Link: <https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
+Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
 ```
 
 標準の HTTP の `Link` ヘッダは、実際に問題のリソースに触れることなくメタデータ (この場合は `@context`)
