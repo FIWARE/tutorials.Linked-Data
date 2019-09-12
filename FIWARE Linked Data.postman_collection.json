@@ -38,7 +38,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": \"urn:ngsi-ld:Building:store001\",\n    \"type\": \"Building\",\n    \"category\": {\n    \t\"type\": \"Property\",\n        \"value\": [\"commercial\"]\n    },\n    \"address\": {\n        \"type\": \"Property\",\n        \"value\": {\n            \"streetAddress\": \"Bornholmer Straße 65\",\n            \"addressRegion\": \"Berlin\",\n            \"addressLocality\": \"Prenzlauer Berg\",\n            \"postalCode\": \"10439\"\n        },\n        \"verified\": {\n\t\t\t\"type\": \"Property\",\n\t\t\t\"value\": true\n\t\t}\n    },\n    \"location\": {\n        \"type\": \"GeoProperty\",\n        \"value\": {\n             \"type\": \"Point\",\n             \"coordinates\": [13.3986, 52.5547]\n        }\n    },\n    \"name\": {\n        \"type\": \"Property\",\n        \"value\": \"Bösebrücke Einkauf\"\n    },\n    \"@context\": [\n        \"https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld\",\n        \"https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld\"\n    ]\n}"
+					"raw": "{\n    \"id\": \"urn:ngsi-ld:Building:store001\",\n    \"type\": \"Building\",\n    \"category\": {\n    \t\"type\": \"Property\",\n        \"value\": [\"commercial\"]\n    },\n    \"address\": {\n        \"type\": \"Property\",\n        \"value\": {\n            \"streetAddress\": \"Bornholmer Straße 65\",\n            \"addressRegion\": \"Berlin\",\n            \"addressLocality\": \"Prenzlauer Berg\",\n            \"postalCode\": \"10439\"\n        },\n        \"verified\": {\n\t\t\t\"type\": \"Property\",\n\t\t\t\"value\": true\n\t\t}\n    },\n    \"location\": {\n        \"type\": \"GeoProperty\",\n        \"value\": {\n             \"type\": \"Point\",\n             \"coordinates\": [13.3986, 52.5547]\n        }\n    },\n    \"name\": {\n        \"type\": \"Property\",\n        \"value\": \"Bösebrücke Einkauf\"\n    },\n    \"@context\": [\n        \"https://schema.lab.fiware.org/ld/context\",\n        \"https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld\"\n    ]\n}"
 				},
 				"url": {
 					"raw": "http://{{orion}}/ngsi-ld/v1/entities",
@@ -68,7 +68,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": \"urn:ngsi-ld:Building:store002\",\n    \"type\": \"Building\",\n    \"category\": {\n    \t\"type\": \"Property\",\n        \"value\": [\"commercial\"]\n    },\n    \"address\": {\n        \"type\": \"Property\",\n        \"value\": {\n            \"streetAddress\": \"Friedrichstraße 44\",\n            \"addressRegion\": \"Berlin\",\n            \"addressLocality\": \"Kreuzberg\",\n            \"postalCode\": \"10969\"\n        },\n        \"verified\": {\n\t\t\t\"type\": \"Property\",\n\t\t\t\"value\": true\n\t\t}\n    },\n     \"location\": {\n        \"type\": \"GeoProperty\",\n        \"value\": {\n             \"type\": \"Point\",\n              \"coordinates\": [13.3903, 52.5075]\n        }\n    },\n    \"name\": {\n        \"type\": \"Property\",\n        \"value\": \"Checkpoint Markt\"\n    },\n    \"@context\": [\n        \"https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld\",\n\t\t\"https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld\"\n    ]\n}"
+					"raw": "{\n    \"id\": \"urn:ngsi-ld:Building:store002\",\n    \"type\": \"Building\",\n    \"category\": {\n    \t\"type\": \"Property\",\n        \"value\": [\"commercial\"]\n    },\n    \"address\": {\n        \"type\": \"Property\",\n        \"value\": {\n            \"streetAddress\": \"Friedrichstraße 44\",\n            \"addressRegion\": \"Berlin\",\n            \"addressLocality\": \"Kreuzberg\",\n            \"postalCode\": \"10969\"\n        },\n        \"verified\": {\n\t\t\t\"type\": \"Property\",\n\t\t\t\"value\": true\n\t\t}\n    },\n     \"location\": {\n        \"type\": \"GeoProperty\",\n        \"value\": {\n             \"type\": \"Point\",\n              \"coordinates\": [13.3903, 52.5075]\n        }\n    },\n    \"name\": {\n        \"type\": \"Property\",\n        \"value\": \"Checkpoint Markt\"\n    },\n    \"@context\": [\n        \"https://schema.lab.fiware.org/ld/context\",\n\t\t\"https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld\"\n    ]\n}"
 				},
 				"url": {
 					"raw": "http://{{orion}}/ngsi-ld/v1/entities/",
@@ -95,7 +95,7 @@
 					{
 						"key": "Link",
 						"type": "text",
-						"value": "<https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+						"value": "<https://schema.lab.fiware.org/ld/context>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
 						"disabled": true
 					},
 					{
@@ -176,7 +176,7 @@
 					{
 						"key": "Link",
 						"type": "text",
-						"value": "<https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+						"value": "<https://schema.lab.fiware.org/ld/context>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
 					},
 					{
 						"key": "Accept",
@@ -487,7 +487,7 @@
 	],
 	"variable": [
 		{
-			"id": "74c62da3-e9cb-4458-b373-776079d6276f",
+			"id": "b0574a26-f661-47c3-939c-66f0b11efa0e",
 			"key": "orion",
 			"value": "localhost:1026",
 			"type": "string"

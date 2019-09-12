@@ -381,7 +381,7 @@ FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Bu
     "type": "Building",
     ...  other data attributes
     "@context": [
-        "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld",
+        "https://schema.lab.fiware.org/ld/context",
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }
@@ -400,7 +400,7 @@ FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Bu
 
 ### FIWARE データ・モデル
 
-[https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld](https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld)
+[https://schema.lab.fiware.org/ld/context](https://schema.lab.fiware.org/ld/context)
 は、FIWARE が提供する標準データ・モデルの定義を指します。これを `@context` に追加すると、GSMA や TM Forum のような他の組織と共同で、
 FIWARE Foundation によって定義されたすべての[データモデル](https://fiware-datamodels.readthedocs.io)の定義が読み込まれます。
 **Building** に関連する FQNs の概要は以下のようになります :
@@ -464,7 +464,7 @@ curl -iX POST \
         "value": "Bösebrücke Einkauf"
     },
     "@context": [
-        "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld",
+        "https://schema.lab.fiware.org/ld/context",
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }'
@@ -513,7 +513,7 @@ curl -iX POST \
         "value": "Checkpoint Markt"
     },
     "@context": [
-        "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld",
+        "https://schema.lab.fiware.org/ld/context",
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }'
@@ -738,7 +738,7 @@ curl -G -X GET \
 フル・リンク・ヘッダの構文は次のとおりです :
 
 ```text
-Link: <https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
+Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
 ```
 
 標準の HTTP の `Link` ヘッダは、実際に問題のリソースに触れることなくメタデータ (この場合は `@context`)
@@ -749,7 +749,7 @@ Link: <https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld>; rel="
 ```console
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+    -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     'http://localhost:1026/ngsi-ld/v1/entities' \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
@@ -779,7 +779,7 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
             "type": "Point",
             "coordinates": [13.3986, 52.5547]
         },
-        "@context": "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld"
+        "@context": "https://schema.lab.fiware.org/ld/context"
     },
     {
         "id": "urn:ngsi-ld:Building:store002",
@@ -796,7 +796,7 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
             "type": "Point",
             "coordinates": [13.3903, 52.5075]
         },
-        "@context": "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld"
+        "@context": "https://schema.lab.fiware.org/ld/context"
     }
 ]
 ```
@@ -828,8 +828,8 @@ curl -G -X GET \
 ```json
 {
     "@context": [
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-        "https://schema.lab.fiware.org/ld/fiware-datamodels-context.jsonld"
+        "https://schema.lab.fiware.org/ld/context",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }
 ```
