@@ -171,16 +171,17 @@ NGSI LD データ・モデルはより複雑で、ナビゲート可能なナレ
 ![](https://fiware.github.io/tutorials.Linked-Data/img/ngsi-ld.png)
 
 
-繰り返しになりますが、_entity_ はコア要素と見なすことができます。すべてのエンティティは一意の `id`
-[URN](https://en.wikipedia.org/wiki/Uniform_resource_name) を使用しなければなりません。保持されているデータの構造を
-定義するために使用される `type` もあります。これは URN でもあります。この URN は、Web 上にある明確なデータ・モデルに
-対応している必要があります。例えば、URN の `https://uri.fiware.org/ns/datamodels#Building` は
+繰り返しになりますが、_entity_ はコア要素と見なすことができます。すべてのエンティティは、URI (多くの場合
+[URN](https://en.wikipedia.org/wiki/Uniform_resource_name)) でなければならない一意の `id` を使用する必要が
+あります。保持されているデータの構造を定義するために使用される `type` もあります。これも URI でなければなりません。
+この URI は、Web 上にある明確なデータ・モデルに対応している必要があります。例えば、URI の
+`https://uri.fiware.org/ns/datamodels#Building` は
 [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html) のための共通の
 データ・モデルを定義するために使われます。
 
 _Entities_ は、_properties_ と _relationships_ を持つことができます。理想的には、それぞれの _property_ の名前は、
-ウェブ全体で見いだされる共通の概念に対応する明確に定義された URN であるべきです (例えば、`http://schema.org/address`
-はアイテムの物理アドレスのための共通の URN です)。_property_ はそのプロパティの状態を反映する値も持ちます (例えば
+ウェブ全体で見いだされる共通の概念に対応する明確に定義された URI であるべきです (例えば、`http://schema.org/address`
+はアイテムの物理アドレスのための共通の URI です)。_property_ はそのプロパティの状態を反映する値も持ちます (例えば
 `name="Checkpoint Markt"`)。最後に、プロパティはそれ自身がプロパティに関するさらなる情報を反映するさらなるプロパティ
 (別名 _properties-of-properties_)を持つことができます。プロパティとリレーションシップは、リンクされた埋め込みプロパティ
 (_properties-of-properties_ または _properties-of-relationships_ または _relationships-of-properties_ または
@@ -189,8 +190,9 @@ _relationships-of-relationships_ など) を持つことができます :
 NGSI LD データ・エンティティ (スーパーマーケットなど) :
 
 -   一意でなければならない `id` を持っています。例えば `urn:ngsi-ld:Building:store001`
--   明確に定義されたデータ・モデルの完全修飾 URN であるべきである `type` を持ちます。例えば
-    `https://uri.fiware.org/ns/datamodels#Building`
+-   明確に定義されたデータ・モデルの完全修飾 URI であるべきである `type` を持ちます。例えば
+    `https://uri.fiware.org/ns/datamodels#Building`。また、作成者は、JSON-LD @context を介して完全修飾
+    URIs にマップされた型の短い文字列としてタイプ名を使用できます
 -   エンティティの _property_ を持ちます。例えば、店舗のアドレスを保持する `address` 属性です。これは
     `http://schema.org/address` に展開することができ、これは完全修飾名
     ([FQN](https://en.wikipedia.org/wiki/Fully_qualified_name)) として知られています
@@ -370,8 +372,8 @@ curl -X GET \
 リンクト・データ・エンティティを作成するときは、一般的なデータ・モデルを使用することが重要です。これにより、複数のソース
 からのデータを簡単に結合し、異なるソースからのデータを比較するときのあいまいさを取り除くことができます。
 
-各属性は URN である必要があるので、完全修飾名を使用してリンクト・データを作成するのは面倒です。そこで JSON-LD は
-コンテキスト定義へのポインタを保持できる `@context` 属性のアイデアを導入しました。
+各属性は URI である必要があるため、全体で完全修飾名を使用してリンクト・データを作成するのは困難です。
+そこで JSON-LD はコンテキスト定義へのポインタを保持できる `@context` 属性のアイデアを導入しました。
 FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html)
 データ・エンティティを追加するには、次の `@context` が必要です。
 
@@ -392,7 +394,7 @@ FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Bu
 ### コア・コンテキスト
 
 [https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld)
-は NSGI-LD のコア `@context` を参照します。これはすべての NGSI エンティティに共通の `id` や `type` のような要素を定義し、
+は NSGI-LD のコア `@context` を参照します。これはすべての NGSI エンティティに共通の `id` や `type` のような用語を定義し、
 `Property` や `Relationship` のような用語を定義します。コア・コンテキストは NGSI-LD にとって非常に基本的なもので、
 デフォルトでリクエストに送信された `@context` に追加されます。
 
@@ -411,9 +413,9 @@ FIWARE Foundation によって定義されたすべての[データモデル](ht
         "Building": "https://uri.fiware.org/ns/datamodels#Building",
         ... etc
         "address": "http://schema.org/address",
-        "category": "https://uri.fiware.org/ns/datamodels/category",
-        "location": "http://uri.etsi.org/ngsi-ld/location",
-        "name": "http://schema.org/name",
+        "category": "https://uri.fiware.org/ns/datamodels#category",
+        "location": "https://uri.etsi.org/ngsi-ld/location",
+        "name": "https://uri.etsi.org/ngsi-ld/name",
         ...etc
     }
 }
@@ -574,7 +576,8 @@ _Properties-of-Properties_ (プロパティのプロパティ) は、メタデ�
 ### FQN タイプによるエンティティ・データの取得
 
 この例では、コンテキスト・データ内のすべての `Building` エンティティのデータを返します。`type` パラメータは NGSI-LD
-では必須であり、レスポンスをフィルタリングするために使用されます。
+では必須であり、レスポンスをフィルタリングするために使用されます。JSON-LD コンテンツを取得するには、Accept HTTP
+ヘッダが必要です。
 
 #### :four: リクエスト :
 
@@ -587,12 +590,11 @@ curl -G -X GET \
 
 #### レスポンス :
 
-レスポンスはデフォルト (`https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld`)
+レスポンスはデフォルト (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`)
 でコアの `@context` を返し、すべての属性は可能な限り展開されます。
 
--   `id`, `type` and `location` はコア・コンテキストで定義されており、展開されません
+-   `id`, `type`, `location`, `name` はコア・コンテキストで定義されており、展開されません
 -   `address` は `http://schema.org/address` にマッピングされました
--   `name` は `http://schema.org/name` にマッピングされました
 -   `category` は `https://uri.fiware.org/ns/datamodels#category` にマッピングされました
 
 エンティティの作成時に属性が FQN に関連付けられていない場合は、短い名前が**常**に表示されます。
@@ -615,7 +617,7 @@ curl -G -X GET \
                 "value": true
             }
         },
-        "http://schema.org/name": {
+        "name": {
             "type": "Property",
             "value": "Bösebrücke Einkauf"
         },
@@ -630,7 +632,7 @@ curl -G -X GET \
                 "coordinates": [13.3986, 52.5547]
             }
         },
-        "@context": "https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld"
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     },
     {
         "id": "urn:ngsi-ld:Building:store002",
@@ -663,7 +665,7 @@ curl -G -X GET \
                 "coordinates": [13.3903, 52.5075]
             }
         },
-        "@context": "https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld"
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     }
 ]
 ```
@@ -685,7 +687,7 @@ curl -G -X GET \
 #### レスポンス :
 
 レスポンスはデフォルト
-(`https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld`)
+(`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`)
 で コアの `@context` を返し、すべての属性は可能な限り展開されます。
 
 ```json
@@ -705,7 +707,7 @@ curl -G -X GET \
             "value": true
         }
     },
-    "http://schema.org/name": {
+    "name": {
         "type": "Property",
         "value": "Bösebrücke Einkauf"
     },
@@ -720,7 +722,7 @@ curl -G -X GET \
             "coordinates": [13.3986, 52.5547]
         }
     },
-    "@context": "https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld"
+    "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
 }
 ```
 
@@ -995,7 +997,8 @@ curl -G -X GET \
 
 #### レスポンス :
 
-`options=keyValues` を使用しているため、レスポンスは属性 `type` と `metadata` 要素のない JSON のみで構成されています。
+Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているため、レスポンスは属性 `type` と `metadata`
+要素のない JSON のみで構成されています。
 
 ```json
 [
@@ -1061,7 +1064,8 @@ curl -G -X GET \
 
 #### レスポンス :
 
-`options=keyValues` を使用しているため、レスポンスは属性 `type` と `metadata` 要素のない JSON のみで構成されています。
+Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているため、レスポンスは属性 `type` と `metadata`
+要素のない JSON のみで構成されています。
 
 ```json
 [
