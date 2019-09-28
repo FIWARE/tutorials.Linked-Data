@@ -9,9 +9,9 @@
 <!-- prettier-ignore -->
 
 このチュートリアルでは、リンクト・データ (Linked Data) の概念を FIWARE プラットフォームに導入します。スーパーマーケット
-・チェーンの店舗検索アプリケーションは **NGSI-LD** を使用して再作成されます。**NSGI v2** と **NGSI-LD** インターフェース
-の違いが強調され、説明されています。このチュートリアルは最初のチュートリアルと直接類似していますが、**NGSI-LD**
-インターフェースからの API 呼び出しを使用します。
+・チェーンのストア・ファインダ・アプリケーションは **NGSI-LD** を使用して再作成されます。**NSGI v2** と **NGSI-LD**
+インターフェースの違いが強調され、説明されています。このチュートリアルは最初のチュートリアルと直接類似していますが、
+**NGSI-LD** インターフェースからの API 呼び出しを使用します。
 
 チュートリアルでは [cUrl](https://ec.haxx.se/) コマンドを使用していますが、
 [Postman のドキュメント](https://fiware.github.io/tutorials.Linked-Data/) としても入手できます。
@@ -193,7 +193,7 @@ NGSI LD データ・エンティティ (スーパーマーケットなど) :
 -   明確に定義されたデータ・モデルの完全修飾 URI であるべきである `type` を持ちます。例えば
     `https://uri.fiware.org/ns/datamodels#Building`。また、作成者は、JSON-LD @context を介して完全修飾
     URIs にマップされた型の短い文字列としてタイプ名を使用できます
--   エンティティの _property_ を持ちます。例えば、店舗のアドレスを保持する `address` 属性です。これは
+-   エンティティの _property_ を持ちます。例えば、ストアのアドレスを保持する `address` 属性です。これは
     `http://schema.org/address` に展開することができ、これは完全修飾名
     ([FQN](https://en.wikipedia.org/wiki/Fully_qualified_name)) として知られています
 -   他の _property_ と同様に、`address` は _property_ の `address` に対応する _value_ を持ちます。例えば
@@ -202,7 +202,7 @@ NGSI LD データ・エンティティ (スーパーマーケットなど) :
 -   エンティティの _relationship_ を持ちます。例えば、`managedBy` というリレーションシップが他のデータ・エンティティに
     対応する `managedBy` フィールド: `urn:ngsi-ld:Person:bob-the-manager`
 -   リレーションシップ `managedBy` はそれ自身 _property-of-a-relationship_ (例えば `since`) を持つことができ、これは
-    Bod が店舗の作業を開始した日付を保持します
+    Bod がストアの作業を開始した日付を保持します
 -   リレーションシップ `managedBy` は、それ自身が _relationship-of-a-relationship_ (例えば ` subordinateTo`)
     を持つことができ、これは階層のボブの上のエリア・マネージャの URN を保持します
 
@@ -291,7 +291,7 @@ mongo-db:
 ```
 
 両方のコンテナは同じネットワーク上に存在します -  Orion Context Broker はポート `1026` をリッスンし、MongoDB
-はデフォルトのポート `27071` をリッスンしています。どちらのコンテナも同じポートを外部に公開しています -
+はデフォルトのポート `27017` をリッスンしています。どちらのコンテナも同じポートを外部に公開しています -
 これは純粋にチュートリアル・アクセスのためのものです - したがって、cUrl または Postman は同じネットワークの一部
 でなくてもそれらにアクセスできます。コマンドラインの初期化は一目瞭然です。
 
@@ -930,7 +930,7 @@ curl -G -X GET \
 
 ### サブ属性の値を比較してコンテキスト・データをフィルタ
 
-この例では、Kreuzberg (クロイツベルク) 地区にあるすべての店舗を返します。
+この例では、Kreuzberg (クロイツベルク) 地区にあるすべてのストアを返します。
 
 フィルタリングは `q` パラメータを使って行うことができます。サブ属性はブラケット構文を使って注釈を付けられます。
 例えば `q=address[addressLocality]=="Kreuzberg"`。これは、ドット・シンタックスが使用されていた NGSI v2 とは異なります。
@@ -1039,7 +1039,7 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
 
 ### geo:json 属性の値を比較してコンテキスト・データをフィルタ
 
-この例では、**Berlin** の **Brandenburg Gate** (_52.5162N 13.3777W_) から2km以内のすべての店舗を返します。
+この例では、**Berlin** の **Brandenburg Gate** (_52.5162N 13.3777W_) から2km以内のすべてのストアを返します。
 ジオ・クエリ・リクエストをするには、`geometry`, `coordinates`, `georel` の3つのパラメータを指定しなければなりません。
 
 NGSI-LD の構文が更新され、`coordinates` パラメータは、現在では、NGSI v2 で必要とされる単純な緯度と経度ペアではなく、
