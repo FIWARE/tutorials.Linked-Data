@@ -175,7 +175,7 @@ NGSI LD データ・モデルはより複雑で、ナビゲート可能なナレ
 [URN](https://en.wikipedia.org/wiki/Uniform_resource_name)) でなければならない一意の `id` を使用する必要が
 あります。保持されているデータの構造を定義するために使用される `type` もあります。これも URI でなければなりません。
 この URI は、Web 上にある明確なデータ・モデルに対応している必要があります。例えば、URI の
-`https://uri.fiware.org/ns/datamodels#Building` は
+`https://uri.fiware.org/ns/data-models#Building` は
 [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html) のための共通の
 データ・モデルを定義するために使われます。
 
@@ -191,7 +191,7 @@ NGSI LD データ・エンティティ (スーパーマーケットなど) :
 
 -   一意でなければならない `id` を持っています。例えば `urn:ngsi-ld:Building:store001`
 -   明確に定義されたデータ・モデルの完全修飾 URI であるべきである `type` を持ちます。例えば
-    `https://uri.fiware.org/ns/datamodels#Building`。また、作成者は、JSON-LD @context を介して完全修飾
+    `https://uri.fiware.org/ns/data-models#Building`。また、作成者は、JSON-LD @context を介して完全修飾
     URIs にマップされた型の短い文字列としてタイプ名を使用できます
 -   エンティティの _property_ を持ちます。例えば、ストアのアドレスを保持する `address` 属性です。これは
     `http://schema.org/address` に展開することができ、これは完全修飾名
@@ -383,7 +383,7 @@ FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Bu
     "type": "Building",
     ...  other data attributes
     "@context": [
-        "https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld",
+        "https://fiware.github.io/data-models/context.jsonld",
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }
@@ -402,7 +402,7 @@ FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Bu
 
 ### FIWARE データ・モデル
 
-[https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld](https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld)
+[https://fiware.github.io/data-models/context.jsonld](https://fiware.github.io/data-models/context.jsonld)
 は、FIWARE が提供する標準データ・モデルの定義を指します。これを `@context` に追加すると、GSMA や TM Forum のような他の組織と共同で、
 FIWARE Foundation によって定義されたすべての[データモデル](https://fiware-datamodels.readthedocs.io)の定義が読み込まれます。
 **Building** に関連する FQNs の概要は以下のようになります :
@@ -410,10 +410,10 @@ FIWARE Foundation によって定義されたすべての[データモデル](ht
 ```json
 {
     "@context": {
-        "Building": "https://uri.fiware.org/ns/datamodels#Building",
+        "Building": "https://uri.fiware.org/ns/data-models#Building",
         ... etc
         "address": "http://schema.org/address",
-        "category": "https://uri.fiware.org/ns/datamodels#category",
+        "category": "https://uri.fiware.org/ns/data-models#category",
         "location": "https://uri.etsi.org/ngsi-ld/location",
         "name": "https://uri.etsi.org/ngsi-ld/name",
         ...etc
@@ -466,7 +466,7 @@ curl -iX POST \
         "value": "Bösebrücke Einkauf"
     },
     "@context": [
-        "https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld",
+        "https://fiware.github.io/data-models/context.jsonld",
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }'
@@ -515,7 +515,7 @@ curl -iX POST \
         "value": "Checkpoint Markt"
     },
     "@context": [
-        "https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld",
+        "https://fiware.github.io/data-models/context.jsonld",
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }'
@@ -527,7 +527,7 @@ curl -iX POST \
 
 `id` と `type` 属性は NSGI v2 を使ったことのある人なら誰でも知っているはずで、これらは変わっていません。上記のように、
 タイプはインクルードされたデータ・モデルを参照するべきです、この場合 `Building` はインクルードされた
-URN `https://uri.fiware.org/ns/datamodels#Building` の短い名前として使われています。その後、各 _property_ は2つの属性、
+URN `https://uri.fiware.org/ns/data-models#Building` の短い名前として使われています。その後、各 _property_ は2つの属性、
 `type` と `value` を含む JSON 要素として定義されます。
 
 _property_ 属性の `type` は以下のいずれかでなければなりません :
@@ -585,7 +585,7 @@ _Properties-of-Properties_ (プロパティのプロパティ) は、メタデ�
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
   -H 'Accept: application/ld+json' \
-  -d 'type=https://uri.fiware.org/ns/datamodels%23Building'
+  -d 'type=https://uri.fiware.org/ns/data-models%23Building'
 ```
 
 #### レスポンス :
@@ -595,7 +595,7 @@ curl -G -X GET \
 
 -   `id`, `type`, `location`, `name` はコア・コンテキストで定義されており、展開されません
 -   `address` は `http://schema.org/address` にマッピングされました
--   `category` は `https://uri.fiware.org/ns/datamodels#category` にマッピングされました
+-   `category` は `https://uri.fiware.org/ns/data-models#category` にマッピングされました
 
 エンティティの作成時に属性が FQN に関連付けられていない場合は、短い名前が**常**に表示されます。
 
@@ -603,7 +603,7 @@ curl -G -X GET \
 [
     {
         "id": "urn:ngsi-ld:Building:store001",
-        "type": "https://uri.fiware.org/ns/datamodels#Building",
+        "type": "https://uri.fiware.org/ns/data-models#Building",
         "http://schema.org/address": {
             "type": "Property",
             "value": {
@@ -621,7 +621,7 @@ curl -G -X GET \
             "type": "Property",
             "value": "Bösebrücke Einkauf"
         },
-        "https://uri.fiware.org/ns/datamodels#category": {
+        "https://uri.fiware.org/ns/data-models#category": {
             "type": "Property",
             "value": ["commercial"]
         },
@@ -636,7 +636,7 @@ curl -G -X GET \
     },
     {
         "id": "urn:ngsi-ld:Building:store002",
-        "type": "https://uri.fiware.org/ns/datamodels#Building",
+        "type": "https://uri.fiware.org/ns/data-models#Building",
         "http://schema.org/address": {
             "type": "Property",
             "value": {
@@ -654,7 +654,7 @@ curl -G -X GET \
             "type": "Property",
             "value": "Checkpoint Markt"
         },
-        "https://uri.fiware.org/ns/datamodels/category": {
+        "https://uri.fiware.org/ns/data-models/category": {
             "type": "Property",
             "value": ["commercial"]
         },
@@ -693,7 +693,7 @@ curl -G -X GET \
 ```json
 {
     "id": "urn:ngsi-ld:Building:store001",
-    "type": "https://uri.fiware.org/ns/datamodels#Building",
+    "type": "https://uri.fiware.org/ns/data-models#Building",
     "http://schema.org/address": {
         "type": "Property",
         "value": {
@@ -711,7 +711,7 @@ curl -G -X GET \
         "type": "Property",
         "value": "Bösebrücke Einkauf"
     },
-    "https://uri.fiware.org/ns/datamodels/category": {
+    "https://uri.fiware.org/ns/data-models/category": {
         "type": "Property",
         "value": ["commercial"]
     },
@@ -735,12 +735,12 @@ curl -G -X GET \
 返します。`type` パラメータの使用は `Building` エンティティのみにレスポンスを制限します、`options=keyValues`
 クエリパラメータの使用はレスポンスを標準の JSON-LD まで減らします。
 
-短い形式の `type="Building"` を FQN `https://uri.fiware.org/ns/datamodels#Building` に関連付けるために
+短い形式の `type="Building"` を FQN `https://uri.fiware.org/ns/data-models#Building` に関連付けるために
 [`Link` ヘッダ](https://www.w3.org/wiki/LinkHeader) を供給しなければなりません。
 フル・リンク・ヘッダの構文は次のとおりです :
 
 ```text
-Link: <https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
+Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
 ```
 
 標準の HTTP の `Link` ヘッダは、実際に問題のリソースに触れることなくメタデータ (この場合は `@context`)
@@ -751,7 +751,7 @@ Link: <https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld>; re
 ```console
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     'http://localhost:1026/ngsi-ld/v1/entities' \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
@@ -781,7 +781,7 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
             "type": "Point",
             "coordinates": [13.3986, 52.5547]
         },
-        "@context": "https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld"
+        "@context": "https://fiware.github.io/data-models/context.jsonld"
     },
     {
         "id": "urn:ngsi-ld:Building:store002",
@@ -798,7 +798,7 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
             "type": "Point",
             "coordinates": [13.3903, 52.5075]
         },
-        "@context": "https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld"
+        "@context": "https://fiware.github.io/data-models/context.jsonld"
     }
 ]
 ```
@@ -816,7 +816,7 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=name==%22Checkpoint%20Markt%22' \
@@ -825,12 +825,12 @@ curl -G -X GET \
 
 #### レスポンス :
 
-`Link` ヘッダ `https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld` は以下に示すように `@context` の配列を保持します :
+`Link` ヘッダ `https://fiware.github.io/data-models/context.jsonld` は以下に示すように `@context` の配列を保持します :
 
 ```json
 {
     "@context": [
-        "https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld",
+        "https://fiware.github.io/data-models/context.jsonld",
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }
@@ -858,7 +858,7 @@ curl -G -X GET \
             "type": "Point",
             "coordinates": [13.3903, 52.5075]
         },
-        "@context": "https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld"
+        "@context": "https://fiware.github.io/data-models/context.jsonld"
     }
 ]
 ```
@@ -876,7 +876,7 @@ curl -G -X GET \
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=category==%22commercial%22,%22office%22 \
@@ -904,7 +904,7 @@ curl -G -X GET \
             "type": "Point",
             "coordinates": [13.3986, 52.5547]
         },
-        "@context": "https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld"
+        "@context": "https://fiware.github.io/data-models/context.jsonld"
     },
     {
         "id": "urn:ngsi-ld:Building:store002",
@@ -921,7 +921,7 @@ curl -G -X GET \
             "type": "Point",
             "coordinates": [13.3903, 52.5075]
         },
-        "@context": "https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld"
+        "@context": "https://fiware.github.io/data-models/context.jsonld"
     }
 ]
 ```
@@ -940,7 +940,7 @@ curl -G -X GET \
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=address[addressLocality]==%22Kreuzberg%22' \
@@ -968,7 +968,7 @@ curl -G -X GET \
             "type": "Point",
             "coordinates": [13.3903, 52.5075]
         },
-        "@context": "https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld"
+        "@context": "https://fiware.github.io/data-models/context.jsonld"
     }
 ]
 ```
@@ -988,7 +988,7 @@ _Property-of-a-Property_ の例です
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'mq=address.verified==true' \
@@ -1053,7 +1053,7 @@ geo-query は デフォルトで `location` 属性に適用されることに注
 ```console
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
-  -H 'Link: <https://fiware.github.io/dataModels/fiware-datamodels-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+  -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
   -H 'Accept: application/ld+json' \
   -d 'type=Building' \
   -d 'geometry=Point' \
