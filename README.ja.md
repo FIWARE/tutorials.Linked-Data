@@ -383,7 +383,7 @@ FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Bu
     "type": "Building",
     ...  other data attributes
     "@context": [
-        "https://fiware.github.io/data-models/context.jsonld",
+        "https://schema.lab.fiware.org/ld/context",
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }
@@ -402,7 +402,7 @@ FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Bu
 
 ### FIWARE データ・モデル
 
-[https://fiware.github.io/data-models/context.jsonld](https://fiware.github.io/data-models/context.jsonld)
+[https://schema.lab.fiware.org/ld/context](https://schema.lab.fiware.org/ld/context)
 は、FIWARE が提供する標準データ・モデルの定義を指します。これを `@context` に追加すると、GSMA や TM Forum のような他の組織と共同で、
 FIWARE Foundation によって定義されたすべての[データモデル](https://fiware-datamodels.readthedocs.io)の定義が読み込まれます。
 **Building** に関連する FQNs の概要は以下のようになります :
@@ -466,7 +466,7 @@ curl -iX POST \
         "value": "Bösebrücke Einkauf"
     },
     "@context": [
-        "https://fiware.github.io/data-models/context.jsonld",
+        "https://schema.lab.fiware.org/ld/context",
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }'
@@ -515,7 +515,7 @@ curl -iX POST \
         "value": "Checkpoint Markt"
     },
     "@context": [
-        "https://fiware.github.io/data-models/context.jsonld",
+        "https://schema.lab.fiware.org/ld/context",
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }'
@@ -602,9 +602,10 @@ curl -G -X GET \
 ```json
 [
     {
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
         "id": "urn:ngsi-ld:Building:store001",
         "type": "https://uri.fiware.org/ns/data-models#Building",
-        "http://schema.org/address": {
+        "https://schema.org/address": {
             "type": "Property",
             "value": {
                 "streetAddress": "Bornholmer Straße 65",
@@ -617,27 +618,32 @@ curl -G -X GET \
                 "value": true
             }
         },
-        "name": {
+        "https://uri.etsi.org/ngsi-ld/name": {
             "type": "Property",
             "value": "Bösebrücke Einkauf"
         },
         "https://uri.fiware.org/ns/data-models#category": {
             "type": "Property",
-            "value": ["commercial"]
+            "value": [
+                "https://uri.fiware.org/ns/data-models#commercial"
+            ]
         },
         "location": {
             "type": "GeoProperty",
             "value": {
                 "type": "Point",
-                "coordinates": [13.3986, 52.5547]
+                "coordinates": [
+                    13.3986,
+                    52.5547
+                ]
             }
-        },
-        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+        }
     },
     {
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "https://uri.fiware.org/ns/data-models#Building",
-        "http://schema.org/address": {
+        "https://schema.org/address": {
             "type": "Property",
             "value": {
                 "streetAddress": "Friedrichstraße 44",
@@ -650,22 +656,26 @@ curl -G -X GET \
                 "value": true
             }
         },
-        "http://schema.org/name": {
+        "https://uri.etsi.org/ngsi-ld/name": {
             "type": "Property",
             "value": "Checkpoint Markt"
         },
-        "https://uri.fiware.org/ns/data-models/category": {
+        "https://uri.fiware.org/ns/data-models#category": {
             "type": "Property",
-            "value": ["commercial"]
+            "value": [
+                "https://uri.fiware.org/ns/data-models#commercial"
+            ]
         },
         "location": {
             "type": "GeoProperty",
             "value": {
                 "type": "Point",
-                "coordinates": [13.3903, 52.5075]
+                "coordinates": [
+                    13.3903,
+                    52.5075
+                ]
             }
-        },
-        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+        }
     }
 ]
 ```
@@ -692,9 +702,10 @@ curl -G -X GET \
 
 ```json
 {
+    "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
     "id": "urn:ngsi-ld:Building:store001",
     "type": "https://uri.fiware.org/ns/data-models#Building",
-    "http://schema.org/address": {
+    "https://schema.org/address": {
         "type": "Property",
         "value": {
             "streetAddress": "Bornholmer Straße 65",
@@ -707,22 +718,26 @@ curl -G -X GET \
             "value": true
         }
     },
-    "name": {
+    "https://uri.etsi.org/ngsi-ld/name": {
         "type": "Property",
         "value": "Bösebrücke Einkauf"
     },
-    "https://uri.fiware.org/ns/data-models/category": {
+    "https://uri.fiware.org/ns/data-models#category": {
         "type": "Property",
-        "value": ["commercial"]
+        "value": [
+            "https://uri.fiware.org/ns/data-models#commercial"
+        ]
     },
     "location": {
         "type": "GeoProperty",
         "value": {
             "type": "Point",
-            "coordinates": [13.3986, 52.5547]
+            "coordinates": [
+                13.3986,
+                52.5547
+            ]
         }
-    },
-    "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+    }
 }
 ```
 
@@ -740,7 +755,7 @@ curl -G -X GET \
 フル・リンク・ヘッダの構文は次のとおりです :
 
 ```text
-Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
+Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
 ```
 
 標準の HTTP の `Link` ヘッダは、実際に問題のリソースに触れることなくメタデータ (この場合は `@context`)
@@ -751,7 +766,7 @@ Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.
 ```console
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+    -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     'http://localhost:1026/ngsi-ld/v1/entities' \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
@@ -767,6 +782,7 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
 ```json
 [
     {
+        "@context": "https://schema.lab.fiware.org/ld/context",
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
         "address": {
@@ -776,14 +792,19 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
             "postalCode": "10439"
         },
         "name": "Bösebrücke Einkauf",
-        "category": ["commercial"],
+        "category": [
+            "commercial"
+        ],
         "location": {
             "type": "Point",
-            "coordinates": [13.3986, 52.5547]
-        },
-        "@context": "https://fiware.github.io/data-models/context.jsonld"
+            "coordinates": [
+                13.3986,
+                52.5547
+            ]
+        }
     },
     {
+        "@context": "https://schema.lab.fiware.org/ld/context",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -793,12 +814,16 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": ["commercial"],
+        "category": [
+            "commercial"
+        ],
         "location": {
             "type": "Point",
-            "coordinates": [13.3903, 52.5075]
-        },
-        "@context": "https://fiware.github.io/data-models/context.jsonld"
+            "coordinates": [
+                13.3903,
+                52.5075
+            ]
+        }
     }
 ]
 ```
@@ -816,7 +841,7 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=name==%22Checkpoint%20Markt%22' \
@@ -825,7 +850,7 @@ curl -G -X GET \
 
 #### レスポンス :
 
-`Link` ヘッダ `https://fiware.github.io/data-models/context.jsonld` は以下に示すように `@context` の配列を保持します :
+`Link` ヘッダ `https://schema.lab.fiware.org/ld/context` は以下に示すように `@context` の配列を保持します :
 
 ```json
 {
@@ -844,6 +869,7 @@ curl -G -X GET \
 ```json
 [
     {
+        "@context": "https://schema.lab.fiware.org/ld/context",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -853,12 +879,16 @@ curl -G -X GET \
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": ["commercial"],
+        "category": [
+            "commercial"
+        ],
         "location": {
             "type": "Point",
-            "coordinates": [13.3903, 52.5075]
-        },
-        "@context": "https://fiware.github.io/data-models/context.jsonld"
+            "coordinates": [
+                13.3903,
+                52.5075
+            ]
+        }
     }
 ]
 ```
@@ -876,7 +906,7 @@ curl -G -X GET \
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=category==%22commercial%22,%22office%22 \
@@ -890,6 +920,7 @@ curl -G -X GET \
 ```json
 [
     {
+        "@context": "https://schema.lab.fiware.org/ld/context",
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
         "address": {
@@ -899,14 +930,19 @@ curl -G -X GET \
             "postalCode": "10439"
         },
         "name": "Bösebrücke Einkauf",
-        "category": ["commercial"],
+        "category": [
+            "commercial"
+        ],
         "location": {
             "type": "Point",
-            "coordinates": [13.3986, 52.5547]
-        },
-        "@context": "https://fiware.github.io/data-models/context.jsonld"
+            "coordinates": [
+                13.3986,
+                52.5547
+            ]
+        }
     },
     {
+        "@context": "https://schema.lab.fiware.org/ld/context",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -916,12 +952,16 @@ curl -G -X GET \
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": ["commercial"],
+        "category": [
+            "commercial"
+        ],
         "location": {
             "type": "Point",
-            "coordinates": [13.3903, 52.5075]
-        },
-        "@context": "https://fiware.github.io/data-models/context.jsonld"
+            "coordinates": [
+                13.3903,
+                52.5075
+            ]
+        }
     }
 ]
 ```
@@ -940,7 +980,7 @@ curl -G -X GET \
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=address[addressLocality]==%22Kreuzberg%22' \
@@ -954,6 +994,7 @@ curl -G -X GET \
 ```json
 [
     {
+        "@context": "https://schema.lab.fiware.org/ld/context",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -963,12 +1004,16 @@ curl -G -X GET \
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": ["commercial"],
+        "category": [
+            "commercial"
+        ],
         "location": {
             "type": "Point",
-            "coordinates": [13.3903, 52.5075]
-        },
-        "@context": "https://fiware.github.io/data-models/context.jsonld"
+            "coordinates": [
+                13.3903,
+                52.5075
+            ]
+        }
     }
 ]
 ```
@@ -988,7 +1033,7 @@ _Property-of-a-Property_ の例です
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'mq=address.verified==true' \
@@ -1003,6 +1048,7 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
 ```json
 [
     {
+        "@context": "https://schema.lab.fiware.org/ld/context",
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
         "address": {
@@ -1011,13 +1057,20 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
             "addressLocality": "Prenzlauer Berg",
             "postalCode": "10439"
         },
+        "name": "Bösebrücke Einkauf",
+        "category": [
+            "commercial"
+        ],
         "location": {
             "type": "Point",
-            "coordinates": [13.3986, 52.5547]
-        },
-        "name": "Bösebrücke Einkauf"
+            "coordinates": [
+                13.3986,
+                52.5547
+            ]
+        }
     },
     {
+        "@context": "https://schema.lab.fiware.org/ld/context",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -1026,11 +1079,17 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
             "addressLocality": "Kreuzberg",
             "postalCode": "10969"
         },
+        "name": "Checkpoint Markt",
+        "category": [
+            "commercial"
+        ],
         "location": {
             "type": "Point",
-            "coordinates": [13.3903, 52.5075]
-        },
-        "name": "Checkpoint Markt"
+            "coordinates": [
+                13.3903,
+                52.5075
+            ]
+        }
     }
 ]
 ```
@@ -1053,7 +1112,7 @@ geo-query は デフォルトで `location` 属性に適用されることに注
 ```console
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
-  -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+  -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
   -H 'Accept: application/ld+json' \
   -d 'type=Building' \
   -d 'geometry=Point' \
@@ -1070,6 +1129,7 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
 ```json
 [
     {
+        "@context": "https://schema.lab.fiware.org/ld/context",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -1078,11 +1138,17 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
             "addressLocality": "Kreuzberg",
             "postalCode": "10969"
         },
+        "name": "Checkpoint Markt",
+        "category": [
+            "commercial"
+        ],
         "location": {
             "type": "Point",
-            "coordinates": [13.3903, 52.5075]
-        },
-        "name": "Checkpoint Markt"
+            "coordinates": [
+                13.3903,
+                52.5075
+            ]
+        }
     }
 ]
 ```

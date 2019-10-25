@@ -103,8 +103,8 @@ the data is structured in a format which is parsable by machines. It is a method
 can be easily compared when coming from a multitude of separate data sources, which could have a different idea as to
 what each attribute means. For example, when two data entities have a `name` attribute how can the computer be certain
 that is refers to a _"Name of a thing"_ in the same sense (rather than a **Username** or a **Surname** or something).
-URLs and data models are used to remove ambiguity by allowing attributes to have a both short form (such as `name`) and a
-fully specified long form (such `http://schema.org/name`) which means it is easy to discover which attribute have a
+URLs and data models are used to remove ambiguity by allowing attributes to have a both short form (such as `name`) and
+a fully specified long form (such `http://schema.org/name`) which means it is easy to discover which attribute have a
 common meaning within a data structure.
 
 JSON-LD introduces the concept of the `@context` element which provides additional information allowing the computer to
@@ -349,7 +349,7 @@ the following `@context` would be required
     "type": "Building",
     ...  other data attributes
     "@context": [
-      "https://fiware.github.io/data-models/context.jsonld",
+      "https://schema.lab.fiware.org/ld/context",
       "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }
@@ -364,11 +364,10 @@ NGSI-LD, that it is added by default to any `@context` sent to a request.
 
 ### FIWARE Data Models
 
-[https://fiware.github.io/data-models/context.jsonld](https://fiware.github.io/data-models/context.jsonld)
-refers to the definition of standard data models supplied by FIWARE. Adding this to the `@context` will load the
-definitions of all the [data models](https://fiware-datamodels.readthedocs.io) defined by the FIWARE Foundation in
-collaboration with other organizations such as GSMA or TM Forum. A summary of the FQNs related to **Building** can be
-seen below:
+[https://schema.lab.fiware.org/ld/context](https://schema.lab.fiware.org/ld/context) refers to the definition of
+standard data models supplied by FIWARE. Adding this to the `@context` will load the definitions of all the
+[data models](https://fiware-datamodels.readthedocs.io) defined by the FIWARE Foundation in collaboration with other
+organizations such as GSMA or TM Forum. A summary of the FQNs related to **Building** can be seen below:
 
 ```json
 {
@@ -429,7 +428,7 @@ curl -iX POST \
         "value": "Bösebrücke Einkauf"
     },
     "@context": [
-        "https://fiware.github.io/data-models/context.jsonld",
+        "https://schema.lab.fiware.org/ld/context",
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }'
@@ -478,7 +477,7 @@ curl -iX POST \
         "value": "Checkpoint Markt"
     },
     "@context": [
-        "https://fiware.github.io/data-models/context.jsonld",
+        "https://schema.lab.fiware.org/ld/context",
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
     ]
 }'
@@ -542,9 +541,8 @@ curl -G -X GET \
 
 #### Response:
 
-The response returns the Core `@context` by default
-(`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`) and all attributes are
-expanded whenever possible.
+The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`) and
+all attributes are expanded whenever possible.
 
 -   `id`, `type`, `location` and `name`are defined in the core context and are not expanded.
 -   `address` has been mapped to `http://schema.org/address`
@@ -556,9 +554,10 @@ Note that if an attribute has not been not associated to an FQN when the entity 
 ```json
 [
     {
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
         "id": "urn:ngsi-ld:Building:store001",
         "type": "https://uri.fiware.org/ns/data-models#Building",
-        "http://schema.org/address": {
+        "https://schema.org/address": {
             "type": "Property",
             "value": {
                 "streetAddress": "Bornholmer Straße 65",
@@ -571,13 +570,13 @@ Note that if an attribute has not been not associated to an FQN when the entity 
                 "value": true
             }
         },
-        "name": {
+        "https://uri.etsi.org/ngsi-ld/name": {
             "type": "Property",
             "value": "Bösebrücke Einkauf"
         },
         "https://uri.fiware.org/ns/data-models#category": {
             "type": "Property",
-            "value": ["commercial"]
+            "value": ["https://uri.fiware.org/ns/data-models#commercial"]
         },
         "location": {
             "type": "GeoProperty",
@@ -585,13 +584,13 @@ Note that if an attribute has not been not associated to an FQN when the entity 
                 "type": "Point",
                 "coordinates": [13.3986, 52.5547]
             }
-        },
-        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+        }
     },
     {
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "https://uri.fiware.org/ns/data-models#Building",
-        "http://schema.org/address": {
+        "https://schema.org/address": {
             "type": "Property",
             "value": {
                 "streetAddress": "Friedrichstraße 44",
@@ -604,13 +603,13 @@ Note that if an attribute has not been not associated to an FQN when the entity 
                 "value": true
             }
         },
-        "http://schema.org/name": {
+        "https://uri.etsi.org/ngsi-ld/name": {
             "type": "Property",
             "value": "Checkpoint Markt"
         },
         "https://uri.fiware.org/ns/data-models#category": {
             "type": "Property",
-            "value": ["commercial"]
+            "value": ["https://uri.fiware.org/ns/data-models#commercial"]
         },
         "location": {
             "type": "GeoProperty",
@@ -618,8 +617,7 @@ Note that if an attribute has not been not associated to an FQN when the entity 
                 "type": "Point",
                 "coordinates": [13.3903, 52.5075]
             }
-        },
-        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+        }
     }
 ]
 ```
@@ -638,15 +636,15 @@ curl -G -X GET \
 
 #### Response:
 
-The response returns the Core `@context` by default
-(`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`) and all attributes are
-expanded whenever possible.
+The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`) and
+all attributes are expanded whenever possible.
 
 ```json
 {
+    "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
     "id": "urn:ngsi-ld:Building:store001",
     "type": "https://uri.fiware.org/ns/data-models#Building",
-    "http://schema.org/address": {
+    "https://schema.org/address": {
         "type": "Property",
         "value": {
             "streetAddress": "Bornholmer Straße 65",
@@ -659,13 +657,13 @@ expanded whenever possible.
             "value": true
         }
     },
-    "name": {
+    "https://uri.etsi.org/ngsi-ld/name": {
         "type": "Property",
         "value": "Bösebrücke Einkauf"
     },
     "https://uri.fiware.org/ns/data-models#category": {
         "type": "Property",
-        "value": ["commercial"]
+        "value": ["https://uri.fiware.org/ns/data-models#commercial"]
     },
     "location": {
         "type": "GeoProperty",
@@ -673,8 +671,7 @@ expanded whenever possible.
             "type": "Point",
             "coordinates": [13.3986, 52.5547]
         }
-    },
-    "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+    }
 }
 ```
 
@@ -689,7 +686,7 @@ A [`Link` header](https://www.w3.org/wiki/LinkHeader) must be supplied to associ
 with the FQN `https://uri.fiware.org/ns/data-models/Building`. The full link header syntax can be seen below:
 
 ```text
-Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
+Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
 ```
 
 The standard HTTP `Link` header allows metadata (in this case the `@context`) to be passed in without actually touching
@@ -700,7 +697,7 @@ the resource in question. In the case of NGSI-LD, the metadata is a file in `app
 ```console
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+    -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'options=keyValues'
@@ -715,6 +712,7 @@ used as the `@context` returned in the response.
 ```json
 [
     {
+        "@context": "https://schema.lab.fiware.org/ld/context",
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
         "address": {
@@ -728,10 +726,10 @@ used as the `@context` returned in the response.
         "location": {
             "type": "Point",
             "coordinates": [13.3986, 52.5547]
-        },
-        "@context": "https://fiware.github.io/data-models/context.jsonld"
+        }
     },
     {
+        "@context": "https://schema.lab.fiware.org/ld/context",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -745,8 +743,7 @@ used as the `@context` returned in the response.
         "location": {
             "type": "Point",
             "coordinates": [13.3903, 52.5075]
-        },
-        "@context": "https://fiware.github.io/data-models/context.jsonld"
+        }
     }
 ]
 ```
@@ -762,7 +759,7 @@ the `q` parameter - if a string has spaces in it, it can be URL encoded and held
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=name==%22Checkpoint%20Markt%22' \
@@ -771,7 +768,7 @@ curl -G -X GET \
 
 #### Response:
 
-The `Link` header `https://fiware.github.io/data-models/context.jsonld` holds an array of `@context` as shown:
+The `Link` header `https://schema.lab.fiware.org/ld/context` holds an array of `@context` as shown:
 
 ```json
 {
@@ -790,6 +787,7 @@ JSON-LD as shown:
 ```json
 [
     {
+        "@context": "https://schema.lab.fiware.org/ld/context",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -803,8 +801,7 @@ JSON-LD as shown:
         "location": {
             "type": "Point",
             "coordinates": [13.3903, 52.5075]
-        },
-        "@context": "https://fiware.github.io/data-models/context.jsonld"
+        }
     }
 ]
 ```
@@ -820,7 +817,7 @@ done using the `q` parameter, comma separating the acceptable values.
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=category==%22commercial%22,%22office%22 \
@@ -834,6 +831,7 @@ The response is returned in JSON-LD format with short form attribute names:
 ```json
 [
     {
+        "@context": "https://schema.lab.fiware.org/ld/context",
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
         "address": {
@@ -847,10 +845,10 @@ The response is returned in JSON-LD format with short form attribute names:
         "location": {
             "type": "Point",
             "coordinates": [13.3986, 52.5547]
-        },
-        "@context": "https://fiware.github.io/data-models/context.jsonld"
+        }
     },
     {
+        "@context": "https://schema.lab.fiware.org/ld/context",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -864,8 +862,7 @@ The response is returned in JSON-LD format with short form attribute names:
         "location": {
             "type": "Point",
             "coordinates": [13.3903, 52.5075]
-        },
-        "@context": "https://fiware.github.io/data-models/context.jsonld"
+        }
     }
 ]
 ```
@@ -882,7 +879,7 @@ Filtering can be done using the `q` parameter - sub-attributes are annotated usi
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=address[addressLocality]==%22Kreuzberg%22' \
@@ -896,6 +893,7 @@ Use of the `Link` header and the `options=keyValues` parameter reduces the respo
 ```json
 [
     {
+        "@context": "https://schema.lab.fiware.org/ld/context",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -909,8 +907,7 @@ Use of the `Link` header and the `options=keyValues` parameter reduces the respo
         "location": {
             "type": "Point",
             "coordinates": [13.3903, 52.5075]
-        },
-        "@context": "https://fiware.github.io/data-models/context.jsonld"
+        }
     }
 ]
 ```
@@ -928,7 +925,7 @@ This supersedes the `mq` parameter from NGSI v2.
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/json' \
     -d 'type=Building' \
     -d 'mq=address.verified==true' \
@@ -943,6 +940,7 @@ consists of JSON only without the attribute `type` and `metadata` elements.
 ```json
 [
     {
+        "@context": "https://schema.lab.fiware.org/ld/context",
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
         "address": {
@@ -951,13 +949,15 @@ consists of JSON only without the attribute `type` and `metadata` elements.
             "addressLocality": "Prenzlauer Berg",
             "postalCode": "10439"
         },
+        "name": "Bösebrücke Einkauf",
+        "category": ["commercial"],
         "location": {
             "type": "Point",
             "coordinates": [13.3986, 52.5547]
-        },
-        "name": "Bösebrücke Einkauf"
+        }
     },
     {
+        "@context": "https://schema.lab.fiware.org/ld/context",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -966,11 +966,12 @@ consists of JSON only without the attribute `type` and `metadata` elements.
             "addressLocality": "Kreuzberg",
             "postalCode": "10969"
         },
+        "name": "Checkpoint Markt",
+        "category": ["commercial"],
         "location": {
             "type": "Point",
             "coordinates": [13.3903, 52.5075]
-        },
-        "name": "Checkpoint Markt"
+        }
     }
 ]
 ```
@@ -992,7 +993,7 @@ If another attribute is to be used, an additional `geoproperty` parameter is req
 ```console
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
-  -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+  -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
   -H 'Accept: application/json' \
   -d 'type=Building' \
   -d 'geometry=Point' \
@@ -1009,6 +1010,7 @@ consists of JSON only without the attribute `type` and `metadata` elements.
 ```json
 [
     {
+        "@context": "https://schema.lab.fiware.org/ld/context",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -1017,11 +1019,12 @@ consists of JSON only without the attribute `type` and `metadata` elements.
             "addressLocality": "Kreuzberg",
             "postalCode": "10969"
         },
+        "name": "Checkpoint Markt",
+        "category": ["commercial"],
         "location": {
             "type": "Point",
             "coordinates": [13.3903, 52.5075]
-        },
-        "name": "Checkpoint Markt"
+        }
     }
 ]
 ```
