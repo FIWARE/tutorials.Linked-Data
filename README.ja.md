@@ -308,7 +308,7 @@ mongo-db:
 
 
 ```bash
-git clone git@github.com:FIWARE/tutorials.Linked-Data.git
+git clone https://github.com/FIWARE/tutorials.Linked-Data.git
 cd tutorials.Linked-Data
 
 ./services start
