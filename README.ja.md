@@ -9,7 +9,7 @@
 <!-- prettier-ignore -->
 
 このチュートリアルでは、リンクト・データ (Linked Data) の概念を FIWARE プラットフォームに導入します。スーパーマーケット
-・チェーンのストア・ファインダ・アプリケーションは **NGSI-LD** を使用して再作成されます。**NSGI v2** と **NGSI-LD**
+・チェーンのストア・ファインダ・アプリケーションは **NGSI-LD** を使用して再作成されます。**NGSI v2** と **NGSI-LD**
 インターフェースの違いが強調され、説明されています。このチュートリアルは最初のチュートリアルと直接類似していますが、
 **NGSI-LD** インターフェースからの API 呼び出しを使用します。
 
@@ -68,7 +68,7 @@
 > ― Malcolm Gladwell, The Tipping Point
 
 FIWARE 入門の[チュートリアル](https://github.com/FIWARE/tutorials.Getting-Started)の紹介では、コンテキスト・データ・
-エンティティの作成と操作に一般的に使用される [NSGI v2](https://fiware.github.io/specifications/OpenAPI/ngsiv2)
+エンティティの作成と操作に一般的に使用される [NGSI v2](https://fiware.github.io/specifications/OpenAPI/ngsiv2)
 インターフェイスを紹介しました。このインターフェースの進化は、**リンクト・データ**の概念を追加しながらコンテキスト・
 データ・エンティティを強化するためのメカニズムとして
 [NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/spec/updated/full_api.json)
@@ -239,7 +239,7 @@ NGSI LD データ・エンティティ (スーパーマーケットなど) :
 
 # アーキテクチャ
 
-デモ・アプリケーションは、準拠している Context Broker と NGSI-LD の呼び出しを送受信します。NSGI v2 と NSGI-LD
+デモ・アプリケーションは、準拠している Context Broker と NGSI-LD の呼び出しを送受信します。NGSI v2 と NGSI-LD
 の両方のインターフェースが [Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/)
 の実験版で利用可能であるため、私たちのデモ・アプリケーションは1つ FIWARE コンポーネントのみを利用します。
 
@@ -394,7 +394,7 @@ FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Bu
 ### コア・コンテキスト
 
 [https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld)
-は NSGI-LD のコア `@context` を参照します。これはすべての NGSI エンティティに共通の `id` や `type` のような用語を定義し、
+は NGSI-LD のコア `@context` を参照します。これはすべての NGSI エンティティに共通の `id` や `type` のような用語を定義し、
 `Property` や `Relationship` のような用語を定義します。コア・コンテキストは NGSI-LD にとって非常に基本的なもので、
 デフォルトでリクエストに送信された `@context` に追加されます。
 
@@ -525,7 +525,7 @@ curl -iX POST \
 
 ### NGSI-LD エンティティ定義内のプロパティの定義
 
-`id` と `type` 属性は NSGI v2 を使ったことのある人なら誰でも知っているはずで、これらは変わっていません。上記のように、
+`id` と `type` 属性は NGSI v2 を使ったことのある人なら誰でも知っているはずで、これらは変わっていません。上記のように、
 タイプはインクルードされたデータ・モデルを参照するべきです、この場合 `Building` はインクルードされた
 URN `https://uri.fiware.org/ns/data-models#Building` の短い名前として使われています。その後、各 _property_ は2つの属性、
 `type` と `value` を含む JSON 要素として定義されます。
