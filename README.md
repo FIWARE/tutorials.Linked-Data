@@ -1033,4 +1033,4 @@ consists of JSON only without the attribute `type` and `metadata` elements.
 
 ## License
 
-[MIT](LICENSE) © 2019 FIWARE Foundation e.V.
+[MIT](LICENSE) © 2019-2020 FIWARE Foundation e.V.

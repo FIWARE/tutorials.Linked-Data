@@ -1164,4 +1164,4 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
 
 ## License
 
-[MIT](LICENSE) © 2019 FIWARE Foundation e.V.
+[MIT](LICENSE) © 2019-2020 FIWARE Foundation e.V.
