@@ -311,7 +311,7 @@ mongo-db:
 git clone https://github.com/FIWARE/tutorials.Linked-Data.git
 cd tutorials.Linked-Data
 
-./services start
+./services orion|scorpio
 ```
 
 > **注 :** クリーンアップして最初からやり直す場合は、次のコマンドで実行できます :
@@ -382,10 +382,7 @@ FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Bu
     "id": "urn:ngsi-ld:Building:store001",
     "type": "Building",
     ...  other data attributes
-    "@context": [
-        "https://schema.lab.fiware.org/ld/context",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
-    ]
+    "@context": "https://schema.lab.fiware.org/ld/context"
 }
 ```
 
@@ -465,10 +462,7 @@ curl -iX POST \
         "type": "Property",
         "value": "Bösebrücke Einkauf"
     },
-    "@context": [
-        "https://schema.lab.fiware.org/ld/context",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
-    ]
+    "@context": "https://schema.lab.fiware.org/ld/context"
 }'
 ```
 
@@ -514,10 +508,7 @@ curl -iX POST \
         "type": "Property",
         "value": "Checkpoint Markt"
     },
-    "@context": [
-        "https://schema.lab.fiware.org/ld/context",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
-    ]
+    "@context": "https://schema.lab.fiware.org/ld/context"
 }'
 ```
 
@@ -624,9 +615,7 @@ curl -G -X GET \
         },
         "https://uri.fiware.org/ns/data-models#category": {
             "type": "Property",
-            "value": [
-                "https://uri.fiware.org/ns/data-models#commercial"
-            ]
+            "value": "https://uri.fiware.org/ns/data-models#commercial"
         },
         "location": {
             "type": "GeoProperty",
@@ -662,9 +651,7 @@ curl -G -X GET \
         },
         "https://uri.fiware.org/ns/data-models#category": {
             "type": "Property",
-            "value": [
-                "https://uri.fiware.org/ns/data-models#commercial"
-            ]
+            "value": "https://uri.fiware.org/ns/data-models#commercial"
         },
         "location": {
             "type": "GeoProperty",
@@ -724,9 +711,7 @@ curl -G -X GET \
     },
     "https://uri.fiware.org/ns/data-models#category": {
         "type": "Property",
-        "value": [
-            "https://uri.fiware.org/ns/data-models#commercial"
-        ]
+        "value": "https://uri.fiware.org/ns/data-models#commercial"
     },
     "location": {
         "type": "GeoProperty",
@@ -792,9 +777,7 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
             "postalCode": "10439"
         },
         "name": "Bösebrücke Einkauf",
-        "category": [
-            "commercial"
-        ],
+        "category": "commercial",
         "location": {
             "type": "Point",
             "coordinates": [
@@ -814,9 +797,7 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": [
-            "commercial"
-        ],
+        "category": "commercial",
         "location": {
             "type": "Point",
             "coordinates": [
@@ -879,9 +860,7 @@ curl -G -X GET \
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": [
-            "commercial"
-        ],
+        "category": "commercial",
         "location": {
             "type": "Point",
             "coordinates": [
@@ -930,9 +909,7 @@ curl -G -X GET \
             "postalCode": "10439"
         },
         "name": "Bösebrücke Einkauf",
-        "category": [
-            "commercial"
-        ],
+        "category": "commercial",
         "location": {
             "type": "Point",
             "coordinates": [
@@ -952,9 +929,7 @@ curl -G -X GET \
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": [
-            "commercial"
-        ],
+        "category": "commercial",
         "location": {
             "type": "Point",
             "coordinates": [
@@ -983,7 +958,7 @@ curl -G -X GET \
     -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
-    -d 'q=address[addressLocality]==%22Kreuzberg%22' \
+    -d 'q=address%5BaddressLocality%5D==%22Kreuzberg%22' \
     -d 'options=keyValues'
 ```
 
@@ -1004,9 +979,7 @@ curl -G -X GET \
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": [
-            "commercial"
-        ],
+        "category": "commercial",
         "location": {
             "type": "Point",
             "coordinates": [
@@ -1058,9 +1031,7 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
             "postalCode": "10439"
         },
         "name": "Bösebrücke Einkauf",
-        "category": [
-            "commercial"
-        ],
+        "category": "commercial",
         "location": {
             "type": "Point",
             "coordinates": [
@@ -1080,9 +1051,7 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": [
-            "commercial"
-        ],
+        "category": "commercial",
         "location": {
             "type": "Point",
             "coordinates": [
@@ -1116,7 +1085,7 @@ curl -G -X GET \
   -H 'Accept: application/ld+json' \
   -d 'type=Building' \
   -d 'geometry=Point' \
-  -d 'coordinates=[13.3777,52.5162]' \
+  -d 'coordinates=%5B13.3777,52.5162%5D' \
   -d 'georel=near;maxDistance==2000' \
   -d 'options=keyValues'
 ```
@@ -1139,9 +1108,7 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": [
-            "commercial"
-        ],
+        "category": "commercial",
         "location": {
             "type": "Point",
             "coordinates": [

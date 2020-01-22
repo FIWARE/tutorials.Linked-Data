@@ -284,7 +284,7 @@ repository. Please clone the repository and create the necessary images by runni
 git clone https://github.com/FIWARE/tutorials.Linked-Data.git
 cd tutorials.Linked-Data
 
-./services start
+./services orion|scorpio
 ```
 
 > **Note:** If you want to clean up and start over again you can do so with the following command:
@@ -348,10 +348,8 @@ the following `@context` would be required
     "id": "urn:ngsi-ld:Building:store001",
     "type": "Building",
     ...  other data attributes
-    "@context": [
-      "https://schema.lab.fiware.org/ld/context",
-      "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
-    ]
+    "@context": "https://schema.lab.fiware.org/ld/context"
+
 }
 ```
 
@@ -427,10 +425,7 @@ curl -iX POST \
         "type": "Property",
         "value": "Bösebrücke Einkauf"
     },
-    "@context": [
-        "https://schema.lab.fiware.org/ld/context",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
-    ]
+    "@context": "https://schema.lab.fiware.org/ld/context"
 }'
 ```
 
@@ -476,10 +471,7 @@ curl -iX POST \
         "type": "Property",
         "value": "Checkpoint Markt"
     },
-    "@context": [
-        "https://schema.lab.fiware.org/ld/context",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
-    ]
+    "@context": "https://schema.lab.fiware.org/ld/context"
 }'
 ```
 
@@ -576,7 +568,7 @@ Note that if an attribute has not been not associated to an FQN when the entity 
         },
         "https://uri.fiware.org/ns/data-models#category": {
             "type": "Property",
-            "value": ["https://uri.fiware.org/ns/data-models#commercial"]
+            "value": "https://uri.fiware.org/ns/data-models#commercial"
         },
         "location": {
             "type": "GeoProperty",
@@ -609,7 +601,7 @@ Note that if an attribute has not been not associated to an FQN when the entity 
         },
         "https://uri.fiware.org/ns/data-models#category": {
             "type": "Property",
-            "value": ["https://uri.fiware.org/ns/data-models#commercial"]
+            "value": "https://uri.fiware.org/ns/data-models#commercial"
         },
         "location": {
             "type": "GeoProperty",
@@ -663,7 +655,7 @@ all attributes are expanded whenever possible.
     },
     "https://uri.fiware.org/ns/data-models#category": {
         "type": "Property",
-        "value": ["https://uri.fiware.org/ns/data-models#commercial"]
+        "value": "https://uri.fiware.org/ns/data-models#commercial"
     },
     "location": {
         "type": "GeoProperty",
@@ -722,7 +714,7 @@ used as the `@context` returned in the response.
             "postalCode": "10439"
         },
         "name": "Bösebrücke Einkauf",
-        "category": ["commercial"],
+        "category": "commercial",
         "location": {
             "type": "Point",
             "coordinates": [13.3986, 52.5547]
@@ -739,7 +731,7 @@ used as the `@context` returned in the response.
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": ["commercial"],
+        "category": "commercial",
         "location": {
             "type": "Point",
             "coordinates": [13.3903, 52.5075]
@@ -797,7 +789,7 @@ JSON-LD as shown:
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": ["commercial"],
+        "category": "commercial",
         "location": {
             "type": "Point",
             "coordinates": [13.3903, 52.5075]
@@ -841,7 +833,7 @@ The response is returned in JSON-LD format with short form attribute names:
             "postalCode": "10439"
         },
         "name": "Bösebrücke Einkauf",
-        "category": ["commercial"],
+        "category": "commercial",
         "location": {
             "type": "Point",
             "coordinates": [13.3986, 52.5547]
@@ -858,7 +850,7 @@ The response is returned in JSON-LD format with short form attribute names:
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": ["commercial"],
+        "category": "commercial",
         "location": {
             "type": "Point",
             "coordinates": [13.3903, 52.5075]
@@ -882,7 +874,7 @@ curl -G -X GET \
     -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
-    -d 'q=address[addressLocality]==%22Kreuzberg%22' \
+    -d 'q=address%5BaddressLocality%5D==%22Kreuzberg%22' \
     -d 'options=keyValues'
 ```
 
@@ -903,7 +895,7 @@ Use of the `Link` header and the `options=keyValues` parameter reduces the respo
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": ["commercial"],
+        "category": "commercial",
         "location": {
             "type": "Point",
             "coordinates": [13.3903, 52.5075]
@@ -950,7 +942,7 @@ consists of JSON only without the attribute `type` and `metadata` elements.
             "postalCode": "10439"
         },
         "name": "Bösebrücke Einkauf",
-        "category": ["commercial"],
+        "category": "commercial",
         "location": {
             "type": "Point",
             "coordinates": [13.3986, 52.5547]
@@ -967,7 +959,7 @@ consists of JSON only without the attribute `type` and `metadata` elements.
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": ["commercial"],
+        "category": "commercial",
         "location": {
             "type": "Point",
             "coordinates": [13.3903, 52.5075]
@@ -997,7 +989,7 @@ curl -G -X GET \
   -H 'Accept: application/json' \
   -d 'type=Building' \
   -d 'geometry=Point' \
-  -d 'coordinates=[13.3777,52.5162]' \
+  -d 'coordinates=%5B13.3777,52.5162%5D' \
   -d 'georel=near;maxDistance==2000' \
   -d 'options=keyValues'
 ```
@@ -1020,7 +1012,7 @@ consists of JSON only without the attribute `type` and `metadata` elements.
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": ["commercial"],
+        "category": "commercial",
         "location": {
             "type": "Point",
             "coordinates": [13.3903, 52.5075]
