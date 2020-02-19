@@ -377,7 +377,7 @@ curl -X GET \
 FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html)
 データ・エンティティを追加するには、次の `@context` が必要です。
 
-```json
+```jsonld
 {
     "id": "urn:ngsi-ld:Building:store001",
     "type": "Building",
@@ -404,7 +404,7 @@ FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Bu
 FIWARE Foundation によって定義されたすべての[データモデル](https://fiware-datamodels.readthedocs.io)の定義が読み込まれます。
 **Building** に関連する FQNs の概要は以下のようになります :
 
-```json
+```jsonld
 {
     "@context": {
         "Building": "https://uri.fiware.org/ns/data-models#Building",
@@ -590,7 +590,7 @@ curl -G -X GET \
 
 エンティティの作成時に属性が FQN に関連付けられていない場合は、短い名前が**常**に表示されます。
 
-```json
+```jsonld
 [
     {
         "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
@@ -687,7 +687,7 @@ curl -G -X GET \
 (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`)
 で コアの `@context` を返し、すべての属性は可能な限り展開されます。
 
-```json
+```jsonld
 {
     "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
     "id": "urn:ngsi-ld:Building:store001",
@@ -764,7 +764,7 @@ curl -G -X GET \
 _properties-of-properties_ 要素は含まれていません。リクエストからの `Link` ヘッダはレスポンスに返される `@context`
 として使われていることがわかります。
 
-```json
+```jsonld
 [
     {
         "@context": "https://schema.lab.fiware.org/ld/context",
@@ -833,7 +833,7 @@ curl -G -X GET \
 
 `Link` ヘッダ `https://schema.lab.fiware.org/ld/context` は以下に示すように `@context` の配列を保持します :
 
-```json
+```jsonld
 {
     "@context": [
         "https://fiware.github.io/data-models/context.jsonld",
@@ -847,7 +847,7 @@ curl -G -X GET \
 これは、`Link` ヘッダと `options=keyValues` パラメータを使用すると、以下に示すように短い形式の JSON-LD
 へのレスポンスが減ることを意味します :
 
-```json
+```jsonld
 [
     {
         "@context": "https://schema.lab.fiware.org/ld/context",
@@ -896,7 +896,7 @@ curl -G -X GET \
 
 レスポンスは、短い形式の属性名を使用してJSON-LD 形式で返されます :
 
-```json
+```jsonld
 [
     {
         "@context": "https://schema.lab.fiware.org/ld/context",
@@ -966,7 +966,7 @@ curl -G -X GET \
 
 `Link` ヘッダと `options=keyValues` パラメータの使用は JSON-LD へのレスポンスを減らします。
 
-```json
+```jsonld
 [
     {
         "@context": "https://schema.lab.fiware.org/ld/context",
@@ -1018,7 +1018,7 @@ curl -G -X GET \
 Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているため、レスポンスは属性 `type` と `metadata`
 要素のない JSON のみで構成されています。
 
-```json
+```jsonld
 [
     {
         "@context": "https://schema.lab.fiware.org/ld/context",
@@ -1095,7 +1095,7 @@ curl -G -X GET \
 Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているため、レスポンスは属性 `type` と `metadata`
 要素のない JSON のみで構成されています。
 
-```json
+```jsonld
 [
     {
         "@context": "https://schema.lab.fiware.org/ld/context",

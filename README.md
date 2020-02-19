@@ -343,7 +343,7 @@ so JSON-LD introduces the idea of an `@context` attribute which can hold pointer
 FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html) data entity,
 the following `@context` would be required
 
-```json
+```jsonld
 {
     "id": "urn:ngsi-ld:Building:store001",
     "type": "Building",
@@ -367,7 +367,7 @@ standard data models supplied by FIWARE. Adding this to the `@context` will load
 [data models](https://fiware-datamodels.readthedocs.io) defined by the FIWARE Foundation in collaboration with other
 organizations such as GSMA or TM Forum. A summary of the FQNs related to **Building** can be seen below:
 
-```json
+```jsonld
 {
     "@context": {
         "Building": "https://uri.fiware.org/ns/data-models#Building",
@@ -543,7 +543,7 @@ all attributes are expanded whenever possible.
 Note that if an attribute has not been not associated to an FQN when the entity was created, the short name will
 **always** be displayed.
 
-```json
+```jsonld
 [
     {
         "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
@@ -631,7 +631,7 @@ curl -G -X GET \
 The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`) and
 all attributes are expanded whenever possible.
 
-```json
+```jsonld
 {
     "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
     "id": "urn:ngsi-ld:Building:store001",
@@ -701,7 +701,7 @@ Because of the use of the `options=keyValues`, the response consists of JSON onl
 `type="Property"` or any _properties-of-properties_ elements. You can see that `Link` header from the request has been
 used as the `@context` returned in the response.
 
-```json
+```jsonld
 [
     {
         "@context": "https://schema.lab.fiware.org/ld/context",
@@ -762,7 +762,7 @@ curl -G -X GET \
 
 The `Link` header `https://schema.lab.fiware.org/ld/context` holds an array of `@context` as shown:
 
-```json
+```jsonld
 {
     "@context": [
         "https://fiware.github.io/data-models/context.jsonld",
@@ -776,7 +776,7 @@ and therefore includes the FIWARE Building model.
 This means that use of the `Link` header and the `options=keyValues` parameter reduces the response to short form
 JSON-LD as shown:
 
-```json
+```jsonld
 [
     {
         "@context": "https://schema.lab.fiware.org/ld/context",
@@ -820,7 +820,7 @@ curl -G -X GET \
 
 The response is returned in JSON-LD format with short form attribute names:
 
-```json
+```jsonld
 [
     {
         "@context": "https://schema.lab.fiware.org/ld/context",
@@ -882,7 +882,7 @@ curl -G -X GET \
 
 Use of the `Link` header and the `options=keyValues` parameter reduces the response to JSON-LD.
 
-```json
+```jsonld
 [
     {
         "@context": "https://schema.lab.fiware.org/ld/context",
@@ -929,7 +929,7 @@ curl -G -X GET \
 Because of the use of the `options=keyValues` together with the Accept HTTP header (`application/json`), the response
 consists of JSON only without the attribute `type` and `metadata` elements.
 
-```json
+```jsonld
 [
     {
         "@context": "https://schema.lab.fiware.org/ld/context",
@@ -999,7 +999,7 @@ curl -G -X GET \
 Because of the use of the `options=keyValues` together with the Accept HTTP header (`application/json`), the response
 consists of JSON only without the attribute `type` and `metadata` elements.
 
-```json
+```jsonld
 [
     {
         "@context": "https://schema.lab.fiware.org/ld/context",
