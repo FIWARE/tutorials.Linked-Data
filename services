@@ -24,16 +24,20 @@ waitForOrion () {
 
 waitForScorpio () {
 	echo -e "\n⏳ Waiting for \033[1;34mScorpio\033[0m to respond\n"
+	waitSeconds=30
 	while [ `docker run --network fiware_default --rm curlimages/curl -s -o /dev/null -w %{http_code} 'http://scorpio:9090/scorpio/v1/info/'` -eq 000 ]
 	do 
 	  echo -e "Context Broker HTTP state: " `curl -s -o /dev/null -w %{http_code} 'http://localhost:9090/scorpio/v1/info/'` " (waiting for 500)"
-	  sleep 30
+	  echo -e "Waiting for ${waitSeconds} seconds ..."
+	  sleep ${waitSeconds}
 	done
 	echo -e "\n⏳ Waiting for all \033[1;34mScorpio\033[0m services to be fully available\n"
 	while [ `docker run --network fiware_default --rm curlimages/curl -s -o /dev/null -w %{http_code} 'http://scorpio:9090/scorpio/v1/info/'` -eq 500 ]
 	do 
 	  echo -e "Context Broker HTTP state: " `curl -s -o /dev/null -w %{http_code} 'http://localhost:9090/scorpio/v1/info/'` " (waiting for 200)"
-	  sleep 30
+	  waitSeconds=$((waitSeconds+5))
+	  echo -e "Waiting for ${waitSeconds} seconds ..."
+	  sleep ${waitSeconds}
 	done
 }
 
