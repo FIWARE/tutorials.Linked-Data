@@ -101,7 +101,7 @@ FIWARE 入門の[チュートリアル](https://github.com/FIWARE/tutorials.Gett
 
 ### :arrow_forward: ビデオ : リンクト・データとは何ですか？
 
-[![](http://img.youtube.com/vi/4x_xzT5eF5Q/0.jpg)](https://www.youtube.com/watch?v=4x_xzT5eF5Q "Introduction")
+[![](https://fiware.github.io/tutorials.Step-by-Step/img/video-logo.png)](https://www.youtube.com/watch?v=4x_xzT5eF5Q "Introduction")
 
 リンクト・データの概念を説明したビデオを見るには、上の画像をクリックしてください。
 
@@ -124,7 +124,7 @@ JSON-LD は `@context` 要素の概念を導入します。これはコンピュ
 
 ### :arrow_forward: ビデオ : JSON-LD とは何ですか？
 
-[![](http://img.youtube.com/vi/vioCbTo3C-4/0.jpg)](https://www.youtube.com/watch?v=vioCbTo3C-4 "JSON-LD")
+[![](https://fiware.github.io/tutorials.Step-by-Step/img/video-logo.png)](https://www.youtube.com/watch?v=vioCbTo3C-4 "JSON-LD")
 
 JSON-LD の背後にある基本概念を説明したビデオを見るには、上の画像をクリックしてください。
 
