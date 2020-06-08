@@ -349,7 +349,7 @@ the following `@context` would be required
     "id": "urn:ngsi-ld:Building:store001",
     "type": "Building",
     ...  other data attributes
-    "@context": "https://schema.lab.fiware.org/ld/context"
+    "@context": "https://fiware.github.io/data-models/context.jsonld"
 
 }
 ```
@@ -426,16 +426,17 @@ curl -iX POST \
         "type": "Property",
         "value": "Bösebrücke Einkauf"
     },
-    "@context": "https://schema.lab.fiware.org/ld/context"
+    "@context": [
+        "https://fiware.github.io/data-models/context.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+    ]
 }'
 ```
 
 The first request will take some time, as the context broker must navigate and load all of the files mentioned in the
 `@context`.
 
-> **Note**: if `https://schema.lab.fiware.org/ld/context` is unavailable, an alternative copy of the FIWARE data models
-> `@context` can be found on the FIWARE Data Models gh-pages on GitHub. Replace the @context value with:
-> `https://fiware.github.io/data-models/full-context.jsonld`.
+> **Note**: if `https://fiware.github.io/data-models/context.jsonld` is unavailable for some reason the request will fail
 >
 > For a working production system it is essential that the `@context` files are always available to ensure third parties can
 > read the context. High availability infrastructure has not been considered for this tutorial to keep the architecture simple.
@@ -479,7 +480,10 @@ curl -iX POST \
         "type": "Property",
         "value": "Checkpoint Markt"
     },
-    "@context": "https://schema.lab.fiware.org/ld/context"
+    "@context": [
+        "https://fiware.github.io/data-models/context.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+    ]
 }'
 ```
 
@@ -686,7 +690,7 @@ A [`Link` header](https://www.w3.org/wiki/LinkHeader) must be supplied to associ
 with the FQN `https://uri.fiware.org/ns/data-models/Building`. The full link header syntax can be seen below:
 
 ```text
-Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
+Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
 ```
 
 The standard HTTP `Link` header allows metadata (in this case the `@context`) to be passed in without actually touching
@@ -697,7 +701,7 @@ the resource in question. In the case of NGSI-LD, the metadata is a file in `app
 ```console
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'options=keyValues'
@@ -712,7 +716,7 @@ used as the `@context` returned in the response.
 ```jsonld
 [
     {
-        "@context": "https://schema.lab.fiware.org/ld/context",
+        "@context": "https://fiware.github.io/data-models/context.jsonld",
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
         "address": {
@@ -729,7 +733,7 @@ used as the `@context` returned in the response.
         }
     },
     {
-        "@context": "https://schema.lab.fiware.org/ld/context",
+        "@context": "https://fiware.github.io/data-models/context.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -759,7 +763,7 @@ the `q` parameter - if a string has spaces in it, it can be URL encoded and held
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=name==%22Checkpoint%20Markt%22' \
@@ -787,7 +791,7 @@ JSON-LD as shown:
 ```jsonld
 [
     {
-        "@context": "https://schema.lab.fiware.org/ld/context",
+        "@context": "https://fiware.github.io/data-models/context.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -817,7 +821,7 @@ done using the `q` parameter, comma separating the acceptable values.
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=category==%22commercial%22,%22office%22 \
@@ -831,7 +835,7 @@ The response is returned in JSON-LD format with short form attribute names:
 ```jsonld
 [
     {
-        "@context": "https://schema.lab.fiware.org/ld/context",
+        "@context": "https://fiware.github.io/data-models/context.jsonld",
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
         "address": {
@@ -848,7 +852,7 @@ The response is returned in JSON-LD format with short form attribute names:
         }
     },
     {
-        "@context": "https://schema.lab.fiware.org/ld/context",
+        "@context": "https://fiware.github.io/data-models/context.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -879,7 +883,7 @@ Filtering can be done using the `q` parameter - sub-attributes are annotated usi
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=address%5BaddressLocality%5D==%22Kreuzberg%22' \
@@ -893,7 +897,7 @@ Use of the `Link` header and the `options=keyValues` parameter reduces the respo
 ```jsonld
 [
     {
-        "@context": "https://schema.lab.fiware.org/ld/context",
+        "@context": "https://fiware.github.io/data-models/context.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -925,7 +929,7 @@ This supersedes the `mq` parameter from NGSI v2.
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
     -H 'Accept: application/json' \
     -d 'type=Building' \
     -d 'mq=address.verified==true' \
@@ -940,7 +944,7 @@ consists of JSON only without the attribute `type` and `metadata` elements.
 ```jsonld
 [
     {
-        "@context": "https://schema.lab.fiware.org/ld/context",
+        "@context": "https://fiware.github.io/data-models/context.jsonld",
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
         "address": {
@@ -957,7 +961,7 @@ consists of JSON only without the attribute `type` and `metadata` elements.
         }
     },
     {
-        "@context": "https://schema.lab.fiware.org/ld/context",
+        "@context": "https://fiware.github.io/data-models/context.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -993,7 +997,7 @@ If another attribute is to be used, an additional `geoproperty` parameter is req
 ```console
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
-  -H 'Link: <https://schema.lab.fiware.org/ld/context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+  -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
   -H 'Accept: application/json' \
   -d 'type=Building' \
   -d 'geometry=Point' \
@@ -1010,7 +1014,7 @@ consists of JSON only without the attribute `type` and `metadata` elements.
 ```jsonld
 [
     {
-        "@context": "https://schema.lab.fiware.org/ld/context",
+        "@context": "https://fiware.github.io/data-models/context.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
