@@ -470,6 +470,14 @@ curl -iX POST \
 Context Broker は `@context` で言及されているすべてのファイルをナビゲートしてロードしなければならないので、
 最初のリクエストは時間がかかります。
 
+> **注**: `https://schema.lab.fiware.org/ld/context` が利用できない場合、FIWARE データモデル `@context` の代替コピーは、
+> GitHub の FIWARE データモデル の gh-pages にあります。@context 値を以下でで置き換えます:
+> `https://fiware.github.io/data-models/full-context.jsonld`.
+>
+> 稼働中の本番システムでは、サードパーティがコンテキストを確実に読み取ることができるように、`@context` ファイルが常に
+> 利用可能であることが不可欠です。このチュートリアルでは、アーキテクチャをシンプルに保つために、高可用性
+> インフラストラクチャを考慮していません。
+
 #### :three: リクエスト :
 
 後続の各エンティティは、与えられた `type` に対して一意の `id` を持たなければなりません
