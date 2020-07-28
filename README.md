@@ -268,7 +268,7 @@ mongo-db:
 ```
 
 Both containers are residing on the same network - the Orion Context Broker is listening on Port `1026` and MongoDB is
-listening on the default port `27071`. Both containers are also exposing the same ports externally - this is purely for
+listening on the default port `27017`. Both containers are also exposing the same ports externally - this is purely for
 the tutorial access - so that cUrl or Postman can access them without being part of the same network. The command-line
 initialization should be self explanatory.
 
