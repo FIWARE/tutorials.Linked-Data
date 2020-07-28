@@ -204,7 +204,7 @@ technology which allows to different components isolated into their respective e
 -   To install Docker on Linux follow the instructions [here](https://docs.docker.com/install/)
 
 **Docker Compose** is a tool for defining and running multi-container Docker applications. A
-[YAML file](https://raw.githubusercontent.com/Fiware/tutorials.Identity-Management/master/docker-compose.yml) is used
+[YAML file](https://raw.githubusercontent.com/Fiware/tutorials.Linked-Data/master/docker-compose/orion-ld.yml) is used
 configure the required services for the application. This means all container services can be brought up in a single
 command. Docker Compose is installed by default as part of Docker for Windows and Docker for Mac, however Linux users
 will need to follow the instructions found [here](https://docs.docker.com/compose/install/)
@@ -235,7 +235,7 @@ run from exposed ports.
 
 ![](https://fiware.github.io/tutorials.Linked-Data/img/architecture.png)
 
-The necessary configuration information can be seen in the services section of the associated `docker-compose.yml` file:
+The necessary configuration information can be seen in the services section of the associated `orion-ld.yml` file:
 
 ```yaml
 orion:
@@ -504,7 +504,7 @@ The `type` of a _property_ attribute must be one of the following:
     strings encoded in the [ISO 8601 format](https://en.wikipedia.org/wiki/ISO_8601) - e.g. `YYYY-MM-DDThh:mm:ssZ`
 
 > **Note:** that for simplicity, this data entity has no relationships defined. Relationships must be given the
-> `type="Relationship`. Relationships will be discussed in a subsequent tutorial.
+> `type=Relationship`. Relationships will be discussed in a subsequent tutorial.
 
 ### Defining Properties-of-Properties within the NGSI-LD entity definition
 
@@ -763,7 +763,7 @@ the `q` parameter - if a string has spaces in it, it can be URL encoded and held
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=name==%22Checkpoint%20Markt%22' \
@@ -821,10 +821,10 @@ done using the `q` parameter, comma separating the acceptable values.
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
-    -d 'q=category==%22commercial%22,%22office%22 \
+    -d 'q=category==%22commercial%22,%22office%22' \
     -d 'options=keyValues'
 ```
 
@@ -883,7 +883,7 @@ Filtering can be done using the `q` parameter - sub-attributes are annotated usi
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=address%5BaddressLocality%5D==%22Kreuzberg%22' \
@@ -929,7 +929,7 @@ This supersedes the `mq` parameter from NGSI v2.
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     -H 'Accept: application/json' \
     -d 'type=Building' \
     -d 'mq=address.verified==true' \
@@ -997,7 +997,7 @@ If another attribute is to be used, an additional `geoproperty` parameter is req
 ```console
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
-  -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+  -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
   -H 'Accept: application/json' \
   -d 'type=Building' \
   -d 'geometry=Point' \
