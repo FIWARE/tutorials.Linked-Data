@@ -19,10 +19,10 @@
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/125db8d3a1ea3dab8e3f)
 
-## Contents
+## コンテンツ
 
 <details>
-<summary><strong>Details</strong></summary>
+<summary><strong>詳細</strong></summary>
 
 -   [FIWARE データ・エンティティへのリンクト・データの概念の追加](#adding-linked-data-concepts-to-fiware-data-entities)
     -   [リンクト・データとは何ですか？](#what-is-linked-data)
@@ -184,7 +184,7 @@ _Entities_ は、_properties_ と _relationships_ を持つことができます
 ウェブ全体で見いだされる共通の概念に対応する明確に定義された URI であるべきです (例えば、`http://schema.org/address`
 はアイテムの物理アドレスのための共通の URI です)。_property_ はそのプロパティの状態を反映する値も持ちます (例えば
 `name="Checkpoint Markt"`)。最後に、プロパティはそれ自身がプロパティに関するさらなる情報を反映するさらなるプロパティ
-(別名 _properties-of-properties_)を持つことができます。プロパティとリレーションシップは、リンクされた埋め込みプロパティ
+(別名 _properties-of-properties_) を持つことができます。プロパティとリレーションシップは、リンクされた埋め込みプロパティ
 (_properties-of-properties_ または _properties-of-relationships_ または _relationships-of-properties_ または
 _relationships-of-relationships_ など) を持つことができます :
 
@@ -224,7 +224,7 @@ NGSI LD データ・エンティティ (スーパーマーケットなど) :
 -   Linux に Docker をインストールするには、[こちら](https://docs.docker.com/install/)の手順に従ってください
 
 **Docker Compose** は、マルチコンテナ Docker アプリケーションを定義して実行するためのツールです。
-[YAMLファイル](https://raw.githubusercontent.com/Fiware/tutorials.Linked-Data/master/docker-compose.yml)
+[YAMLファイル](https://raw.githubusercontent.com/Fiware/tutorials.Linked-Data/master/docker-compose/orion-ld.yml)
 を使用して、アプリケーションに必要なサービスを設定します。これは、すべてのコンテナ・サービスを単一のコマンドで起動
 できることを意味します。Docker Compose は、Docker for Windows および Docker for Mac の一部としてデフォルトでインストール
 されますが、Linux ユーザは[こちら](https://docs.docker.com/compose/install/)にある手順に従う必要があります。
@@ -259,7 +259,7 @@ NGSI LD データ・エンティティ (スーパーマーケットなど) :
 
 ![](https://fiware.github.io/tutorials.Linked-Data/img/architecture.png)
 
-必要な設定情報は関連する `docker-compose.yml` ファイルの services セクションにあります :
+必要な設定情報は関連する `orion-ld.yml` ファイルの services セクションにあります :
 
 ```yaml
 orion:
@@ -548,13 +548,13 @@ _property_ 属性の `type` は以下のいずれかでなければなりませ�
     文字列でなければなりません。例えば `YYYY-MM-DDThh:mm:ssZ`
 
 > **注 :** 簡単にするために、このデータ・エンティティには定義されたリレーションシップはありません。リレーションシップは
-> `type="Relationship` で与えられなければなりません。リレーションシップは次のチュートリアルで議論されます。
+> `type=Relationship` で与えられなければなりません。リレーションシップは次のチュートリアルで議論されます。
 
 <a name="defining-properties-of-properties-within-the-ngsi-ld-entity-definition"></a>
 
 ### NGSI-LD エンティティ定義内の Properties-of-Properties の定義
 
-_Properties-of-Properties_ (プロパティのプロパティ) は、メタデータ (つまり、_"data about data"_ (データに関するデータ))と
+_Properties-of-Properties_ (プロパティのプロパティ) は、メタデータ (つまり、_"data about data"_ (データに関するデータ)) と
 同等の NGSI-LD です。精度、プロバイダ、使用する単位など、属性値自体のプロパティを記述するために使用されます。
 いくつかの組み込みメタデータ属性がすでに存在していて、これらの名前は予約されています :
 
@@ -749,7 +749,7 @@ curl -G -X GET \
 提供されたデータへの参照が提供されている場合、短い名前のデータを返し、レスポンスを特定のデータの `type`
 に制限することが可能です。例えば、以下のリクエストはコンテキスト・データ内のすべての  `Building` エンティティのデータを
 返します。`type` パラメータの使用は `Building` エンティティのみにレスポンスを制限します、`options=keyValues`
-クエリパラメータの使用はレスポンスを標準の JSON-LD まで減らします。
+クエリ・パラメータの使用はレスポンスを標準の JSON-LD まで減らします。
 
 短い形式の `type="Building"` を FQN `https://uri.fiware.org/ns/data-models#Building` に関連付けるために
 [`Link` ヘッダ](https://www.w3.org/wiki/LinkHeader) を供給しなければなりません。
@@ -838,7 +838,7 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=name==%22Checkpoint%20Markt%22' \
@@ -901,10 +901,10 @@ curl -G -X GET \
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
-    -d 'q=category==%22commercial%22,%22office%22 \
+    -d 'q=category==%22commercial%22,%22office%22' \
     -d 'options=keyValues'
 ```
 
@@ -971,7 +971,7 @@ curl -G -X GET \
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=address%5BaddressLocality%5D==%22Kreuzberg%22' \
@@ -1022,7 +1022,7 @@ _Property-of-a-Property_ の例です
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'mq=address.verified==true' \
@@ -1097,7 +1097,7 @@ geo-query は デフォルトで `location` 属性に適用されることに注
 ```console
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
-  -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+  -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
   -H 'Accept: application/ld+json' \
   -d 'type=Building' \
   -d 'geometry=Point' \
