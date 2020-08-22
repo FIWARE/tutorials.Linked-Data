@@ -219,6 +219,9 @@ NGSI LD データ・エンティティ (スーパーマーケットなど) :
 
 ## Docker
 
+物事を単純にするために、両方のコンポーネントが [Docker](https://www.docker.com) を使用して実行されます。**Docker** は、
+さまざまコンポーネントをそれぞれの環境に分離することを可能にするコンテナ・テクノロジです。
+
 -   Windows に Docker をインストールするには、[こちら](https://docs.docker.com/docker-for-windows/)の指示に従ってください
 -   Mac に Docker をインストールするには、[こちら](https://docs.docker.com/docker-for-mac/)の指示に従ってください
 -   Linux に Docker をインストールするには、[こちら](https://docs.docker.com/install/)の手順に従ってください
