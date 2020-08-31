@@ -318,6 +318,7 @@ mongo-db:
 ```bash
 git clone https://github.com/FIWARE/tutorials.Linked-Data.git
 cd tutorials.Linked-Data
+git checkout NGSI-v2
 
 ./services orion|scorpio
 ```

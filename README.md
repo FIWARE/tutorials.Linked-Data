@@ -19,7 +19,7 @@ The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also a
 
 -   このチュートリアルは[日本語](README.ja.md)でもご覧いただけます。
 
-:warning:  **Note:** This tutorial is designed for **NGSI-v2** developers looking to switch or upgrade systems to **NGSI-LD**, if you 
+:warning:  **Note:** This tutorial is designed for **NGSI-v2** developers looking to switch or upgrade systems to **NGSI-LD**, if you
 are building a linked data system from scratch or you are not already familiar with **NGSI-v2** then it is recommmended that you
 look directly at the [NGSI-LD developers tutorial](https://ngsi-ld-tutorials.readthedocs.io/) documentation.
 
@@ -288,6 +288,7 @@ repository. Please clone the repository and create the necessary images by runni
 ```bash
 git clone https://github.com/FIWARE/tutorials.Linked-Data.git
 cd tutorials.Linked-Data
+git checkout NGSI-v2
 
 ./services orion|scorpio
 ```
