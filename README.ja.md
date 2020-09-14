@@ -310,7 +310,7 @@ mongo-db:
 # 起動
 
 すべてのサービスは、リポジトリ内で提供される
-[services](https://github.com/FIWARE/tutorials.Linked-Data/blob/master/services) Bash スクリプトを実行して、
+[services](https://github.com/FIWARE/tutorials.Linked-Data/blob/NGSI-v2/services) Bash スクリプトを実行して、
 コマンドラインから初期化できます。以下のようにコマンドを実行して、リポジトリのクローンを作成して必要なイメージを
 作成してください :
 
