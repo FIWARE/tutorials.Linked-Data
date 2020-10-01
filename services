@@ -91,7 +91,7 @@ case "${command}" in
 	"stellio")
 		stoppingContainers 
 		echo -e "Starting four containers \033[1;34mScorpio\033[0m, \033[1mKafka\033[0m, \033[1mZookeeper\033[0m and a \033[1mPostgres\033[0m database."
-		echo -e "- \033[1;34mScorpio\033[0m is the context broker\n"
+		echo -e "- \033[1;34mStellio\033[0m is the context broker\n"
 		docker-compose --log-level ERROR -f docker-compose/stellio.yml -p fiware up -d --remove-orphans
 		;;
 	"stop")
