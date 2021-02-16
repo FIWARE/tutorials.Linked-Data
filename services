@@ -79,6 +79,7 @@ case "${command}" in
 		echo "usage: services [create|orion|scorpio|stellio|stop]"
 		;;
 	"start")
+		export $(cat .env | grep "#" -v)
 		./services orion
 		;;
 	"orion")
@@ -107,12 +108,15 @@ case "${command}" in
 		docker-compose --log-level ERROR -f docker-compose/stellio.yml -p fiware up -d --remove-orphans
 		;;
 	"stop")
+		export $(cat .env | grep "#" -v)
 		stoppingContainers
 		;;
 	"start")
+		export $(cat .env | grep "#" -v)
 		./services orion
 		;;
 	"create")
+		export $(cat .env | grep "#" -v)
 		echo "Pulling Docker images"
 		docker-compose --log-level ERROR -f docker-compose/scorpio-aaio.yml pull
 		docker-compose --log-level ERROR -f docker-compose/orion-ld.yml pull
