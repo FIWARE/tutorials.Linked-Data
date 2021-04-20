@@ -45,7 +45,7 @@ it is recommmended that you look directly at the
     -   [Checking the service health](#checking-the-service-health)
     -   [Creating Context Data](#creating-context-data)
         -   [Core Context](#core-context)
-        -   [FIWARE Data Models](#fiware-data-models)
+        -   [Smart Data Models](#smart-data-models)
         -   [Defining Properties within the NGSI-LD entity definition](#defining-properties-within-the-ngsi-ld-entity-definition)
         -   [Defining Properties-of-Properties within the NGSI-LD entity definition](#defining-properties-of-properties-within-the-ngsi-ld-entity-definition)
     -   [Querying Context Data](#querying-context-data)
@@ -117,7 +117,7 @@ JSON-LD introduces the concept of the `@context` element which provides addition
 interpret the rest of the data with more clarity and depth.
 
 Furthermore the JSON-LD specification enables you to define a unique `@type` associating a well-defined
-[data model](https://fiware-datamodels.readthedocs.io/en/latest/guidelines/index.html) to the data itself.
+[data model](https://smartdatamodels.org/) to the data itself.
 
 ### :arrow_forward: Video: What is JSON-LD?
 
@@ -164,7 +164,7 @@ Once again, _entity_ can be considered to be the core element. Every entity must
 often a [URN](https://en.wikipedia.org/wiki/Uniform_resource_name), there is also a `type`, used to define the structure
 of the data held, which must also be a URI. This URI should correspond to a well-defined data model which can be found
 on the web. For example the URI `https://uri.fiware.org/ns/data-models#Building` is used to define common data model for
-a [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html).
+a [Building](https://github.com/smart-data-models/dataModel.Building).
 
 _Entities_ can have _properties_ and _relationships_. Ideally the name of each _property_ should also be a well defined
 URI which corresponds to a common concept found across the web (e.g. `http://schema.org/address` is a common URI for the
@@ -347,7 +347,7 @@ from multiple sources and remove ambiguity when comparing data coming from diffe
 
 Creating linked data using fully qualified names throughout would be painful, as each attribute would need to be a URI,
 so JSON-LD introduces the idea of an `@context` attribute which can hold pointers to context definitions. To add a
-FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html) data entity,
+Smart Data [Building](https://github.com/smart-data-models/dataModel.Building) data entity,
 the following `@context` would be required
 
 ```jsonld
@@ -367,11 +367,11 @@ refers to the Core `@context` of NGSI-LD, this defines terms such as `id` and `t
 entities, as well as defining terms such as `Property` and `Relationship`. The core context is so fundamental to
 NGSI-LD, that it is added by default to any `@context` sent to a request.
 
-### FIWARE Data Models
+### Smart Data Models
 
 [https://schema.lab.fiware.org/ld/context](https://schema.lab.fiware.org/ld/context) refers to the definition of
 standard data models supplied by FIWARE. Adding this to the `@context` will load the definitions of all the
-[data models](https://fiware-datamodels.readthedocs.io) defined by the FIWARE Foundation in collaboration with other
+[data models](https://smartdatamodels.org/) defined by the FIWARE Foundation in collaboration with other
 organizations such as GSMA or TM Forum. A summary of the FQNs related to **Building** can be seen below:
 
 ```jsonld

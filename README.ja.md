@@ -122,7 +122,7 @@ JSON-LD は `@context` 要素の概念を導入します。これはコンピュ
 追加情報を提供します。
 
 さらに JSON-LD 仕様では、明確に定義された
-[データ・モデル](https://fiware-datamodels.readthedocs.io/en/latest/guidelines/index.html)
+[データ・モデル](https://smartdatamodels.org/)
 をデータ自体に関連付ける独自の `@type` を定義できます。
 
 <a name="arrow_forward-video-what-is-json-ld"></a>
@@ -181,7 +181,7 @@ NGSI LD データ・モデルはより複雑で、ナビゲート可能なナレ
 あります。保持されているデータの構造を定義するために使用される `type` もあります。これも URI でなければなりません。
 この URI は、Web 上にある明確なデータ・モデルに対応している必要があります。例えば、URI の
 `https://uri.fiware.org/ns/data-models#Building` は
-[Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html) のための共通の
+[Building](https://github.com/smart-data-models/dataModel.Building) のための共通の
 データ・モデルを定義するために使われます。
 
 _Entities_ は、_properties_ と _relationships_ を持つことができます。理想的には、それぞれの _property_ の名前は、
@@ -383,7 +383,7 @@ curl -X GET \
 
 各属性は URI である必要があるため、全体で完全修飾名を使用してリンクト・データを作成するのは困難です。
 そこで JSON-LD はコンテキスト定義へのポインタを保持できる `@context` 属性のアイデアを導入しました。
-FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html)
+FIWARE [Building](https://github.com/smart-data-models/dataModel.Building)
 データ・エンティティを追加するには、次の `@context` が必要です。
 
 ```jsonld
@@ -410,7 +410,7 @@ FIWARE [Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Bu
 
 [https://schema.lab.fiware.org/ld/context](https://schema.lab.fiware.org/ld/context)
 は、FIWARE が提供する標準データ・モデルの定義を指します。これを `@context` に追加すると、GSMA や TM Forum のような他の組織と共同で、
-FIWARE Foundation によって定義されたすべての[データモデル](https://fiware-datamodels.readthedocs.io)の定義が読み込まれます。
+FIWARE Foundation によって定義されたすべての[データモデル](https://smartdatamodels.org/)の定義が読み込まれます。
 **Building** に関連する FQNs の概要は以下のようになります :
 
 ```jsonld
