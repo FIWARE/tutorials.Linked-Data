@@ -1,5 +1,5 @@
 [![FIWARE Banner](https://fiware.github.io/tutorials.Linked-Data/img/fiware.png)](https://www.fiware.org/developers)
-[![NGSI LD](https://img.shields.io/badge/NGSI-LD-d6604d.svg)](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.03.01_60/gs_cim009v010301p.pdf)
+[![NGSI LD](https://img.shields.io/badge/NGSI-LD-d6604d.svg)](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.04.01_60/gs_cim009v010401p.pdf)
 
 [![FIWARE Core Context Management](https://nexus.lab.fiware.org/repository/raw/public/badges/chapters/core.svg)](https://github.com/FIWARE/catalogue/blob/master/core/README.md)
 [![License: MIT](https://img.shields.io/github/license/fiware/tutorials.Linked-Data.svg)](https://opensource.org/licenses/MIT)
@@ -76,7 +76,7 @@ FIWARE 入門の[チュートリアル](https://github.com/FIWARE/tutorials.Gett
 エンティティの作成と操作に一般的に使用される [NGSI v2](https://fiware.github.io/specifications/OpenAPI/ngsiv2)
 インターフェイスを紹介しました。このインターフェースの進化は、**リンクト・データ**の概念を追加しながらコンテキスト・
 データ・エンティティを強化するためのメカニズムとして
-[NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/spec/updated/full_api.json)
+[NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/rep/NGSI-LD/NGSI-LD/raw/master/spec/updated/generated/full_api.json)
 と呼ばれる補足仕様を作成しました。このチュートリアルでは、新しいインターフェイスの背景にあるアイデアを紹介し、
 リンクされたデータとしてデータ・エンティティを作成および操作する方法を比較対照します。
 
@@ -140,7 +140,7 @@ JSON-LD の背後にある基本概念を説明したビデオを見るには、
 **NGSI-LD** は、リンクト・データ (エンティティのリレーションシップ)、プロパティ・グラフ、およびセマンティクス (JSON-LD
 が提供する機能を利用) のサポートを改善するために修正された **NGSI v2** 情報モデルの進化です。この作業は ETSI ISG CIM
 イニシアチブの下で行われており、更新された仕様は
-[NGSI-LD](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.03.01_60/gs_cim009v010301p.pdf)
+[NGSI-LD](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.04.01_60/gs_cim009v010401p.pdf)
 としてブランド設定されています。NGSI-LD の主な構成要素は、_Entity_, _Property_ および _Relationship_ です。NGSI-LD
 エンティティ (インスタンス) は、プロパティまたはリレーションシップの対象になります。伝統的な NGSI v2 データ・モデルに
 関しては、プロパティは属性とその値の組み合わせと見なすことができます。リレーションシップは、リンクト・データを
@@ -255,7 +255,7 @@ NGSI LD データ・エンティティ (スーパーマーケットなど) :
 [MongoDB](https://www.mongodb.com/) テクノロジに依存しています。したがって、アーキテクチャは2つの要素から
 構成されます :
 
--   [NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/spec/updated/full_api.json)
+-   [NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/rep/NGSI-LD/NGSI-LD/raw/master/spec/updated/generated/full_api.json)
     を使ってリクエストを受け取る [Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/)
 -   基礎となる [MongoDB](https://www.mongodb.com/) データベース :
     -   データ・エンティティ、サブスクリプション、レジストレーションなどのコンテキスト・データ情報を保持するために
