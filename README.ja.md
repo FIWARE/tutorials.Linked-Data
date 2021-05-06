@@ -391,7 +391,7 @@ FIWARE [Building](https://github.com/smart-data-models/dataModel.Building)
     "id": "urn:ngsi-ld:Building:store001",
     "type": "Building",
     ...  other data attributes
-    "@context": "https://fiware.github.io/data-models/context.jsonld"
+    "@context": "https://smartdatamodels.org/context.jsonld"
 }
 ```
 
@@ -408,7 +408,7 @@ FIWARE [Building](https://github.com/smart-data-models/dataModel.Building)
 
 ### FIWARE データ・モデル
 
-[https://schema.lab.fiware.org/ld/context](https://schema.lab.fiware.org/ld/context)
+[https://smartdatamodels.org/context.jsonld](https://smartdatamodels.org/context.jsonld)
 は、FIWARE が提供する標準データ・モデルの定義を指します。これを `@context` に追加すると、GSMA や TM Forum のような他の組織と共同で、
 FIWARE Foundation によって定義されたすべての[データモデル](https://smartdatamodels.org/)の定義が読み込まれます。
 **Building** に関連する FQNs の概要は以下のようになります :
@@ -472,7 +472,7 @@ curl -iX POST \
         "value": "Bösebrücke Einkauf"
     },
     "@context": [
-        "https://fiware.github.io/data-models/context.jsonld",
+        "https://smartdatamodels.org/context.jsonld",
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"
     ]
 }'
@@ -481,7 +481,7 @@ curl -iX POST \
 Context Broker は `@context` で言及されているすべてのファイルをナビゲートしてロードしなければならないので、
 最初のリクエストは時間がかかります。
 
-> **注**: 何らかの理由でリクエストが失敗して、`https://schema.lab.fiware.org/ld/context` が利用できない場合、
+> **注**: 何らかの理由でリクエストが失敗して、`https://smartdatamodels.org/context.jsonld` が利用できない場合、
 > FIWARE データモデル `@context` の代替コピーは、GitHub の FIWARE データモデル の gh-pages にあります。
 > @context 値を以下でで置き換えます:
 > `https://fiware.github.io/data-models/full-context.jsonld`.
@@ -530,7 +530,7 @@ curl -iX POST \
         "value": "Checkpoint Markt"
     },
     "@context": [
-        "https://fiware.github.io/data-models/context.jsonld",
+        "https://smartdatamodels.org/context.jsonld",
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"
     ]
 }'
@@ -764,7 +764,7 @@ curl -G -X GET \
 フル・リンク・ヘッダの構文は次のとおりです :
 
 ```text
-Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
+Link: <https://smartdatamodels.org/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
 ```
 
 標準の HTTP の `Link` ヘッダは、実際に問題のリソースに触れることなくメタデータ (この場合は `@context`)
@@ -775,7 +775,7 @@ Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.
 ```console
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+    -H 'Link: <https://smartdatamodels.org/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     'http://localhost:1026/ngsi-ld/v1/entities' \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
@@ -791,7 +791,7 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
 ```jsonld
 [
     {
-        "@context": "https://fiware.github.io/data-models/context.jsonld",
+        "@context": "https://smartdatamodels.org/context.jsonld",
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
         "address": {
@@ -811,7 +811,7 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
         }
     },
     {
-        "@context": "https://fiware.github.io/data-models/context.jsonld",
+        "@context": "https://smartdatamodels.org/context.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -846,7 +846,7 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+    -H 'Link: <https://smartdatamodels.org/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=name==%22Checkpoint%20Markt%22' \
@@ -855,12 +855,12 @@ curl -G -X GET \
 
 #### レスポンス :
 
-`Link` ヘッダ `https://schema.lab.fiware.org/ld/context` は以下に示すように `@context` の配列を保持します :
+`Link` ヘッダ `https://smartdatamodels.org/context.jsonld` は以下に示すように `@context` の配列を保持します :
 
 ```jsonld
 {
     "@context": [
-        "https://fiware.github.io/data-models/context.jsonld",
+        "https://smartdatamodels.org/context.jsonld",
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"
     ]
 }
@@ -874,7 +874,7 @@ curl -G -X GET \
 ```jsonld
 [
     {
-        "@context": "https://fiware.github.io/data-models/context.jsonld",
+        "@context": "https://smartdatamodels.org/context.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -909,7 +909,7 @@ curl -G -X GET \
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+    -H 'Link: <https://smartdatamodels.org/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=category==%22commercial%22,%22office%22' \
@@ -923,7 +923,7 @@ curl -G -X GET \
 ```jsonld
 [
     {
-        "@context": "https://fiware.github.io/data-models/context.jsonld",
+        "@context": "https://smartdatamodels.org/context.jsonld",
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
         "address": {
@@ -943,7 +943,7 @@ curl -G -X GET \
         }
     },
     {
-        "@context": "https://fiware.github.io/data-models/context.jsonld",
+        "@context": "https://smartdatamodels.org/context.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -979,7 +979,7 @@ curl -G -X GET \
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+    -H 'Link: <https://smartdatamodels.org/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=address%5BaddressLocality%5D==%22Kreuzberg%22' \
@@ -993,7 +993,7 @@ curl -G -X GET \
 ```jsonld
 [
     {
-        "@context": "https://fiware.github.io/data-models/context.jsonld",
+        "@context": "https://smartdatamodels.org/context.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -1030,7 +1030,7 @@ _Property-of-a-Property_ の例です
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+    -H 'Link: <https://smartdatamodels.org/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=address.verified==true' \
@@ -1045,7 +1045,7 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
 ```jsonld
 [
     {
-        "@context": "https://fiware.github.io/data-models/context.jsonld",
+        "@context": "https://smartdatamodels.org/context.jsonld",
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
         "address": {
@@ -1065,7 +1065,7 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
         }
     },
     {
-        "@context": "https://fiware.github.io/data-models/context.jsonld",
+        "@context": "https://smartdatamodels.org/context.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -1105,7 +1105,7 @@ geo-query は デフォルトで `location` 属性に適用されることに注
 ```console
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
-  -H 'Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+  -H 'Link: <https://smartdatamodels.org/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
   -H 'Accept: application/ld+json' \
   -d 'type=Building' \
   -d 'geometry=Point' \
@@ -1122,7 +1122,7 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
 ```jsonld
 [
     {
-        "@context": "https://fiware.github.io/data-models/context.jsonld",
+        "@context": "https://smartdatamodels.org/context.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
