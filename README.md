@@ -346,9 +346,9 @@ When creating linked data entities, it is important to use common data models. T
 from multiple sources and remove ambiguity when comparing data coming from different sources.
 
 Creating linked data using fully qualified names throughout would be painful, as each attribute would need to be a URI,
-so JSON-LD introduces the idea of an `@context` attribute which can hold pointers to context definitions. To add a
-Smart Data [Building](https://github.com/smart-data-models/dataModel.Building) data entity,
-the following `@context` would be required
+so JSON-LD introduces the idea of an `@context` attribute which can hold pointers to context definitions. To add a Smart
+Data [Building](https://github.com/smart-data-models/dataModel.Building) data entity, the following `@context` would be
+required
 
 ```jsonld
 {
@@ -371,8 +371,8 @@ NGSI-LD, that it is added by default to any `@context` sent to a request.
 
 [https://schema.lab.fiware.org/ld/context](https://schema.lab.fiware.org/ld/context) refers to the definition of
 standard data models supplied by FIWARE. Adding this to the `@context` will load the definitions of all the
-[data models](https://smartdatamodels.org/) defined by the FIWARE Foundation in collaboration with other
-organizations such as GSMA or TM Forum. A summary of the FQNs related to **Building** can be seen below:
+[data models](https://smartdatamodels.org/) defined by the FIWARE Foundation in collaboration with other organizations
+such as GSMA or TM Forum. A summary of the FQNs related to **Building** can be seen below:
 
 ```jsonld
 {
@@ -390,6 +390,37 @@ organizations such as GSMA or TM Forum. A summary of the FQNs related to **Build
 
 If we include this context definition, it means that we will be able to use short names for `Building`, `address`,
 `location` for our entities, but computers will also be able to read the FQNs when comparing with other sources.
+
+#### Context terms are IRIs not URLs
+
+It should be noted that According to the [JSON-LD Spec](https://www.w3.org/TR/json-ld/#the-context) : _"a context is
+used to map terms to IRIs."_ - An IRI (Internationalized Resource Identifier) is not necessarily a URL - see
+[here](https://fusion.cs.uni-jena.de/fusion/blog/2016/11/18/iri-uri-url-urn-and-their-differences/) and therefore it is
+not unexpected if elements such as `https://uri.etsi.org/ngsi-ld/name` do not actually resolve to a web-page. However
+many IRIs within JSON-LD `@context` files, such as `http://schema.org/address` do indeed return webpages with more
+information about themselves.
+
+If you take the NGSI-LD [Core @context](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld)
+
+```jsonld
+{
+  "@context": {
+
+    "ngsi-ld": "https://uri.etsi.org/ngsi-ld/",
+    "geojson": "https://purl.org/geojson/vocab#",
+    "id": "@id",
+    "type": "@type",
+...
+    "@vocab": "https://uri.etsi.org/ngsi-ld/default-context/"
+  }
+}
+```
+
+You can see that any unresolved short-name for an attribute will be mapped onto the default context i.e.:
+
+-   Unknown attribute `xxx` => `https://uri.etsi.org/ngsi-ld/default-context/xxx`
+
+And unsurprisingly these default-context IRIs don't exist as valid webpages either.
 
 To create a valid **Building** data entity in the context broker, make a POST request to the
 `http://localhost:1026/ngsi-ld/v1/entities` endpoint as shown below. It is essential that the appropriate
