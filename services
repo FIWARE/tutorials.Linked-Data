@@ -83,7 +83,7 @@ case "${command}" in
 		;;
 	"start")
 		export $(cat .env | grep "#" -v)
-		./services orion
+		./services orion $2
 		;;
 	"orion")
 		stoppingContainers
@@ -113,10 +113,6 @@ case "${command}" in
 	"stop")
 		export $(cat .env | grep "#" -v)
 		stoppingContainers
-		;;
-	"start")
-		export $(cat .env | grep "#" -v)
-		./services orion
 		;;
 	"create")
 		export $(cat .env | grep "#" -v)
