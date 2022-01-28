@@ -74,4 +74,4 @@ services:
 networks:
   default:
     labels:
-      org.fiware: 'tutorial' ~
+      org.fiware: 'tutorial'

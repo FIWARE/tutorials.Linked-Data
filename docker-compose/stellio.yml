@@ -123,7 +123,7 @@ services:
 networks:
   default:
     labels:
-      org.fiware: 'tutorial' ~
+      org.fiware: 'tutorial'
 
 volumes:
   stellio-neo4j-storage: ~
