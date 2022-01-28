@@ -16,7 +16,7 @@
 # 
 # see: https://github.com/FIWARE/helm-charts/
 #
-version: "3.5"
+version: "3.8"
 
 services:
   zookeeper:
@@ -72,4 +72,6 @@ services:
       test: curl --fail -s http://scorpio:${SCORPIO_PORT}/scorpio/v1/info/ || exit 1
 
 networks:
-  default: ~
+  default:
+    labels:
+      org.fiware: 'tutorial' ~
