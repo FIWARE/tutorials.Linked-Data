@@ -4,8 +4,8 @@
 [![FIWARE Core Context Management](https://nexus.lab.fiware.org/repository/raw/public/badges/chapters/core.svg)](https://github.com/FIWARE/catalogue/blob/master/core/README.md)
 [![License: MIT](https://img.shields.io/github/license/fiware/tutorials.Linked-Data.svg)](https://opensource.org/licenses/MIT)
 [![Support badge](https://img.shields.io/badge/tag-fiware-orange.svg?logo=stackoverflow)](https://stackoverflow.com/questions/tagged/fiware)
-[![JSON LD](https://img.shields.io/badge/JSON--LD-1.1-f06f38.svg)](https://w3c.github.io/json-ld-syntax/)
-<br/> [![Documentation](https://img.shields.io/readthedocs/fiware-tutorials.svg)](https://fiware-tutorials.rtfd.io)
+[![JSON LD](https://img.shields.io/badge/JSON--LD-1.1-f06f38.svg)](https://w3c.github.io/json-ld-syntax/) <br/>
+[![Documentation](https://img.shields.io/readthedocs/fiware-tutorials.svg)](https://fiware-tutorials.rtfd.io)
 
 <!-- prettier-ignore -->
 
@@ -44,7 +44,7 @@
     -   [サービス状態の確認](#checking-the-service-health)
     -   [コンテキスト・データの作成](#creating-context-data)
         -   [コア・コンテキスト](#core-context)
-        -   [FIWARE データ・モデル](#fiware-data-models)
+        -   [Smart Data Models](#smart-data-models)
         -   [NGSI-LD エンティティ定義内のプロパティの定義](#defining-properties-within-the-ngsi-ld-entity-definition)
         -   [NGSI-LD エンティティ定義内の Properties-of-Properties の定義](#defining-properties-of-properties-within-the-ngsi-ld-entity-definition)
     -   [コンテキスト・データのクエリ](#querying-context-data)
@@ -383,8 +383,8 @@ curl -X GET \
 
 各属性は URI である必要があるため、全体で完全修飾名を使用してリンクト・データを作成するのは困難です。
 そこで JSON-LD はコンテキスト定義へのポインタを保持できる `@context` 属性のアイデアを導入しました。
-FIWARE [Building](https://github.com/smart-data-models/dataModel.Building)
-データ・エンティティを追加するには、次の `@context` が必要です。
+Smart Data [Building](https://github.com/smart-data-models/dataModel.Building) データ・エンティティを追加するには、次の
+`@context` が必要です。
 
 ```jsonld
 {
@@ -404,9 +404,9 @@ FIWARE [Building](https://github.com/smart-data-models/dataModel.Building)
 `Property` や `Relationship` のような用語を定義します。コア・コンテキストは NGSI-LD にとって非常に基本的なもので、
 デフォルトでリクエストに送信された `@context` に追加されます。
 
-<a name="fiware-data-models"></a>
+<a name="smart-data-model"></a>
 
-### FIWARE データ・モデル
+### Smart Data Models
 
 [https://schema.lab.fiware.org/ld/context](https://schema.lab.fiware.org/ld/context)
 は、FIWARE が提供する標準データ・モデルの定義を指します。これを `@context` に追加すると、GSMA や TM Forum のような他の組織と共同で、
@@ -429,6 +429,36 @@ FIWARE Foundation によって定義されたすべての[データモデル](ht
 
 このコンテキスト定義を含めると、エンティティの `Building`, `address`, `location`に短い名前を使用できるようになりますが、
 他の情報源と比較するときにコンピュータも FQNs を読み取ることができるようになります。
+
+#### Context terms are IRIs not URLs
+
+[JSON-LD仕様](https://www.w3.org/TR/json-ld/#the-context) によると : _"コンテキストは Terms を IRIs にマップするために
+使用される" ことに注意してください。_ - IRI (Internationalized Resource Identifier) は必ずしも URL ではありません -
+[ここ](https://fusion.cs.uni-jena.de/fusion/blog/2016/11/18/iri-uri-url-urn-and-their-differences/)を参照してください。
+したがって、`https://uri.etsi.org/ngsi-ld/name` などの要素が実際に Web ページに解決されなくても、予期しないことでは
+ありません。ただし、`http://schema.org/address` などの JSON-LD `@context` ファイル内の多くの IRIs は、実際に、
+それ自体に関する詳細情報を含む Web ページを返します。
+
+NGSI-LD [Core @context](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld) を使用する場合、
+
+```jsonld
+{
+  "@context": {
+    "ngsi-ld": "https://uri.etsi.org/ngsi-ld/",
+    "geojson": "https://purl.org/geojson/vocab#",
+    "id": "@id",
+    "type": "@type",
+...
+    "@vocab": "https://uri.etsi.org/ngsi-ld/default-context/"
+  }
+}
+```
+
+属性の未解決のショートネームがデフォルトのコンテキストにマッピングされることがわかります:
+
+-   不明な属性 `xxx` => `https://uri.etsi.org/ngsi-ld/default-context/xxx`
+
+そして当然のことながら、これらのデフォルト・コンテキストの IRI は有効な Web ページとしても存在しません。
 
 Context Broker に有効な **Building** データ・エンティティを作成するには、以下に示すように
 `http://localhost:1026/ngsi-ld/v1/entities` エンドポイントに POST リクエストを行います。データ・エンティティが Linked data
@@ -1155,4 +1185,4 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
 
 ## License
 
-[MIT](LICENSE) © 2019-2020 FIWARE Foundation e.V.
+[MIT](LICENSE) © 2019-2022 FIWARE Foundation e.V.
