@@ -7,7 +7,7 @@
 
 set -e
 
-SCORPIO="http://scorpio:9090/scorpio/v1/info/"
+SCORPIO="http://scorpio:9090/"
 ORION="http://orion:1026/version"
 STELLIO="http://stellio:8080/actuator/health"
 CONTEXT="https://fiware.github.io/tutorials.Step-by-Step/tutorials-context.jsonld"
@@ -56,14 +56,7 @@ waitForScorpio () {
 	getHeartbeat "${SCORPIO}"
 	while [ "${response}" -eq 000 ]
 	do
-		echo -e "Context Broker HTTP state: ${response} (waiting for 500)"
-		pause 60
-		getHeartbeat "${SCORPIO}"
-	done
-	echo -e "\n⏳ Waiting for all \033[1;34mScorpio\033[0m services to be fully available\n"
-	while [ "$response" -eq 500 ]
-	do
-		echo -e "Context Broker HTTP state: ${response} (waiting for 200)"
+		echo -e "Context Broker HTTP state: ${response} (waiting for 404)"
 		pause 60
 		getHeartbeat "${SCORPIO}"
 	done
