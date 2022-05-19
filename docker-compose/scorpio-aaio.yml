@@ -16,8 +16,7 @@
 # 
 # see: https://github.com/FIWARE/helm-charts/
 #
-version: "3.8"
-
+version: '3.9'
 services:
   zookeeper:
     labels:
@@ -79,7 +78,7 @@ services:
     networks:
       - default
     ports:
-      - "9090:9090"
+      - "${SCORPIO_PORT}:9090"
     depends_on:
       - postgres
       - kafka
