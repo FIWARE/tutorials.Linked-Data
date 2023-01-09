@@ -92,14 +92,14 @@ waitForCoreContext () {
 	done
 }
 
-waitForCoreContext () {
-	echo -e "\n⏳ Checking availability of \033[1m core @context\033[0m from ETSI\n"
-	getHeartbeat "${CORE_CONTEXT}"
+waitForUserContext () {
+	echo -e "\n⏳ Waiting for the data models \033[1m@context\033[0m to be available (Smart Supermarket)\n"
+	getHeartbeat "${CONTEXT}"
 	while [ "${response}" -eq 000 ]
 	do
 		echo -e "\n@context HTTP state: ${response} (waiting for 200)"
 		pause 3
-		getHeartbeat "${CORE_CONTEXT}"
+		getHeartbeat "${CONTEXT}"
 	done
 }
 
