@@ -85,7 +85,7 @@ services:
       - SPRING_R2DBC_PASSWORD=stellio_subscription_db_password
       - APPLICATION_AUTHENTICATION_ENABLED=false
     ports:
-      - 8084:8084
+      - 8085:8084
     networks:
       - default
     depends_on:
