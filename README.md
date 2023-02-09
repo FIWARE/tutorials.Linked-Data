@@ -164,7 +164,7 @@ The NGSI LD data model is more complex, with more rigid definitions of use which
 Once again, _entity_ can be considered to be the core element. Every entity must use a unique `id` which must be a URI,
 often a [URN](https://en.wikipedia.org/wiki/Uniform_resource_name), there is also a `type`, used to define the structure
 of the data held, which must also be a URI. This URI should correspond to a well-defined data model which can be found
-on the web. For example the URI `https://uri.fiware.org/ns/data-models#Building` is used to define common data model for
+on the web. For example the URI `https://uri.fiware.org/ns/dataModels#Building` is used to define common data model for
 a [Building](https://github.com/smart-data-models/dataModel.Building).
 
 _Entities_ can have _properties_ and _relationships_. Ideally the name of each _property_ should also be a well defined
@@ -179,7 +179,7 @@ An NGSI LD Data Entity (e.g. a supermarket):
 
 -   Has an `id` which must be unique. For example `urn:ngsi-ld:Building:store001`,
 -   Has `type` which should be a fully qualified URI of a well defined data model. For example
-    `https://uri.fiware.org/ns/data-models#Building`. Authors can also use type names, as short hand strings for types,
+    `https://uri.fiware.org/ns/dataModels#Building`. Authors can also use type names, as short hand strings for types,
     mapped to fully qualified URIs through the JSON-LD `@context`.
 -   Has _property_ of the entity, for example, an `address` attribute which holds the address of the store. This can be
     expanded into `http://schema.org/address`, which is known as a fully qualified name
@@ -378,10 +378,10 @@ such as GSMA or TM Forum. A summary of the FQNs related to **Building** can be s
 ```jsonld
 {
     "@context": {
-        "Building": "https://uri.fiware.org/ns/data-models#Building",
+        "Building": "https://uri.fiware.org/ns/dataModels#Building",
         ... etc
         "address": "http://schema.org/address",
-        "category": "https://uri.fiware.org/ns/data-models#category",
+        "category": "https://uri.fiware.org/ns/dataModels#category",
         "location": "https://uri.etsi.org/ngsi-ld/location",
         "name": "https://uri.etsi.org/ngsi-ld/name",
         ...etc
@@ -531,7 +531,7 @@ curl -iX POST \
 
 The attributes `id` and `type` should be familiar to anyone who has used NGSI v2, and these have not changed. As
 mentioned above, the type should refer to an included data model, in this case `Building` is being used as a short name
-for the included URN `https://uri.fiware.org/ns/data-models#Building`. Thereafter each _property_ is defined as a JSON
+for the included URN `https://uri.fiware.org/ns/dataModels#Building`. Thereafter each _property_ is defined as a JSON
 element containing two attributes, a `type` and a `value`.
 
 The `type` of a _property_ attribute must be one of the following:
@@ -590,7 +590,7 @@ and all attributes are expanded whenever possible.
 
 -   `id`, `type`, `location` and `name`are defined in the core context and are not expanded.
 -   `address` has been mapped to `http://schema.org/address`
--   `category` has been mapped to `https://uri.fiware.org/ns/data-models#category`
+-   `category` has been mapped to `https://uri.fiware.org/ns/dataModels#category`
 
 Note that if an attribute has not been not associated to an FQN when the entity was created, the short name will
 **always** be displayed.
@@ -600,7 +600,7 @@ Note that if an attribute has not been not associated to an FQN when the entity 
     {
         "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld",
         "id": "urn:ngsi-ld:Building:store001",
-        "type": "https://uri.fiware.org/ns/data-models#Building",
+        "type": "https://uri.fiware.org/ns/dataModels#Building",
         "https://schema.org/address": {
             "type": "Property",
             "value": {
@@ -618,9 +618,9 @@ Note that if an attribute has not been not associated to an FQN when the entity 
             "type": "Property",
             "value": "Bösebrücke Einkauf"
         },
-        "https://uri.fiware.org/ns/data-models#category": {
+        "https://uri.fiware.org/ns/dataModels#category": {
             "type": "Property",
-            "value": "https://uri.fiware.org/ns/data-models#commercial"
+            "value": "https://uri.fiware.org/ns/dataModels#commercial"
         },
         "location": {
             "type": "GeoProperty",
@@ -633,7 +633,7 @@ Note that if an attribute has not been not associated to an FQN when the entity 
     {
         "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
-        "type": "https://uri.fiware.org/ns/data-models#Building",
+        "type": "https://uri.fiware.org/ns/dataModels#Building",
         "https://schema.org/address": {
             "type": "Property",
             "value": {
@@ -651,9 +651,9 @@ Note that if an attribute has not been not associated to an FQN when the entity 
             "type": "Property",
             "value": "Checkpoint Markt"
         },
-        "https://uri.fiware.org/ns/data-models#category": {
+        "https://uri.fiware.org/ns/dataModels#category": {
             "type": "Property",
-            "value": "https://uri.fiware.org/ns/data-models#commercial"
+            "value": "https://uri.fiware.org/ns/dataModels#commercial"
         },
         "location": {
             "type": "GeoProperty",
@@ -687,7 +687,7 @@ and all attributes are expanded whenever possible.
 {
     "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld",
     "id": "urn:ngsi-ld:Building:store001",
-    "type": "https://uri.fiware.org/ns/data-models#Building",
+    "type": "https://uri.fiware.org/ns/dataModels#Building",
     "https://schema.org/address": {
         "type": "Property",
         "value": {
@@ -705,9 +705,9 @@ and all attributes are expanded whenever possible.
         "type": "Property",
         "value": "Bösebrücke Einkauf"
     },
-    "https://uri.fiware.org/ns/data-models#category": {
+    "https://uri.fiware.org/ns/dataModels#category": {
         "type": "Property",
-        "value": "https://uri.fiware.org/ns/data-models#commercial"
+        "value": "https://uri.fiware.org/ns/dataModels#commercial"
     },
     "location": {
         "type": "GeoProperty",
