@@ -1,5 +1,5 @@
 [![FIWARE Banner](https://fiware.github.io/tutorials.Linked-Data/img/fiware.png)](https://www.fiware.org/developers)
-[![NGSI LD](https://img.shields.io/badge/NGSI-LD-d6604d.svg)](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.04.01_60/gs_cim009v010401p.pdf)
+[![NGSI LD](https://img.shields.io/badge/NGSI-LD-d6604d.svg)](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.06.01_60/gs_CIM009v010601p.pdf)
 
 [![FIWARE Core Context Management](https://nexus.lab.fiware.org/repository/raw/public/badges/chapters/core.svg)](https://github.com/FIWARE/catalogue/blob/master/core/README.md)
 [![License: MIT](https://img.shields.io/github/license/fiware/tutorials.Linked-Data.svg)](https://opensource.org/licenses/MIT)
@@ -141,7 +141,7 @@ JSON-LD の背後にある基本概念を説明したビデオを見るには、
 **NGSI-LD** は、リンクト・データ (エンティティのリレーションシップ)、プロパティ・グラフ、およびセマンティクス (JSON-LD
 が提供する機能を利用) のサポートを改善するために修正された **NGSI v2** 情報モデルの進化です。この作業は ETSI ISG CIM
 イニシアチブの下で行われており、更新された仕様は
-[NGSI-LD](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.04.01_60/gs_cim009v010401p.pdf)
+[NGSI-LD](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.06.01_60/gs_CIM009v010601p.pdf)
 としてブランド設定されています。NGSI-LD の主な構成要素は、_Entity_, _Property_ および _Relationship_ です。NGSI-LD
 エンティティ (インスタンス) は、プロパティまたはリレーションシップの対象になります。伝統的な NGSI v2 データ・モデルに
 関しては、プロパティは属性とその値の組み合わせと見なすことができます。リレーションシップは、リンクト・データを
@@ -271,7 +271,7 @@ NGSI LD データ・エンティティ (スーパーマーケットなど) :
 
 ```yaml
 orion:
-    image: fiware/orion-ld
+    image: quay.io/fiware/orion-ld
     hostname: orion
     container_name: fiware-orion
     depends_on:
