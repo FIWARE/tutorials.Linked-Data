@@ -101,7 +101,7 @@ sold at?"_
 
 ### :arrow_forward: Video: What is Linked Data?
 
-[![](https://fiware.github.io/tutorials.Step-by-Step/img/video-logo.png)](https://www.youtube.com/watch?v=4x_xzT5eF5Q "Introduction")
+[![](https://fiware.github.io/tutorials.Step-by-Step/img/video-logo.png)](https://www.youtube.com/watch?v=4x_xzT5eF5Q 'Introduction')
 
 Click on the image above to watch an introductory video on linked data concepts
 
@@ -122,7 +122,7 @@ Furthermore the JSON-LD specification enables you to define a unique `@type` ass
 
 ### :arrow_forward: Video: What is JSON-LD?
 
-[![](https://fiware.github.io/tutorials.Step-by-Step/img/video-logo.png)](https://www.youtube.com/watch?v=vioCbTo3C-4 "JSON-LD")
+[![](https://fiware.github.io/tutorials.Step-by-Step/img/video-logo.png)](https://www.youtube.com/watch?v=vioCbTo3C-4 'JSON-LD')
 
 Click on the image above to watch a video describing the basic concepts behind JSON-LD.
 
@@ -253,7 +253,7 @@ orion:
     networks:
         - default
     ports:
-        - "1026:1026"
+        - '1026:1026'
     command: -dbhost mongo-db -logLevel DEBUG
     healthcheck:
         test: curl --fail -s http://orion:1026/version || exit 1
@@ -265,9 +265,9 @@ mongo-db:
     hostname: mongo-db
     container_name: db-mongo
     expose:
-        - "27017"
+        - '27017'
     ports:
-        - "27017:27017"
+        - '27017:27017'
     networks:
         - default
     command: --nojournal
@@ -585,8 +585,8 @@ curl -G -X GET \
 
 #### Response:
 
-The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`)
-and all attributes are expanded whenever possible.
+The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`) and
+all attributes are expanded whenever possible.
 
 -   `id`, `type`, `location` and `name`are defined in the core context and are not expanded.
 -   `address` has been mapped to `http://schema.org/address`
@@ -680,8 +680,8 @@ curl -G -X GET \
 
 #### Response:
 
-The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`)
-and all attributes are expanded whenever possible.
+The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`) and
+all attributes are expanded whenever possible.
 
 ```jsonld
 {
