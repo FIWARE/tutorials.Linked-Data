@@ -363,7 +363,7 @@ required
 
 ### Core Context
 
-[https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld)
+[https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld)
 refers to the Core `@context` of NGSI-LD, this defines terms such as `id` and `type` which are common to all NGSI
 entities, as well as defining terms such as `Property` and `Relationship`. The core context is so fundamental to
 NGSI-LD, that it is added by default to any `@context` sent to a request.
@@ -401,7 +401,7 @@ not unexpected if elements such as `https://uri.etsi.org/ngsi-ld/name` do not ac
 many IRIs within JSON-LD `@context` files, such as `http://schema.org/address` do indeed return web pages with more
 information about themselves.
 
-If you take the NGSI-LD [Core @context](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld)
+If you take the NGSI-LD [Core @context](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld)
 
 ```jsonld
 {
@@ -466,7 +466,7 @@ curl -iX POST \
     },
     "@context": [
         "https://fiware.github.io/data-models/context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
     ]
 }'
 ```
@@ -522,7 +522,7 @@ curl -iX POST \
     },
     "@context": [
         "https://fiware.github.io/data-models/context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
     ]
 }'
 ```
@@ -580,12 +580,12 @@ NGSI-LD and is used to filter the response. The Accept HTTP header is needed to 
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
   -H 'Accept: application/ld+json' \
-  -d 'type=https://uri.fiware.org/ns/data-models%23Building'
+  -d 'type=https%3A%2F%2Furi.fiware.org%2Fns%2Fdata-models%23Building'
 ```
 
 #### Response:
 
-The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`) and
+The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld`) and
 all attributes are expanded whenever possible.
 
 -   `id`, `type`, `location` and `name`are defined in the core context and are not expanded.
@@ -598,7 +598,7 @@ Note that if an attribute has not been not associated to an FQN when the entity 
 ```jsonld
 [
     {
-        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
         "id": "urn:ngsi-ld:Building:store001",
         "type": "https://uri.fiware.org/ns/dataModels#Building",
         "https://schema.org/address": {
@@ -631,7 +631,7 @@ Note that if an attribute has not been not associated to an FQN when the entity 
         }
     },
     {
-        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "https://uri.fiware.org/ns/dataModels#Building",
         "https://schema.org/address": {
@@ -680,12 +680,12 @@ curl -G -X GET \
 
 #### Response:
 
-The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`) and
+The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld`) and
 all attributes are expanded whenever possible.
 
 ```jsonld
 {
-    "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+    "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
     "id": "urn:ngsi-ld:Building:store001",
     "type": "https://uri.fiware.org/ns/dataModels#Building",
     "https://schema.org/address": {
@@ -818,7 +818,7 @@ The `Link` header `https://schema.lab.fiware.org/ld/context` holds an array of `
 {
     "@context": [
         "https://fiware.github.io/data-models/context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
     ]
 }
 ```

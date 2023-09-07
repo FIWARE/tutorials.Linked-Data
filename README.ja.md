@@ -400,7 +400,7 @@ Smart Data [Building](https://github.com/smart-data-models/dataModel.Building) �
 
 ### コア・コンテキスト
 
-[https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld)
+[https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld)
 は NGSI-LD のコア `@context` を参照します。これはすべての NGSI エンティティに共通の `id` や `type` のような用語を定義し、
 `Property` や `Relationship` のような用語を定義します。コア・コンテキストは NGSI-LD にとって非常に基本的なもので、
 デフォルトでリクエストに送信された `@context` に追加されます。
@@ -440,7 +440,7 @@ FIWARE Foundation によって定義されたすべての[データモデル](ht
 ありません。ただし、`http://schema.org/address` などの JSON-LD `@context` ファイル内の多くの IRIs は、実際に、
 それ自体に関する詳細情報を含む Web ページを返します。
 
-NGSI-LD [Core @context](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld) を使用する場合、
+NGSI-LD [Core @context](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld) を使用する場合、
 
 ```jsonld
 {
@@ -504,7 +504,7 @@ curl -iX POST \
     },
     "@context": [
         "https://fiware.github.io/data-models/context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
     ]
 }'
 ```
@@ -562,7 +562,7 @@ curl -iX POST \
     },
     "@context": [
         "https://fiware.github.io/data-models/context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
     ]
 }'
 ```
@@ -631,12 +631,12 @@ _Properties-of-Properties_ (プロパティのプロパティ) は、メタデ�
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
   -H 'Accept: application/ld+json' \
-  -d 'type=https://uri.fiware.org/ns/data-models%23Building'
+  -d 'type=https%3A%2F%2Furi.fiware.org%2Fns%2Fdata-models%23Building'
 ```
 
 #### レスポンス :
 
-レスポンスはデフォルト (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`)
+レスポンスはデフォルト (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld`)
 でコアの `@context` を返し、すべての属性は可能な限り展開されます。
 
 -   `id`, `type`, `location`, `name` はコア・コンテキストで定義されており、展開されません
@@ -648,7 +648,7 @@ curl -G -X GET \
 ```jsonld
 [
     {
-        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
         "id": "urn:ngsi-ld:Building:store001",
         "type": "https://uri.fiware.org/ns/dataModels#Building",
         "https://schema.org/address": {
@@ -684,7 +684,7 @@ curl -G -X GET \
         }
     },
     {
-        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "https://uri.fiware.org/ns/dataModels#Building",
         "https://schema.org/address": {
@@ -739,12 +739,12 @@ curl -G -X GET \
 #### レスポンス :
 
 レスポンスはデフォルト
-(`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld`)
+(`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld`)
 で コアの `@context` を返し、すべての属性は可能な限り展開されます。
 
 ```jsonld
 {
-    "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+    "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
     "id": "urn:ngsi-ld:Building:store001",
     "type": "https://uri.fiware.org/ns/dataModels#Building",
     "https://schema.org/address": {
@@ -892,7 +892,7 @@ curl -G -X GET \
 {
     "@context": [
         "https://fiware.github.io/data-models/context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
     ]
 }
 ```
