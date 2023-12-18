@@ -312,7 +312,7 @@ NGSI-LD linked data entities rather than NGSI v2.
 
 As usual, you can check if the Orion Context Broker is running by making an HTTP request to the exposed port:
 
-#### :one: Request:
+#### 1️⃣ Request:
 
 ```console
 curl -X GET \
@@ -427,7 +427,7 @@ To create a valid **Building** data entity in the context broker, make a POST re
 `http://localhost:1026/ngsi-ld/v1/entities` endpoint as shown below. It is essential that the appropriate
 `Content-Type: application/ld+json` is also used, so that the data entity is recognized as Linked data.
 
-#### :two: Request:
+#### 2️⃣ Request:
 
 ```console
 curl -iX POST \
@@ -481,7 +481,7 @@ The first request will take some time, as the context broker must navigate and l
 > can read the context. High availability infrastructure has not been considered for this tutorial to keep the
 > architecture simple.
 
-#### :three: Request:
+#### 3️⃣ Request:
 
 Each subsequent entity must have a unique `id` for the given `type`
 
@@ -574,7 +574,7 @@ short names.
 This example returns the data of all `Building` entities within the context data The `type` parameter is mandatory for
 NGSI-LD and is used to filter the response. The Accept HTTP header is needed to retrieve JSON-LD content.
 
-#### :four: Request:
+#### 4️⃣ Request:
 
 ```console
 curl -G -X GET \
@@ -670,7 +670,7 @@ Note that if an attribute has not been not associated to an FQN when the entity 
 
 This example returns the data of `urn:ngsi-ld:Building:store001`
 
-#### :five: Request:
+#### 5️⃣ Request:
 
 ```console
 curl -G -X GET \
@@ -736,7 +736,7 @@ Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.
 The standard HTTP `Link` header allows metadata (in this case the `@context`) to be passed in without actually touching
 the resource in question. In the case of NGSI-LD, the metadata is a file in `application/ld+json` format.
 
-#### :six: Request:
+#### 6️⃣ Request:
 
 ```console
 curl -G -X GET \
@@ -798,7 +798,7 @@ This example returns all `Building` entities with the `name` attribute _Checkpoi
 the `q` parameter - if a string has spaces in it, it can be URL encoded and held within double quote characters `"` =
 `%22`.
 
-#### :seven: Request:
+#### 7️⃣  Request:
 
 ```console
 curl -G -X GET \
@@ -856,7 +856,7 @@ Within the standard `Building` model, the `category` attribute refers to an arra
 `Building` entities with a `category` attribute which contains either `commercial` or `office` strings. Filtering can be
 done using the `q` parameter, comma separating the acceptable values.
 
-#### :eight: Request:
+#### 8️⃣  Request:
 
 ```console
 curl -G -X GET \
@@ -918,7 +918,7 @@ This example returns all stores found in the Kreuzberg District.
 Filtering can be done using the `q` parameter - sub-attributes are annotated using the bracket syntax e.g.
 `q=address[addressLocality]=="Kreuzberg"`. This differs from NGSI v2 where dot syntax was used.
 
-#### :nine: Request:
+#### 9️⃣ Request:
 
 ```console
 curl -G -X GET \
@@ -964,7 +964,7 @@ of a _Property-of-a-Property_
 Metadata queries (i.e. Properties of Properties) are annotated using the dot syntax e.g. `q=address.verified==true`.
 This supersedes the `mq` parameter from NGSI v2.
 
-#### :one::zero: Request:
+#### 1️⃣0️⃣ Request:
 
 ```console
 curl -G -X GET \
@@ -1032,7 +1032,7 @@ required in NGSI v2.
 Note that by default the geo-query will be applied to the `location` attribute, as this is default specified in NGSI-LD.
 If another attribute is to be used, an additional `geoproperty` parameter is required.
 
-#### :one::one: Request:
+#### 1️⃣1️⃣ Request:
 
 ```console
 curl -G -X GET \

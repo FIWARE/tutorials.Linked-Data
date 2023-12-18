@@ -346,7 +346,7 @@ git checkout NGSI-v2
 いつものように、公開されたポートに HTTP リクエストをすることで Orion Context Broker が実行されているかどうかを
 確認できます :
 
-#### :one: リクエスト :
+#### 1️⃣ リクエスト :
 
 ```console
 curl -X GET \
@@ -465,7 +465,7 @@ Context Broker に有効な **Building** データ・エンティティを作成
 `http://localhost:1026/ngsi-ld/v1/entities` エンドポイントに POST リクエストを行います。データ・エンティティが Linked data
 として認識されるように、適切な `Content-Type: application/ld+json` も使われることが重要です。
 
-#### :two: リクエスト :
+#### 2️⃣ リクエスト :
 
 ```console
 curl -iX POST \
@@ -521,7 +521,7 @@ Context Broker は `@context` で言及されているすべてのファイル�
 > 利用可能であることが不可欠です。このチュートリアルでは、アーキテクチャをシンプルに保つために、高可用性
 > インフラストラクチャを考慮していません。
 
-#### :three: リクエスト :
+#### 3️⃣ リクエスト :
 
 後続の各エンティティは、与えられた `type` に対して一意の `id` を持たなければなりません
 
@@ -625,7 +625,7 @@ _Properties-of-Properties_ (プロパティのプロパティ) は、メタデ�
 では必須であり、レスポンスをフィルタリングするために使用されます。JSON-LD コンテンツを取得するには、Accept HTTP
 ヘッダが必要です。
 
-#### :four: リクエスト :
+#### 4️⃣ リクエスト :
 
 ```console
 curl -G -X GET \
@@ -728,7 +728,7 @@ curl -G -X GET \
 
 この例は `urn:ngsi-ld:Building:store001` のデータを返します
 
-#### :five: リクエスト :
+#### 5️⃣ リクエスト :
 
 ```console
 curl -G -X GET \
@@ -801,7 +801,7 @@ Link: <https://fiware.github.io/data-models/context.jsonld>; rel="http://www.w3.
 標準の HTTP の `Link` ヘッダは、実際に問題のリソースに触れることなくメタデータ (この場合は `@context`)
 を渡すことを可能にします。NGSI-LD の場合、メタデータは `application/ld+json` 形式のファイルです。
 
-#### :six: リクエスト :
+#### 6️⃣ リクエスト :
 
 ```console
 curl -G -X GET \
@@ -872,7 +872,7 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
 パラメータを使って行うことができます。文字列がスペースを含む場合、それは URL エンコードされ、単一引用符 `"` = `%22`
 の中に保持されます。
 
-#### :seven: リクエスト :
+#### 7️⃣  リクエスト :
 
 ```console
 curl -G -X GET \
@@ -935,7 +935,7 @@ curl -G -X GET \
 の文字列を含む `category` 属性を持つすべての `Building` エンティティを返します。フィルタリングは `q`
 パラメータを使って行うことができ、コンマは許容値を区切ります。
 
-#### :eight: リクエスト :
+#### 8️⃣  リクエスト :
 
 ```console
 curl -G -X GET \
@@ -1005,7 +1005,7 @@ curl -G -X GET \
 フィルタリングは `q` パラメータを使って行うことができます。サブ属性はブラケット構文を使って注釈を付けられます。
 例えば `q=address[addressLocality]=="Kreuzberg"`。これは、ドット・シンタックスが使用されていた NGSI v2 とは異なります。
 
-#### :nine: リクエスト :
+#### 9️⃣ リクエスト :
 
 ```console
 curl -G -X GET \
@@ -1056,7 +1056,7 @@ _Property-of-a-Property_ の例です
 メタデータ・クエリ (すなわち Properties of Properties) はドット・シンタックスを使用して注釈付けされます。
 例えば `q=address.verified==true`。これは NGSI v2 の `mq` パラメータに代わるものです。
 
-#### :one::zero: リクエスト :
+#### 1️⃣0️⃣ リクエスト :
 
 ```console
 curl -G -X GET \
@@ -1131,7 +1131,7 @@ NGSI-LD の構文が更新され、`coordinates` パラメータは、現在で�
 geo-query は デフォルトで `location` 属性に適用されることに注意してください。これは、NGSI-LD でデフォルトで
 指定されているためです。他の属性を使うのであれば、追加の `geoproperty` パラメータが必要です。
 
-#### :one::one: リクエスト :
+#### 1️⃣1️⃣ リクエスト :
 
 ```console
 curl -G -X GET \
