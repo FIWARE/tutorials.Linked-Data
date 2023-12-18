@@ -20,8 +20,9 @@ The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also a
 
 -   このチュートリアルは[日本語](README.ja.md)でもご覧いただけます。
 
-:warning: **Note:** This tutorial is designed for **NGSI-v2** developers looking to switch or upgrade systems to
-**NGSI-LD**, if you are building a linked data system from scratch or you are not already familiar with **NGSI-v2** then
+> [!NOTE]
+>  This tutorial is designed for **NGSI-v2** developers looking to switch or upgrade systems to
+>  **NGSI-LD**, if you are building a linked data system from scratch or you are not already familiar with **NGSI-v2** then
 it is recommmended that you look directly at the
 [NGSI-LD developers tutorial](https://ngsi-ld-tutorials.readthedocs.io/) documentation.
 
@@ -295,7 +296,8 @@ git checkout NGSI-v2
 ./services orion|scorpio
 ```
 
-> **Note:** If you want to clean up and start over again you can do so with the following command:
+> [!NOTE]
+> If you want to clean up and start over again you can do so with the following command:
 >
 > ```
 > ./services stop
@@ -474,7 +476,8 @@ curl -iX POST \
 The first request will take some time, as the context broker must navigate and load all of the files mentioned in the
 `@context`.
 
-> **Note**: if `https://fiware.github.io/data-models/context.jsonld` is unavailable for some reason the request will
+> [!NOTE]
+>  if `https://fiware.github.io/data-models/context.jsonld` is unavailable for some reason the request will
 > fail
 >
 > For a working production system it is essential that the `@context` files are always available to ensure third parties
@@ -543,7 +546,8 @@ The `type` of a _property_ attribute must be one of the following:
 -   For time-based values, `"Property"` shall be used as well, but the property value should be Date, Time or DateTime
     strings encoded in the [ISO 8601 format](https://en.wikipedia.org/wiki/ISO_8601) - e.g. `YYYY-MM-DDThh:mm:ssZ`
 
-> **Note:** that for simplicity, this data entity has no relationships defined. Relationships must be given the
+> [!NOTE]
+> Note that for simplicity, this data entity has no relationships defined. Relationships must be given the
 > `type=Relationship`. Relationships will be discussed in a subsequent tutorial.
 
 ### Defining Properties-of-Properties within the NGSI-LD entity definition
