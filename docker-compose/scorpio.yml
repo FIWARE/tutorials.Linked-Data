@@ -18,7 +18,7 @@
 #
 version: '3.9'
 services:
-  # Scorpio is the context broker
+  # Scorpio is an NGSI-LD context broker
   scorpio:
     labels:
       org.fiware: 'tutorial'

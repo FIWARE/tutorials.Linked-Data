@@ -18,13 +18,13 @@
 #
 version: '3.9'
 services:
-  # Orion is the context broker
-  orion:
+  # Orion-LD is an NGSI-LD context broker
+  orion-ld:
     labels:
       org.fiware: 'tutorial'
     image: quay.io/fiware/orion-ld:${ORION_LD_VERSION}
     hostname: orion
-    container_name: fiware-orion
+    container_name: fiware-orion-ld
     depends_on:
       - mongo-db
     networks:
