@@ -387,7 +387,7 @@ curl -X GET \
 Smart Data [Building](https://github.com/smart-data-models/dataModel.Building) データ・エンティティを追加するには、次の
 `@context` が必要です。
 
-```jsonld
+```json
 {
     "id": "urn:ngsi-ld:Building:store001",
     "type": "Building",
@@ -414,13 +414,13 @@ Smart Data [Building](https://github.com/smart-data-models/dataModel.Building) �
 FIWARE Foundation によって定義されたすべての[データモデル](https://smartdatamodels.org/)の定義が読み込まれます。
 **Building** に関連する FQNs の概要は以下のようになります :
 
-```jsonld
+```json
 {
     "@context": {
         "Building": "https://uri.fiware.org/ns/dataModels#Building",
         ... etc
         "address": "http://schema.org/address",
-        "category": "https://uri.fiware.org/ns/dataModels#category",
+        "category": "https://smart-data-models.github.io/data-models/terms.jsonld#/definitions/category",
         "location": "https://uri.etsi.org/ngsi-ld/location",
         "name": "https://uri.etsi.org/ngsi-ld/name",
         ...etc
@@ -442,7 +442,7 @@ FIWARE Foundation によって定義されたすべての[データモデル](ht
 
 NGSI-LD [Core @context](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld) を使用する場合、
 
-```jsonld
+```json
 {
   "@context": {
     "ngsi-ld": "https://uri.etsi.org/ngsi-ld/",
@@ -475,8 +475,8 @@ curl -iX POST \
     "id": "urn:ngsi-ld:Building:store001",
     "type": "Building",
     "category": {
-        "type": "Property",
-        "value": ["commercial"]
+        "type": "VocabularyProperty",
+        "vocab": "commercial"
     },
     "address": {
         "type": "Property",
@@ -533,8 +533,8 @@ curl -iX POST \
     "id": "urn:ngsi-ld:Building:store002",
     "type": "Building",
     "category": {
-        "type": "Property",
-        "value": ["commercial"]
+        "type": "VocabularyProperty",
+        "vocab": "commercial"
     },
     "address": {
         "type": "Property",
@@ -641,11 +641,11 @@ curl -G -X GET \
 
 -   `id`, `type`, `location`, `name` はコア・コンテキストで定義されており、展開されません
 -   `address` は `http://schema.org/address` にマッピングされました
--   `category` は `https://uri.fiware.org/ns/dataModels#category` にマッピングされました
+-   `category` は `https://smart-data-models.github.io/data-models/terms.jsonld#/definitions/category` にマッピングされました
 
 エンティティの作成時に属性が FQN に関連付けられていない場合は、短い名前が**常**に表示されます。
 
-```jsonld
+```json
 [
     {
         "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
@@ -668,9 +668,9 @@ curl -G -X GET \
             "type": "Property",
             "value": "Bösebrücke Einkauf"
         },
-        "https://uri.fiware.org/ns/dataModels#category": {
-            "type": "Property",
-            "value": "https://uri.fiware.org/ns/dataModels#commercial"
+        "https://smart-data-models.github.io/data-models/terms.jsonld#/definitions/category": {
+            "type": "VocabularyProperty",
+            "vocab": "https://uri.fiware.org/ns/dataModels#commercial"
         },
         "location": {
             "type": "GeoProperty",
@@ -704,9 +704,9 @@ curl -G -X GET \
             "type": "Property",
             "value": "Checkpoint Markt"
         },
-        "https://uri.fiware.org/ns/dataModels#category": {
-            "type": "Property",
-            "value": "https://uri.fiware.org/ns/dataModels#commercial"
+        "https://smart-data-models.github.io/data-models/terms.jsonld#/definitions/category": {
+            "type": "VocabularyProperty",
+            "vocab": "https://uri.fiware.org/ns/dataModels#commercial"
         },
         "location": {
             "type": "GeoProperty",
@@ -742,7 +742,7 @@ curl -G -X GET \
 (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld`)
 で コアの `@context` を返し、すべての属性は可能な限り展開されます。
 
-```jsonld
+```json
 {
     "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
     "id": "urn:ngsi-ld:Building:store001",
@@ -764,9 +764,9 @@ curl -G -X GET \
         "type": "Property",
         "value": "Bösebrücke Einkauf"
     },
-    "https://uri.fiware.org/ns/dataModels#category": {
-        "type": "Property",
-        "value": "https://uri.fiware.org/ns/dataModels#commercial"
+    "https://smart-data-models.github.io/data-models/terms.jsonld#/definitions/category": {
+        "type": "VocabularyProperty",
+        "vocab": "https://uri.fiware.org/ns/dataModels#commercial"
     },
     "location": {
         "type": "GeoProperty",
@@ -819,7 +819,7 @@ curl -G -X GET \
 _properties-of-properties_ 要素は含まれていません。リクエストからの `Link` ヘッダはレスポンスに返される `@context`
 として使われていることがわかります。
 
-```jsonld
+```json
 [
     {
         "@context": "https://fiware.github.io/data-models/context.jsonld",
@@ -832,7 +832,9 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
             "postalCode": "10439"
         },
         "name": "Bösebrücke Einkauf",
-        "category": "commercial",
+        "category": {
+            "vocab" :"commercial"
+        },
         "location": {
             "type": "Point",
             "coordinates": [
@@ -852,7 +854,9 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": "commercial",
+        "category": {
+            "vocab" :"commercial"
+        },
         "location": {
             "type": "Point",
             "coordinates": [
@@ -888,7 +892,7 @@ curl -G -X GET \
 
 `Link` ヘッダ `https://schema.lab.fiware.org/ld/context` は以下に示すように `@context` の配列を保持します :
 
-```jsonld
+```json
 {
     "@context": [
         "https://fiware.github.io/data-models/context.jsonld",
@@ -902,7 +906,7 @@ curl -G -X GET \
 これは、`Link` ヘッダと `options=keyValues` パラメータを使用すると、以下に示すように短い形式の JSON-LD
 へのレスポンスが減ることを意味します :
 
-```jsonld
+```json
 [
     {
         "@context": "https://fiware.github.io/data-models/context.jsonld",
@@ -915,7 +919,9 @@ curl -G -X GET \
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": "commercial",
+        "category": {
+            "vocab" :"commercial"
+        },
         "location": {
             "type": "Point",
             "coordinates": [
@@ -951,7 +957,7 @@ curl -G -X GET \
 
 レスポンスは、短い形式の属性名を使用してJSON-LD 形式で返されます :
 
-```jsonld
+```json
 [
     {
         "@context": "https://fiware.github.io/data-models/context.jsonld",
@@ -964,7 +970,9 @@ curl -G -X GET \
             "postalCode": "10439"
         },
         "name": "Bösebrücke Einkauf",
-        "category": "commercial",
+        "category": {
+            "vocab" :"commercial"
+        },
         "location": {
             "type": "Point",
             "coordinates": [
@@ -984,7 +992,9 @@ curl -G -X GET \
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": "commercial",
+        "category": {
+            "vocab" :"commercial"
+        },
         "location": {
             "type": "Point",
             "coordinates": [
@@ -1021,7 +1031,7 @@ curl -G -X GET \
 
 `Link` ヘッダと `options=keyValues` パラメータの使用は JSON-LD へのレスポンスを減らします。
 
-```jsonld
+```json
 [
     {
         "@context": "https://fiware.github.io/data-models/context.jsonld",
@@ -1034,7 +1044,9 @@ curl -G -X GET \
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": "commercial",
+        "category": {
+            "vocab" :"commercial"
+        },
         "location": {
             "type": "Point",
             "coordinates": [
@@ -1073,7 +1085,7 @@ curl -G -X GET \
 Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているため、レスポンスは属性 `type` と `metadata`
 要素のない JSON のみで構成されています。
 
-```jsonld
+```json
 [
     {
         "@context": "https://fiware.github.io/data-models/context.jsonld",
@@ -1086,7 +1098,9 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
             "postalCode": "10439"
         },
         "name": "Bösebrücke Einkauf",
-        "category": "commercial",
+        "category": {
+            "vocab" :"commercial"
+        },
         "location": {
             "type": "Point",
             "coordinates": [
@@ -1106,7 +1120,9 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": "commercial",
+        "category": {
+            "vocab" :"commercial"
+        },
         "location": {
             "type": "Point",
             "coordinates": [
@@ -1150,7 +1166,7 @@ curl -G -X GET \
 Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているため、レスポンスは属性 `type` と `metadata`
 要素のない JSON のみで構成されています。
 
-```jsonld
+```json
 [
     {
         "@context": "https://fiware.github.io/data-models/context.jsonld",
@@ -1163,7 +1179,9 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
             "postalCode": "10969"
         },
         "name": "Checkpoint Markt",
-        "category": "commercial",
+        "category": {
+            "vocab" :"commercial"
+        },
         "location": {
             "type": "Point",
             "coordinates": [
