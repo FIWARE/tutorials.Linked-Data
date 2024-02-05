@@ -545,13 +545,15 @@ The `type` of a _property_ attribute must be one of the following:
 -   `"GeoProperty"`: `"http://uri.etsi.org/ngsi-ld/GeoProperty"` for locations. Locations should be specified as
     Longitude-Latitude pairs in [GeoJSON format](https://tools.ietf.org/html/rfc7946). The preferred name for the
     primary location attribute is `location`
+-   `"VocabularyProperty"` holds enumerated values and is a mapping of a URI to a value within the user'`@context`
+-   `"LanguageProperty"` holds a set of internationalized strings.
 -   `"Property"`: `"http://uri.etsi.org/ngsi-ld/Property"` - for everything else.
 -   For time-based values, `"Property"` shall be used as well, but the property value should be Date, Time or DateTime
     strings encoded in the [ISO 8601 format](https://en.wikipedia.org/wiki/ISO_8601) - e.g. `YYYY-MM-DDThh:mm:ssZ`
 
 > [!NOTE]
 > Note that for simplicity, this data entity has no relationships defined. Relationships must be given the
-> `type=Relationship`. Relationships will be discussed in a subsequent tutorial.
+> `type=Relationship` or one of its defined subtypes. Relationships will be discussed in a subsequent tutorial.
 
 ### Defining Properties-of-Properties within the NGSI-LD entity definition
 
@@ -587,7 +589,7 @@ NGSI-LD and is used to filter the response. The Accept HTTP header is needed to 
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
   -H 'Accept: application/ld+json' \
-  -d 'type=https%3A%2F%2Furi.fiware.org%2Fns%2Fdata-models%23Building'
+  -d 'type=https%3A%2F%2Fsmartdatamodels.org%2FdataModel.Building%2FBuilding'
 ```
 
 #### Response:
@@ -595,20 +597,25 @@ curl -G -X GET \
 The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld`) and
 all attributes are expanded whenever possible.
 
--   `id`, `type`, `location` and `name`are defined in the core context and are not expanded.
--   `address` has been mapped to `http://schema.org/address`
--   `category` has been mapped to `https://smart-data-models.github.io/data-models/terms.jsonld#/definitions/category`
+-   `id`, `type` and `location` are defined in the core context and are not expanded.
+-   `address` has been mapped to `http://smartdatamodels.org/address`
+-   `name` has been mapped to `http://smartdatamodels.org/name`
+-   `category` has been mapped to `https://smartdatamodels.org/dataModel.Building/category`
 
 Note that if an attribute has not been not associated to an FQN when the entity was created, the short name will
-**always** be displayed.
+**always** be displayed - `verified` and `commercial` are examples of this since they were missing from the supplied user `@context` when inserting the context data.
 
 ```json
 [
     {
         "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
         "id": "urn:ngsi-ld:Building:store001",
-        "type": "https://uri.fiware.org/ns/dataModels#Building",
-        "https://schema.org/address": {
+        "type": "https://smartdatamodels.org/dataModel.Building/Building",
+        "https://smartdatamodels.org/dataModel.Building/category": {
+            "type": "VocabularyProperty",
+            "vocab": "commercial"
+        },
+        "https://smartdatamodels.org/address": {
             "type": "Property",
             "value": {
                 "streetAddress": "Bornholmer Straße 65",
@@ -621,53 +628,55 @@ Note that if an attribute has not been not associated to an FQN when the entity 
                 "value": true
             }
         },
-        "https://uri.etsi.org/ngsi-ld/name": {
-            "type": "Property",
-            "value": "Bösebrücke Einkauf"
-        },
-        "https://smart-data-models.github.io/data-models/terms.jsonld#/definitions/category": {
-            "type": "VocabularyProperty",
-            "vocab": "https://uri.fiware.org/ns/dataModels#commercial"
-        },
         "location": {
             "type": "GeoProperty",
             "value": {
                 "type": "Point",
-                "coordinates": [13.3986, 52.5547]
+                "coordinates": [
+                    13.3986,
+                    52.5547
+                ]
             }
+        },
+        "https://smartdatamodels.org/name": {
+            "type": "Property",
+            "value": "Bösebrücke Einkauf"
         }
     },
     {
         "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
-        "type": "https://uri.fiware.org/ns/dataModels#Building",
-        "https://schema.org/address": {
+        "type": "https://smartdatamodels.org/dataModel.Building/Building",
+        "https://smartdatamodels.org/dataModel.Building/category": {
+            "type": "VocabularyProperty",
+            "vocab": "commercial"
+        },
+        "https://smartdatamodels.org/address": {
             "type": "Property",
             "value": {
-                "streetAddress": "Friedrichstraße 44",
-                "addressRegion": "Berlin",
-                "addressLocality": "Kreuzberg",
-                "postalCode": "10969"
+                "https://smartdatamodels.org/streetAddress": "Friedrichstraße 44",
+                "https://smartdatamodels.org/addressRegion": "Berlin",
+                "https://smartdatamodels.org/addressLocality": "Kreuzberg",
+                "https://smartdatamodels.org/postalCode": "10969"
             },
             "verified": {
                 "type": "Property",
                 "value": true
             }
         },
-        "https://uri.etsi.org/ngsi-ld/name": {
-            "type": "Property",
-            "value": "Checkpoint Markt"
-        },
-        "https://smart-data-models.github.io/data-models/terms.jsonld#/definitions/category": {
-            "type": "VocabularyProperty",
-            "value": "https://uri.fiware.org/ns/dataModels#commercial"
-        },
         "location": {
             "type": "GeoProperty",
             "value": {
                 "type": "Point",
-                "coordinates": [13.3903, 52.5075]
+                "coordinates": [
+                    13.3903,
+                    52.5075
+                ]
             }
+        },
+        "https://smartdatamodels.org/name": {
+            "type": "Property",
+            "value": "Checkpoint Markt"
         }
     }
 ]
@@ -694,35 +703,24 @@ all attributes are expanded whenever possible.
 {
     "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
     "id": "urn:ngsi-ld:Building:store001",
-    "type": "https://uri.fiware.org/ns/dataModels#Building",
-    "https://schema.org/address": {
-        "type": "Property",
-        "value": {
-            "streetAddress": "Bornholmer Straße 65",
-            "addressRegion": "Berlin",
-            "addressLocality": "Prenzlauer Berg",
-            "postalCode": "10439"
-        },
-        "verified": {
-            "type": "Property",
-            "value": true
-        }
+    "type": "https://smartdatamodels.org/dataModel.Building/Building",
+    "https://smartdatamodels.org/dataModel.Building/category": {
+        "vocab": "commercial"
     },
-    "https://uri.etsi.org/ngsi-ld/name": {
-        "type": "Property",
-        "value": "Bösebrücke Einkauf"
-    },
-    "https://smart-data-models.github.io/data-models/terms.jsonld#/definitions/category": {
-        "type": "VocabularyProperty",
-        "value": "https://uri.fiware.org/ns/dataModels#commercial"
+    "https://smartdatamodels.org/address": {
+        "streetAddress": "Bornholmer Straße 65",
+        "addressRegion": "Berlin",
+        "addressLocality": "Prenzlauer Berg",
+        "postalCode": "10439"
     },
     "location": {
-        "type": "GeoProperty",
-        "value": {
-            "type": "Point",
-            "coordinates": [13.3986, 52.5547]
-        }
-    }
+        "type": "Point",
+        "coordinates": [
+            13.3986,
+            52.5547
+        ]
+    },
+    "https://smartdatamodels.org/name": "Bösebrücke Einkauf"
 }
 ```
 
@@ -823,18 +821,7 @@ curl -G -X GET \
 
 #### Response:
 
-The `Link` header `https://schema.lab.fiware.org/ld/context` holds an array of `@context` as shown:
-
-```json
-{
-    "@context": [
-        "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
-    ]
-}
-```
-
-and therefore includes the FIWARE Building model.
+The `Link` header `https://smart-data-models.github.io/dataModel.Building/context.jsonld` includes the FIWARE Building model.
 
 This means that use of the `Link` header and the `options=keyValues` parameter reduces the response to short form
 JSON-LD as shown:
@@ -865,9 +852,15 @@ JSON-LD as shown:
 
 ### Filter context data by comparing the values of an attribute in an Array
 
-Within the standard `Building` model, the `category` attribute refers to an array of strings. This example returns all
+Within the standard `Building` model, the `category` attribute refers to an array of enumerated strings. This example returns all
 `Building` entities with a `category` attribute which contains either `commercial` or `office` strings. Filtering can be
 done using the `q` parameter, comma separating the acceptable values.
+
+> [!NOTE]
+>
+> `category` has been defined as a **VocabularyProperty**, which would usually mean that the `vocab`
+> value should be a URI defined in the `@context`. The `expandValues` hint indicates that URI
+> expansion is required for the `category` attribute when querying the context data.
 
 #### 8️⃣  Request:
 
@@ -878,7 +871,8 @@ curl -G -X GET \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
     -d 'q=category==%22commercial%22,%22office%22' \
-    -d 'options=keyValues'
+    -d 'options=keyValues' \
+    -d 'expandValues=category'
 ```
 
 #### Response:
@@ -1102,4 +1096,4 @@ consists of JSON only without the attribute `type` and `metadata` elements.
 
 ## License
 
-[MIT](LICENSE) © 2019-2020 FIWARE Foundation e.V.
+[MIT](LICENSE) © 2019-2024 FIWARE Foundation e.V.
