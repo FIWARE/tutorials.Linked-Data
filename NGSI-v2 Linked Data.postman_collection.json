@@ -1,0 +1,1210 @@
+{
+	"info": {
+		"_postman_id": "16121a01-e085-4afd-8689-fea63a0d7246",
+		"name": "NGSI-v2 Linked Data",
+		"description": "This tutorial teaches **NGSI-LD** users about CRUD Operations. The tutorial outlines example usage of the various ways\nof amending context as detailed within the\n[NGSI-LD specification](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.03.01_60/gs_cim009v010301p.pdf). A\nseries of entities representing temperature sensors are created, modified and deleted based on the temperature sensor\nmodel defined in an [earlier tutorial](https://github.com/FIWARE/tutorials.Understanding-At-Context).\n\nThe `docker-compose` file for this tutorial can be found on GitHub: \n\n![GitHub](https://fiware.github.io/tutorials.NGSI-LD-Operations/icon/GitHub-Mark-32px.png) [FIWARE-LD 103: Manipulating Context Data through CRUD Operations ](https://github.com/FIWARE/tutorials.NGSI-LD-Operations)\n\n# NGSI-LD CRUD Operations\n\n> “Ninety-percent of everything is crud.”\n>\n> ― Theodore Sturgeon, Venture Science Fiction Magazine\n\n**CRUD** Operations (**Create**, **Read**, **Update** and **Delete**) are the four basic functions of persistent\nstorage. For a smart system based on **NGSI-LD**, **CRUD** actions allow the developer to manipulate the context data\nwithin the system. Every **CRUD** operation is clearly defined within the\n[NGSI-LD specification](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.03.01_60/gs_cim009v010301p.pdf), so all\nNGSI-LD compliant context brokers offer the same interface with the same NGSI-LD operations.\n\nThis tutorial will describe the rational behind each operation, when to use it and how to execute the various **CRUD**\noperations. Since **NGSI-LD** is based on **JSON-LD** passing of `@context` as part of each request in mandatory. For\n**CRUD** operations this is typically passed as a `Link` header, although as we have seen is also possible to pass an\n`@context` attribute as part of the body of the request if `Content-Type: application/ld+json`. However for GET\nrequests, the `@context` cannot be placed in the payload body technique as GET requests have no body.\n\n## Context Entity CRUD Operations\n\nThere are four endpoints used for CRUD operations on an individual data entity. These follow the usual rules for\nhierarchical entities within RESTful applications.\n\nFor operations where the `<entity-id>` is not yet known within the context, or is unspecified, the\n`/ngsi-ld/v1/entities` endpoint is used. As an example, this is used for creating new entities.\n\nOnce an `<entity-id>` is known within the context, individual data entities can be manipulated using the\n`/ngsi-ld/v1/entities/<entity-id>` endpoint.\n\nGeneral Attribute operations on a known entity occur on the `/ngsi-ld/v1/entities/<entity-id>/attrs` endpoint and\noperations on individual attributes occur on the `/ngsi-ld/v1/entities/<entity-id>/attrs/<attr-id>`.\n\nWhen requesting data or modifying individual entities, the various CRUD operations map naturally to HTTP verbs.\n\n-   **GET** - for reading data\n-   **POST** - for creating new entities and attributes\n-   **PATCH** - for amending entities and attributes\n-   **DELETE** - for deleting entities and attributes\n\n## Context Entity Batch Operations\n\nBatch operations allow users to modify multiple data entities with a single request. All batch operations are mapped to\nthe **POST** HTTP verb.\n\n-   `/entityOperations/create`\n-   `/entityOperations/update`\n-   `/entityOperations/upsert`\n-   `/entityOperations/delete`\n\n# Prerequisites\n\n## Docker\n\nTo keep things simple all components will be run using [Docker](https://www.docker.com). **Docker** is a container\ntechnology which allows to different components isolated into their respective environments.\n\n-   To install Docker on Windows follow the instructions [here](https://docs.docker.com/docker-for-windows/)\n-   To install Docker on Mac follow the instructions [here](https://docs.docker.com/docker-for-mac/)\n-   To install Docker on Linux follow the instructions [here](https://docs.docker.com/install/)\n\n**Docker Compose** is a tool for defining and running multi-container Docker applications. A\n[YAML file](https://raw.githubusercontent.com/Fiware/tutorials.NGSI-LD-Operations/master/docker-compose/orion-ld.yml) is\nused configure the required services for the application. This means all container services can be brought up in a\nsingle command. Docker Compose is installed by default as part of Docker for Windows and Docker for Mac, however Linux\nusers will need to follow the instructions found [here](https://docs.docker.com/compose/install/)\n\n## Cygwin\n\nWe will start up our services using a simple bash script. Windows users should download [cygwin](http://www.cygwin.com/)\nto provide a command-line functionality similar to a Linux distribution on Windows.\n\n# Architecture\n\nThe demo application will send and receive NGSI-LD calls to a compliant context broker. Since the standardized NGSI-LD\ninterface is available across multiple context brokers, so we only need to pick one - for example the\n[Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/). The application will therefore only make use of\none FIWARE component.\n\nCurrently, the Orion Context Broker relies on open source [MongoDB](https://www.mongodb.com/) technology to keep\npersistence of the context data it holds.\n\nTo promote interoperability of data exchange, NGSI-LD context brokers explicitly expose a\n[JSON-LD `@context` file](https://json-ld.org/spec/latest/json-ld/#the-context) to define the data held within the\ncontext entities. This defines a unique URI for every entity type and every attribute so that other services outside of\nthe NGSI domain are able to pick and choose the names of their data structures. Every `@context` file must be available\non the network. In our case the tutorial application will be used to host a series of static files.\n\nTherefore, the architecture will consist of three elements:\n\n-   The [Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/) which will receive requests using\n    [NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/spec/updated/full_api.json)\n-   The underlying [MongoDB](https://www.mongodb.com/) database :\n    -   Used by the Orion Context Broker to hold context data information such as data entities, subscriptions and\n        registrations\n-   The **Tutorial Application** does the following:\n    -   Offers static `@context` files defining the context entities within the system.\n\nSince all interactions between the three elements are initiated by HTTP requests, the elements can be containerized and\nrun from exposed ports.\n\n![](https://fiware.github.io/tutorials.NGSI-LD-Operations/img/architecture.png)\n\nThe necessary configuration information can be seen in the services section of the associated `orion-ld.yml` file:\n\n```yaml\norion:\n    image: fiware/orion-ld\n    hostname: orion\n    container_name: fiware-orion\n    depends_on:\n        - mongo-db\n    networks:\n        - default\n    ports:\n        - \"1026:1026\"\n    command: -dbhost mongo-db -logLevel DEBUG\n    healthcheck:\n        test: curl --fail -s http://orion:1026/version || exit 1\n```\n\n```yaml\nmongo-db:\n    image: mongo:3.6\n    hostname: mongo-db\n    container_name: db-mongo\n    expose:\n        - \"27017\"\n    ports:\n        - \"27017:27017\"\n    networks:\n        - default\n    command: --nojournal\n```\n\n```yaml\ntutorial:\n    image: fiware/tutorials.ngsi-ld\n    hostname: tutorial\n    container_name: fiware-tutorial\n    networks:\n        default:\n            aliases:\n                - context\n    expose:\n        - 3000\n```\n\nThe necessary configuration information can be seen in the services section of the associated `docker-compose.yml` file.\nIt has been described in a [previous tutorial](https://github.com/FIWARE/tutorials.Working-with-At-Context/)\n\n# Start Up\n\nAll services can be initialised from the command-line by running the\n[services](https://github.com/FIWARE/tutorials.NGSI-LD-Operations/blob/master/services) Bash script provided within the\nrepository. Please clone the repository and create the necessary images by running the commands as shown:\n\n```bash\ngit clone https://github.com/FIWARE/tutorials.NGSI-LD-Operations.git\ncd tutorials.NGSI-LD-Operations\n\n./services orion|scorpio\n```\n\n> **Note:** If you want to clean up and start over again you can do so with the following command:\n>\n> ```\n> ./services stop\n> ```",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "513743",
+		"_collection_link": "https://fiware.postman.co/workspace/NGSI-LD-tutorials~60157bf9-a93f-4c6e-90d1-0917133c1872/collection/513743-16121a01-e085-4afd-8689-fea63a0d7246?action=share&source=collection_link&creator=513743"
+	},
+	"item": [
+		{
+			"name": "New Folder",
+			"item": [
+				{
+					"name": "NGSI-v2  - Read Data directly",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{v2-broker}}/v2/entities/urn:ngsi-ld:Store:001",
+							"protocol": "http",
+							"host": [
+								"{{v2-broker}}"
+							],
+							"path": [
+								"v2",
+								"entities",
+								"urn:ngsi-ld:Store:001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Adapter - Read as Linked Data",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/ld+json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/urn:ngsi-ld:Store:001",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Store:001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NGSI-v2 - Query Data directly",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{v2-broker}}/v2/entities/?type=Store",
+							"protocol": "http",
+							"host": [
+								"{{v2-broker}}"
+							],
+							"path": [
+								"v2",
+								"entities",
+								""
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Store"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Adapter - Query as Linked Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/?type=Store",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								""
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Store"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NGSI-LD - Add redirect regsistration",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"ContextSourceRegistration\",\n    \"information\": [\n        {\n            \"entities\": [\n                {\n                    \"type\": \"Store\"\n                }\n            ]\n        }\n    ],\n    \"contextSourceInfo\": [\n        {\n            \"key\": \"jsonldContext\",\n            \"value\": \"http://context/ngsi-context.jsonld\"\n        }\n    ],\n    \"mode\": \"redirect\",\n    \"operations\": [\n        \"redirectionOps\"\n    ],\n    \"endpoint\": \"http://adapter:3000/\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{context-broker}}/ngsi-ld/v1/csourceRegistrations/",
+							"protocol": "http",
+							"host": [
+								"{{context-broker}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"csourceRegistrations",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NGSI-LD - Read as Linked Data",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{context-broker}}/ngsi-ld/v1/entities/urn:ngsi-ld:Store:001",
+							"protocol": "http",
+							"host": [
+								"{{context-broker}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Store:001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NGSI-LD - Read as Linked Data - alternate context",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{alternate-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{context-broker}}/ngsi-ld/v1/entities/urn:ngsi-ld:Store:001",
+							"protocol": "http",
+							"host": [
+								"{{context-broker}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Store:001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NGSI-LD - Read as Linked Data Copy",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{context-broker}}/ngsi-ld/v1/entities/urn:ngsi-ld:Store:001",
+							"protocol": "http",
+							"host": [
+								"{{context-broker}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Store:001"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create Operations",
+			"item": [
+				{
+					"name": "Create a New Data Entity",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Link",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n      \"id\": \"urn:ngsi-ld:TemperatureSensor:001\",\n      \"type\": \"TemperatureSensor\",\n      \"category\": {\n            \"type\": \"Property\",\n            \"value\": \"sensor\"\n      },\n      \"temperature\": {\n            \"type\": \"Property\",\n            \"value\": 25,\n            \"unitCode\": \"CEL\"\n      }\n}"
+						},
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities"
+							]
+						},
+						"description": "This example adds a new **TemperatureSensor** entity to the context.\n\nNew entities can be added by making a POST request to the `/ngsi-ld/v1/entities` endpoint.\n\nThe request will fail if the entity already exists in the context."
+					},
+					"response": []
+				},
+				{
+					"name": "Create a New Attribute",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Link",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n       \"batteryLevel\": {\n            \"type\": \"Property\",\n            \"value\": 0.8,\n            \"unitCode\": \"C62\"\n      },\n      \"controlledAsset\": {\n            \"type\": \"Relationship\",\n            \"object\": \"urn:ngsi-ld:Building:barn002\"\n      }\n}"
+						},
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:TemperatureSensor:001",
+								"attrs"
+							]
+						},
+						"description": "This example adds a new `batteryLevel` Property and a `controlledAsset` Relationship to the existing\n**TemperatureSensor** entity with `id=urn:ngsi-ld:TemperatureSensor:001`.\n\nNew attributes can be added by making a POST request to the `/ngsi-ld/v1/entities/<entity>/attrs` endpoint.\n\nThe payload should consist of a JSON object holding the attribute names and values as shown.\n\nAll `type=Property` attributes must have a `value` associated with them. All `type=Relationship` attributes must have an\n`object` associated with them which holds the URN of another entity. Well-defined common metadata elements such as\n`unitCode` can be provided as strings, all other metadata should be passed as a JSON object with its own `type` and\n`value` attributes\n\nSubsequent requests using the same `id` will update the value of the attribute in the context."
+					},
+					"response": []
+				},
+				{
+					"name": "Batch Create New Data Entities or Attributes",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Link",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/ld+json",
+								"type": "text",
+								"name": "Accept"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n      \"id\": \"urn:ngsi-ld:TemperatureSensor:002\",\n      \"type\": \"TemperatureSensor\",\n      \"category\": {\n            \"type\": \"Property\",\n            \"value\": \"sensor\"\n      },\n      \"temperature\": {\n            \"type\": \"Property\",\n            \"value\": 20,\n            \"unitCode\": \"CEL\"\n      }\n    },\n    {\n      \"id\": \"urn:ngsi-ld:TemperatureSensor:003\",\n      \"type\": \"TemperatureSensor\",\n      \"category\": {\n            \"type\": \"Property\",\n            \"value\": \"sensor\"\n      },\n      \"temperature\": {\n            \"type\": \"Property\",\n            \"value\": 2,\n            \"unitCode\": \"CEL\"\n      }\n    },\n     {\n      \"id\": \"urn:ngsi-ld:TemperatureSensor:004\",\n      \"type\": \"TemperatureSensor\",\n      \"category\": {\n            \"type\": \"Property\",\n            \"value\": \"sensor\"\n      },\n      \"temperature\": {\n            \"type\": \"Property\",\n            \"value\": 100,\n            \"unitCode\": \"CEL\"\n      }\n    }\n]"
+						},
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entityOperations/create",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entityOperations",
+								"create"
+							]
+						},
+						"description": "This example uses the convenience batch processing endpoint to add three new **TemperatureSensor** entities to the\ncontext. Batch create uses the `/ngsi-ld/v1/entityOperations/create` endpoint.\n\nThe request will fail if any of the attributes already exist in the context. The response highlights which actions have\nbeen successful and the reason for failure (if any has occurred)."
+					},
+					"response": []
+				},
+				{
+					"name": "Batch Create/Overwrite New Data Entities",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Link",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/ld+json",
+								"type": "text",
+								"name": "Accept"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n      \"id\": \"urn:ngsi-ld:TemperatureSensor:002\",\n      \"type\": \"TemperatureSensor\",\n      \"category\": {\n            \"type\": \"Property\",\n            \"value\": \"sensor\"\n      },\n      \"temperature\": {\n            \"type\": \"Property\",\n            \"value\": 21,\n            \"unitCode\": \"CEL\"\n      }\n    },\n    {\n      \"id\": \"urn:ngsi-ld:TemperatureSensor:003\",\n      \"type\": \"TemperatureSensor\",\n      \"category\": {\n            \"type\": \"Property\",\n            \"value\": \"sensor\"\n      },\n      \"temperature\": {\n            \"type\": \"Property\",\n            \"value\": 27,\n            \"unitCode\": \"CEL\"\n      }\n    }\n]"
+						},
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entityOperations/upsert",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entityOperations",
+								"upsert"
+							]
+						},
+						"description": "This example uses the convenience batch processing endpoint to add or amend two **TemperatureSensor** entities in the\ncontext.\n\n-   if an entity already exists, the request will update that entity's attributes.\n-   if an entity does not exist, a new entity will be created.\n\nBatch processing for create/overwrite uses the `/ngsi-ld/v1/entityOperations/upsert` endpoint.\n\nA subsequent request containing the same data (i.e. same entities and `actionType=append`) will also succeed won't\nchange the context state. The `modifiedAt` metadata will be amended however."
+					},
+					"response": []
+				}
+			],
+			"description": "Create Operations map to HTTP POST.\n\n-   The `/ngsi-ld/v1/entities` endpoint is used for creating new entities\n-   The `/ngsi-ld/v1/entities/<entity-id>/attrs` endpoint is used for adding new attributes\n\nAny newly created entity must have `id` and `type` attributes and a valid `@context` definition. All other attributes\nare optional and will depend on the system being modelled. If additional attributes are present though, each should\nspecify both a `type` and a `value`.\n\nThe response will be **201 - Created** if the operation is successful or **409 - Conflict** if the operation fails.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Read Operations",
+			"item": [
+				{
+					"name": "Read a Data Entity (verbose)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001?options=sysAttrs",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:TemperatureSensor:001"
+							],
+							"query": [
+								{
+									"key": "options",
+									"value": "sysAttrs"
+								}
+							]
+						},
+						"description": "This example reads the full context from an existing **TemperatureSensor** entity with a known `id`.\n\nTemperatureSensor `urn:ngsi-ld:TemperatureSensor:001` is returned as _normalized_ NGSI-LD. Additional metadata is\nreturned because `options=sysAttrs`. By default the `@context` is returned in the payload body (although this could be\nmoved due to content negotiation if the `Accept:application/json` had been set.\n\nIndividual context data entities can be retrieved by making a GET request to the `/ngsi-ld/v1/entities/<entity>`\nendpoint."
+					},
+					"response": []
+				},
+				{
+					"name": "Read an Attribute from a Data Entity",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001?attrs=temperature",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:TemperatureSensor:001"
+							],
+							"query": [
+								{
+									"key": "attrs",
+									"value": "temperature"
+								}
+							]
+						},
+						"description": "This example reads the value of a single attribute (`temperature`) from an existing **TemperatureSensor** entity with a\nknown `id`.\n\nThe sensor `urn:ngsi-ld:TemperatureSensor:001` is reading at 25°C.\n\nBecause `options=keyValues` was not used this is the normalized response including the metadata such as `unitCode`.\nContext data can be retrieved by making a GET request to the `/ngsi-ld/v1/entities/<entity-id>` endpoint and selecting\nthe `attrs` using a comma separated list.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Read a Data Entity (key value pairs)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{json-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"name": "Accept"
+							}
+						],
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/?options=keyValues",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:TemperatureSensor:001",
+								""
+							],
+							"query": [
+								{
+									"key": "options",
+									"value": "keyValues",
+									"description": "* `keyValues` option in order to get a more compact and brief representation, including just attribute values\n* `values` option combined with a list of attribute values  `attrs`  for an ordered list of attributes only\n"
+								}
+							]
+						},
+						"description": "This example reads the key-value pairs  from the context of an existing **TemperatureSensor** entities with a known `id`.\n\nThe response contains an unfiltered list of context data from an entity containing all of the attributes of the\n`urn:ngsi-ld:TemperatureSensor:001`. The payload body does not contain an `@context` attribute since the\n`Accept: application/json` was set.\n\nCombine the `options=keyValues` parameter with the `attrs` parameter to retrieve a limited set of key-value pairs."
+					},
+					"response": []
+				},
+				{
+					"name": "Read Multiple attributes values from a Data Entity",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{json-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"name": "Accept"
+							}
+						],
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/?options=keyValues&attrs=category,temperature",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:TemperatureSensor:001",
+								""
+							],
+							"query": [
+								{
+									"key": "options",
+									"value": "keyValues",
+									"description": "* `keyValues` option in order to get a more compact and brief representation, including just attribute values\n* `values` option combined with a list of attribute values  `attrs`  for an ordered list of attributes only"
+								},
+								{
+									"key": "attrs",
+									"value": "category,temperature",
+									"description": "Ordered list of attribute names to display"
+								}
+							]
+						},
+						"description": "\nThis example reads the value of two attributes (`category` and `temperature`) from the context of an existing\n**TemperatureSensor** entity with a known ID.\n\nCombine the `options=keyValues` parameter and the `attrs` parameter to return a list of values."
+					},
+					"response": []
+				},
+				{
+					"name": "List all Data Entities (verbose)",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/ld+json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/?type=TemperatureSensor",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								""
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "TemperatureSensor"
+								}
+							]
+						},
+						"description": "This example lists the full context of all **TemperatureSensor** entities.\n\nOn start-up the context was empty, four **TemperatureSensor** entities have been added by create operations so the full\ncontext will now contain four sensors.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "List all Data Entities (key value pairs)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{json-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"name": "Accept"
+							}
+						],
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/?type=TemperatureSensor&options=keyValues&attrs=temperature",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								""
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "TemperatureSensor",
+									"description": "Entity type"
+								},
+								{
+									"key": "options",
+									"value": "keyValues"
+								},
+								{
+									"key": "attrs",
+									"value": "temperature"
+								}
+							]
+						},
+						"description": "This example lists the `temperature` attribute of all **TemperatureSensor** entities.\n\nThe full context contains four sensors, they are returned in a random order.\n\nFull context data for a specified entity type can be retrieved by making a GET request to the `/ngsi-ld/v1/entities/` endpoint\nand supplying the `type` parameter, combine this with the `options=keyValues` parameter and the `attrs` parameter to\nretrieve key-values."
+					},
+					"response": []
+				},
+				{
+					"name": "NGSI-v2 - List all Data Entities",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{json-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"name": "Accept"
+							}
+						],
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/?type=TemperatureSensor&options=keyValues&attrs=temperature",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								""
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "TemperatureSensor",
+									"description": "Entity type"
+								},
+								{
+									"key": "options",
+									"value": "keyValues"
+								},
+								{
+									"key": "attrs",
+									"value": "temperature"
+								}
+							]
+						},
+						"description": "This example lists the `temperature` attribute of all **TemperatureSensor** entities.\n\nThe full context contains four sensors, they are returned in a random order.\n\nFull context data for a specified entity type can be retrieved by making a GET request to the `/ngsi-ld/v1/entities/` endpoint\nand supplying the `type` parameter, combine this with the `options=keyValues` parameter and the `attrs` parameter to\nretrieve key-values."
+					},
+					"response": []
+				},
+				{
+					"name": "List Data Entity by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{json-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"name": "Accept"
+							}
+						],
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/?id=urn:ngsi-ld:TemperatureSensor:001,urn:ngsi-ld:TemperatureSensor:002&options=keyValues&attrs=temperature",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								""
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "urn:ngsi-ld:TemperatureSensor:001,urn:ngsi-ld:TemperatureSensor:002"
+								},
+								{
+									"key": "options",
+									"value": "keyValues"
+								},
+								{
+									"key": "attrs",
+									"value": "temperature"
+								}
+							]
+						},
+						"description": "This example lists selected data from two **TemperatureSensor** entities chosen by `id`. Note that every `id` must be\nunique, so `type` is not required for this request. To filter by `id` add the entries in a comma delimted list.\n\nThe response details the selected attributes from the selected entities."
+					},
+					"response": []
+				}
+			],
+			"description": "-   The `/ngsi-ld/v1/entities` endpoint is used for listing entities\n-   The `/ngsi-ld/v1/entities/<entity>` endpoint is used for retrieving the details of a single entity.\n\nFor read operations the `@context` must be supplied in a `Link` header.\n\n#### Filtering\n\n-   The `options` parameter (combined with the `attrs` parameter) can be used to filter the returned fields\n-   The `q` parameter can be used to filter the returned entities",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Update Operations",
+			"item": [
+				{
+					"name": "Overwrite the value of an Attribute value",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Link",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": [\"sensor\", \"actuator\"],\n    \"type\": \"Property\"\n}"
+						},
+						"url": {
+							"raw": "http://{{context-broker}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs/category",
+							"protocol": "http",
+							"host": [
+								"{{context-broker}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:TemperatureSensor:001",
+								"attrs",
+								"category"
+							]
+						},
+						"description": "This example updates the value of the `category` attribute of the Entity with `id=urn:ngsi-ld:TemperatureSensor:001`\n\nExisting attribute values can be altered by making a PATCH request to the\n`/ngsi-ld/v1/entities/<entity-id>/attrs/<attribute>` endpoint. The appropriate `@context` should be supplied as a `Link`\nheader."
+					},
+					"response": []
+				},
+				{
+					"name": "Overwrite Multiple Attributes of a Data Entity",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Link",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n      \"category\": {\n            \"value\": [\n                  \"sensor\",\n                  \"actuator\"\n            ],\n            \"type\": \"Property\"\n      },\n      \"controlledAsset\": {\n            \"type\": \"Relationship\",\n            \"object\": \"urn:ngsi-ld:Building:barn001\"\n      }\n}"
+						},
+						"url": {
+							"raw": "http://{{context-broker}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs",
+							"protocol": "http",
+							"host": [
+								"{{context-broker}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:TemperatureSensor:001",
+								"attrs"
+							]
+						},
+						"description": "This example simultaneously updates the values of both the `category` and `controlledAsset` attributes of the Entity\nwith `id=urn:ngsi-ld:TemperatureSensor:001`.\n\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Batch Update Attributes of Multiple Data Entities",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Link",
+								"type": "text",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n  {\n    \"id\": \"urn:ngsi-ld:TemperatureSensor:003\",\n    \"type\": \"TemperatureSensor\",\n    \"category\": {\n      \"type\": \"Property\",\n      \"value\": [\n        \"actuator\",\n        \"sensor\"\n      ]\n    }\n  },\n  {\n    \"id\": \"urn:ngsi-ld:TemperatureSensor:004\",\n    \"type\": \"TemperatureSensor\",\n    \"category\": {\n      \"type\": \"Property\",\n      \"value\": [\n        \"actuator\",\n        \"sensor\"\n      ]\n    }\n  }\n]"
+						},
+						"url": {
+							"raw": "http://{{context-broker}}/ngsi-ld/v1/entityOperations/upsert?options=update",
+							"protocol": "http",
+							"host": [
+								"{{context-broker}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entityOperations",
+								"upsert"
+							],
+							"query": [
+								{
+									"key": "options",
+									"value": "update"
+								}
+							]
+						},
+						"description": "This example uses the convenience batch processing endpoint to update existing sensors.\n\nBatch processing uses the `/ngsi-ld/v1/entityOperations/upsert` endpoint. The payload body holds an array of the\nentities and attributes we wish to update.The `options=update` parameter indicates we will not remove existing\nattributes if they already exist and have not been included in the payload.\n\nAn alternative would be to use the `/ngsi-ld/v1/entityOperations/update` endpoint. Unlike `upsert`, the `update`\noperation will not silently create any new entities - it fails if the entities do not already exist."
+					},
+					"response": []
+				},
+				{
+					"name": "Batch Replace Entity Data",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Link",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n  {\n    \"id\": \"urn:ngsi-ld:TemperatureSensor:003\",\n    \"type\": \"TemperatureSensor\",\n    \"category\": {\n      \"type\": \"Property\",\n      \"value\": [\n        \"actuator\",\n        \"sensor\"\n      ]\n    }\n  },\n  {\n    \"id\": \"urn:ngsi-ld:TemperatureSensor:004\",\n    \"type\": \"TemperatureSensor\",\n    \"temperature\": {\n      \"type\": \"Property\",\n      \"value\": [\n        \"actuator\",\n        \"sensor\"\n      ]\n    }\n  }\n]"
+						},
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entityOperations/update?options=replace",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entityOperations",
+								"update"
+							],
+							"query": [
+								{
+									"key": "options",
+									"value": "replace"
+								}
+							]
+						},
+						"description": "This example uses the convenience batch processing endpoint to replace entity data of existing sensors.\n\nBatch processing uses the `/ngsi-ld/v1/entityOperations/update` endpoint with a payload with the - `options=replace`\nparameter, this means we will overwrite existing entities. `/ngsi-ld/v1/entityOperations/upsert` could also be used if\nnew entities are also to be created."
+					},
+					"response": []
+				}
+			],
+			"description": "Overwrite operations are mapped to HTTP PATCH:\n\n-   The `/ngsi-ld/v1/entities/<entity-id>/attrs/<attribute>` endpoint is used to update an attribute\n-   The `/ngsi-ld/v1/entities/<entity-id>/attrs` endpoint is used to update multiple attributes\n",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Delete Operations",
+			"item": [
+				{
+					"name": "Delete a Data Entity",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:004",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:TemperatureSensor:004"
+							]
+						},
+						"description": "This example deletes the entity with `id=urn:ngsi-ld:TemperatureSensor:004` from the context.\n\nEntities can be deleted by making a DELETE request to the `/ngsi-ld/v1/entities/<entity>` endpoint.\n\nSubsequent requests using the same `id` will result in an error response since the entity no longer exists in the\ncontext."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete an Attribute from a Data Entity",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs/batteryLevel",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:TemperatureSensor:001",
+								"attrs",
+								"batteryLevel"
+							]
+						},
+						"description": "This example removes the `batteryLevel` attribute from the entity with `id=urn:ngsi-ld:TemperatureSensor:001`.\n\nAttributes can be deleted by making a DELETE request to the `/ngsi-ld/v1/entities/<entity>/attrs/<attribute>` endpoint. It is\nimportant to supply the appropriate `@context` in the request in the form of a `Link` header to ensure that the\nattribute name can be recognised.\n\nIf the entity does not exist within the context or the attribute cannot be found on the entity, the result will be an\nerror response."
+					},
+					"response": []
+				},
+				{
+					"name": "Batch Delete Multiple Data Entities",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n  \"urn:ngsi-ld:TemperatureSensor:002\",\n  \"urn:ngsi-ld:TemperatureSensor:003\"\n]"
+						},
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entityOperations/delete",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entityOperations",
+								"delete"
+							]
+						},
+						"description": "This example uses the convenience batch processing endpoint to delete some **TemperatureSensor** entities.\n\nBatch processing uses the `/ngsi-ld/v1/entityOperations/delete` endpoint with a payload consisting of an array of\nelements to delete.\n\nIf an entity does not exist in the context, the result will be an error response."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Multiple Attributes of a Data Entity",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Link",
+								"type": "text",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n      \"category\": {\n            \"value\": null,\n            \"type\": \"Property\"\n      },\n      \"controlledAsset\": {\n            \"type\": \"Relationship\",\n            \"object\": null\n      }\n}"
+						},
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:TemperatureSensor:001",
+								"attrs"
+							]
+						},
+						"description": "This example uses the PATCH `/ngsi-ld/v1/entities/<entity-id>/attrs` endpoint to delete some attributes from a\n**TemperatureSensor** entity.\n\nIf a value is set to `null` the attribute is deleted."
+					},
+					"response": []
+				}
+			],
+			"description": "Delete Operations map to HTTP DELETE.\n\n-   The `/ngsi-ld/v1/entities/<entity-id>` endpoint can be used to delete an entity\n-   The `/ngsi-ld/v1/entities/<entity-id>/attrs/<attribute>` endpoint can be used to delete an attribute\n\nThe response will be **204 - No Content** if the operation is successful or **404 - Not Found** if the operation fails.\n\n### Data Relationships\n\nIf there are entities within the context which relate to one another, you must be careful when deleting an entity. You\nwill need to check that no references are left dangling once the entity has been deleted.\n\nOrganizing a cascade of deletions is beyond the scope of this tutorial, but it would be possible using a batch delete\nrequest.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "NGSI-LD - Read as Linked Data Copy",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Link",
+						"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{context-broker}}/ngsi-ld/v1/entities/?type=Store",
+					"protocol": "http",
+					"host": [
+						"{{context-broker}}"
+					],
+					"path": [
+						"ngsi-ld",
+						"v1",
+						"entities",
+						""
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "Store"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "context-broker",
+			"value": "localhost:1026",
+			"type": "string"
+		},
+		{
+			"key": "ngsi-context.jsonld",
+			"value": "http://context/ngsi-context.jsonld",
+			"type": "string"
+		},
+		{
+			"key": "alternate-context.jsonld",
+			"value": "http://context/alternate-context.jsonld",
+			"type": "string"
+		},
+		{
+			"key": "json-context.jsonld",
+			"value": "http://context/json-context.jsonld",
+			"type": "string"
+		},
+		{
+			"key": "v2-broker",
+			"value": "localhost:1027",
+			"type": "string"
+		},
+		{
+			"key": "adapter",
+			"value": "localhost:3005",
+			"type": "string"
+		}
+	]
+}
