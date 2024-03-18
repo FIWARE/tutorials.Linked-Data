@@ -8,7 +8,7 @@
         "tutorial": "https://fiware.github.io/tutorials.Step-by-Step/schema/",
         "openstreetmap": "https://wiki.openstreetmap.org/wiki/Tag:building%3D",
         "Bell": "tutorial:Bell",
-        "Building": "fiware:Building",
+        "Store": "fiware:Building",
         "Door": "tutorial:Door",
         "Lamp": "tutorial:Lamp",
         "Motion": "tutorial:Motion",
