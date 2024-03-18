@@ -138,7 +138,6 @@
 
         "InventoryItem" : "fiware:InventoryItem",
         "Product" : "fiware:Product",
-        "Shelf" : "fiware:Shelf",
-        "Store":  "fiware:Building"
+        "Shelf" : "fiware:Shelf"
     }
 }
