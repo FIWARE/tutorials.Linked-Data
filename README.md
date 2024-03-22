@@ -1,5 +1,5 @@
 [![FIWARE Banner](https://fiware.github.io/tutorials.Linked-Data/img/fiware.png)](https://www.fiware.org/developers)
-[![NGSI LD](https://img.shields.io/badge/NGSI-LD-d6604d.svg)](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.07.01_60/gs_cim009v010701p.pdf)
+[![NGSI LD](https://img.shields.io/badge/NGSI-LD-d6604d.svg)](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.08.01_60/gs_cim009v010801p.pdf)
 
 [![FIWARE Core Context Management](https://nexus.lab.fiware.org/repository/raw/public/badges/chapters/core.svg)](https://github.com/FIWARE/catalogue/blob/master/core/README.md)
 [![License: MIT](https://img.shields.io/github/license/fiware/tutorials.Linked-Data.svg)](https://opensource.org/licenses/MIT)
@@ -132,7 +132,7 @@ Click on the image above to watch a video describing the basic concepts behind J
 **NGSI-LD** is an evolution of the **NGSI v2** information model, which has been modified to improve support for linked
 data (entity relationships), property graphs and semantics (exploiting the capabilities offered by JSON-LD). This work
 has been conducted under the ETSI ISG CIM initiative and the updated specification has been branded as
-[NGSI-LD](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.07.01_60/gs_cim009v010701p.pdf). The main constructs
+[NGSI-LD](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.08.01_60/gs_cim009v010801p.pdf). The main constructs
 of NGSI-LD are: _Entity_, _Property_ and _Relationship_. NGSI-LD Entities (instances) can be the subject of Properties
 or Relationships. In terms of the traditional NGSI v2 data model, Properties can be seen as the combination of an
 attribute and its value. Relationships allow to establish associations between instances using linked data.
