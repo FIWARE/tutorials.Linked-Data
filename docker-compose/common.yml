@@ -151,7 +151,7 @@ services:
       - DEBUG=adapter:*
       - NGSI_V2_CONTEXT_BROKER=http://orion2:1026
       - USER_CONTEXT_URL=http://context/fixed-context.jsonld
-      - CORE_CONTEXT_URL=https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld
+      - CORE_CONTEXT_URL=https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld
       - NOTIFICATION_RELAY_URL=http://adapter:3000/notify
       
   ngsi-v2:
