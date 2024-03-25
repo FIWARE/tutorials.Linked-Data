@@ -21,10 +21,16 @@ The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also a
 -   このチュートリアルは[日本語](README.ja.md)でもご覧いただけます。
 
 > [!NOTE]
->  This tutorial is designed for **NGSI-v2** developers looking to switch or upgrade systems to
->  **NGSI-LD**, if you are building a linked data system from scratch or you are not already familiar with **NGSI-v2** then
-it is recommmended that you look directly at the
-[NGSI-LD developers tutorial](https://ngsi-ld-tutorials.readthedocs.io/) documentation.
+>  This tutorial is designed for existing **NGSI-v2** developers looking understand the minimal
+>  changes that would be necessary to completely switch or upgrade systems to **NGSI-LD**,
+>  if you are building a linked data system from scratch and you do not have an **NGSI-v2**
+>  background then it is recommmended that you look directly at the
+> [NGSI-LD developers tutorial](https://ngsi-ld-tutorials.readthedocs.io/) documentation.
+>
+> Similarly, if you have already have a functioning **NGSI-v2** system which you merely
+> wish to use as a context source within an existing **NGSI-LD** data space, checkout the
+> equivalent [**NGSI-LD** tutorial](https://github.com/FIWARE/tutorials.Linked-Data/tree/NGSI-LD) on federating **NGSI-v2** data sources.
+>
 
 ## Contents
 
