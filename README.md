@@ -208,7 +208,7 @@ persistence of the context data they hold. Therefore, the architecture will cons
 Since all interactions between the two elements are initiated by HTTP requests, the elements can be containerized and
 run from exposed ports.
 
-![](https://fiware.github.io/tutorials.Linked-Data/img/architecture.png)
+![](https://fiware.github.io/tutorials.Linked-Data/img/architecture-lepus.png)
 
 The necessary configuration information can be seen in the services section of the associated `common.yml` and `orion-ld.yml` files:
 
