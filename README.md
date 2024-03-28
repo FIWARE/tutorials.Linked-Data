@@ -6,30 +6,23 @@
 [![JSON LD](https://img.shields.io/badge/JSON--LD-1.1-f06f38.svg)](https://w3c.github.io/json-ld-syntax/) <br/>
 [![Documentation](https://img.shields.io/readthedocs/ngsi-ld-tutorials.svg)](https://ngsi-ld-tutorials.rtfd.io)
 
-
 This tutorial introduces the idea of using an existing **NGSI-v2** Context Broker as a Context Source within an **NGSI-LD** data space, and how to combine both JSON-based
-and JSON-LD based context data into a unified structure through introducing a simple
-**NGSI-LD** façade pattern with a fixed `@context`. The tutorial re-uses the data from
-the  original **NGSI-v2** getting started tutorial but uses API calls from the
-**NGSI-LD** interface.
-
-**NGSI-LD** interface.
+and JSON-LD based context data into a unified structure through introducing a simple **NGSI-LD** façade pattern with a fixed `@context`. The tutorial re-uses the data from
+the  original **NGSI-v2** getting started tutorial but uses API calls from the **NGSI-LD** interface.
 
 The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also available as
-[Postman documentation](https://fiware.github.io/tutorials.Linked-Data/)
+[Postman documentation](https://fiware.github.io/tutorials.Linked-Data/ngsi-ld.html)
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/125db8d3a1ea3dab8e3f)
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/FIWARE/tutorials.Linked-Data/tree/NGSI-LD)
 
 
 > [!NOTE]
->  This tutorial is designed for exisiting **NGSI-v2** developers looking to attach existing
->  **NGSI-v2** systems to an **NGSI-LD** federation.
->  if you are building a linked data system from scratch you should start from the beginnning
->   of the [NGSI-LD developers tutorial](https://ngsi-ld-tutorials.readthedocs.io/) documentation.
+>  This tutorial is designed for exisiting **NGSI-v2** developers looking to attach existing **NGSI-v2** systems to an **NGSI-LD** federation. If you are building a linked data
+> system from scratch you should start from the beginnning of the [NGSI-LD developers tutorial](https://ngsi-ld-tutorials.readthedocs.io/) documentation.
 >
-> Similarly, if you an existing **NGSI-v2** developer and you want to understand linked
-> data concepts, checkout the equivalent [**NGSI-v2** tutorial](https://github.com/FIWARE/tutorials.Linked-Data/tree/NGSI-v2) on upgrading **NGSI-v2** data sources to **NGSI-LD**
+> Similarly, if you an existing **NGSI-v2** developer and you just want to understand linked data concepts in general, checkout the equivalent
+>  [**NGSI-v2** tutorial](https://github.com/FIWARE/tutorials.Linked-Data/tree/NGSI-v2) on upgrading **NGSI-v2** data sources to **NGSI-LD**
 
 ## Contents
 
@@ -41,44 +34,39 @@ The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also a
 >
 > ― Judy Garland
 
-The first introduction to FIWARE [Getting Started tutorial](https://github.com/FIWARE/tutorials.Getting-Started) introduced
-the [NGSI v2](https://fiware.github.io/specifications/OpenAPI/ngsiv2) JSON-based interface that is commonly used to create and
-manipulate context data entities. [NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/rep/NGSI-LD/NGSI-LD/raw/master/spec/updated/generated/full_api.json) is an evolution of that interface which enhances context data entities through adding the concept of **linked data**.
+The first introduction to FIWARE [Getting Started tutorial](https://github.com/FIWARE/tutorials.Getting-Started) introduced the [NGSI v2](https://fiware.github.io/specifications/OpenAPI/ngsiv2) 
+JSON-based interface that is commonly used to create and manipulate context data entities. 
+[NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/rep/NGSI-LD/NGSI-LD/raw/master/spec/updated/generated/full_api.json) is an evolution of that interface which enhances context data entities through adding the concept of **linked data**.
 
 There is a need for two separate interfaces since:
 
 -  **NGSI-v2** offers [JSON](https://www.json.org/json-en.html) based interoperability used in individual Smart Systems
 -  **NGSI-LD** offers [JSON-LD](https://json-ld.org/) based interoperability used for Federations and Data Spaces
 
-**NGSI-v2** is ideal for creating individual applications offering interoperable interfaces for web services
-or IoT devices. It is easier to understand than NGSI-LD and does not require a JSON-LD `@context`, However **NGSI-v2** without linked data falls short when attempting to offer federated data across a
-data space. Once multiple apps and organisations are involved each individual data owner is no longer in
-control of the structure of the data used internally by the other participants within the data space. This is where
-the `@context` of **NGSI-LD** comes in, acting as a mapping mechanism for attributes allowing the each local system to continue to use its own preferred terminology within the data it holds and for federated data from other users within the data space to be renamed using a standard expansion/compaction operation allowing each individual system understand data  holistically from across the whole data space.
-
-
+**NGSI-v2** is ideal for creating individual applications offering interoperable interfaces for web services or IoT devices. It is easier to understand than NGSI-LD and does not require 
+a JSON-LD `@context`, However **NGSI-v2** without linked data falls short when attempting to offer federated data across a data space. Once multiple apps and organisations are involved 
+each individual data owner is no longer in control of the structure of the data used internally by the other participants within the data space. This is where the `@context` 
+of **NGSI-LD** comes in, acting as a mapping mechanism for attributes allowing the each local system to continue to use its own preferred terminology within the data it holds
+and for federated data from other users within the data space to be renamed using a standard expansion/compaction operation allowing each individual system understand data 
+holistically from across the whole data space.
 
 ## Creating a common data space
 
+For example, imagine a simple "Buildings" data space consisting of two participants pooling their data together:
 
-For example. Imagine a simple "Buildings" data space consisting of two participants sharing their data together:
-
--  Details of a series of [supermarkets](https://fiware-tutorials.readthedocs.io/en/latest/)
--  Details of a series of [farms](https://ngsi-ld-tutorials.readthedocs.io/en/latest/)
+-  Details of a series of [supermarkets](https://fiware-tutorials.readthedocs.io/en/latest/) from the **NGSI-v2** tutorials.
+-  Details of a series of [farms](https://ngsi-ld-tutorials.readthedocs.io/en/latest/) from the **NGSI-LD** tutorials.
 
 Although the two participants have agreed to use a common [data model](https://ngsi-ld-tutorials.readthedocs.io/en/latest/datamodels.html#building) between them, internally
 they hold their data in a slightly different structure.
 
-
-#### Farm (**NGSI-LD**)
+#### Farm (**NGSI-LD** Data)
 
 Within the **NGSI-LD** Smart Farm, all of the Building Entities are marked using `"type":"Building"` as a shortname which can be expanded to a full URI https://uri.fiware.org/ns/dataModels#Building` using JSON-LD expansion rules. All the attributes of each Building entity
 (such as `name`, `category` etc
 are defined using the [User `@context`](./data-models/ngsi-context.jsonld) and are structured as NGSI-LD attributes.
 The standard NGSI-LD Keywords are used to define the nature of each attribute - e.g. `Property`,
-`GeoProperty`, `VocabularyProperty`, `Relationship` and each of these terms is also defined within the [core `@context`](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld).
-
-
+`GeoProperty`, `VocabularyProperty`, `Relationship` and each of these terms is also defined within the [core `@context`](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld).
 
 ```json
 {
@@ -115,10 +103,12 @@ The standard NGSI-LD Keywords are used to define the nature of each attribute - 
 }
 ```
 
-#### Supermarket (**NGSI-v2**)
+#### Supermarket (**NGSI-v2** Data)
 
 Within the **NGSI-v2** Smart Supermarket, every entity must have a `id` and `type` - this is part of the data model and a prerequisite for joining the data space.
-However due to the backend systems used, the internal short name is `"type":"Store"`. Within an **NGSI-v2** system there is no concept of `@context` - every attribute has a `type` and a `value` and the attribute `type` is usually aligned with the datatype (e.g. `Text`, `PostalAddress`) although since **NGSI-LD** keyword types such as `Relationship` `VocabularyProperty` are also permissible and set by convention.
+However due to the backend systems used, the internal short name is `"type":"Store"`. Within an **NGSI-v2** system there is no concept of `@context` - every attribute
+has a `type` and a `value` and the attribute `type` is usually aligned with the datatype (e.g. `Text`, `PostalAddress`) although since **NGSI-LD** keyword types such as 
+`Relationship`, `VocabularyProperty` are also permissible and set by convention.
 
 ```json
 {
@@ -158,15 +148,18 @@ However due to the backend systems used, the internal short name is `"type":"Sto
 
 ### Types of data space
 
-When joining a data space, a participant must abide by the rules that govern that data space. One of the first decisions a common data space must make is to defined the nature of the data space itself. There are three primary approaches to this, which can broadly be defined as follows:
+When joining a data space, a participant must abide by the rules that govern that data space. One of the first decisions a common data space must make is to defined
+the nature of the data space itself. There are three primary approaches to this, which can broadly be defined as follows:
 
-- An **Integrated** data space requires that every participant uses exactly the same payloads and infrastructure - _e.g. "Use Scorpio 4.1.15 only"_ . This could be a requirement for a lottery ticketing system where every terminal sends ticket data in the same format.
-- A **unified** data space defines a common data format, but allows for the underlying infrastructure to differ between participants - _e.g. "Use NGSI-LD only for all payloads"_
-- A **federated** data space is even looser and defines a common meta structure so each participants has more flexibility regarding it underlying technologies  - _e.g. "All payloads must be translatable as GeoJSON"_ for a combined GIS, NGSI-LD data space.
+-  An **Integrated** data space requires that every participant uses exactly the same payloads and infrastructure - for example _"Use Scorpio 4.1.15 only"_ . This could be a
+   requirement for a lottery ticketing system where every terminal sends ticket data in the same format.
+-  A **unified** data space defines a common data format, but allows for the underlying infrastructure to differ between participants - for example _"Use NGSI-LD only
+   for all payloads"_
+-  A **federated** data space is even looser and defines a common meta structure so each participants has more flexibility regarding it underlying technologies
+   for example "All payloads must be translatable as GeoJSON"_ for a combined GIS, NGSI-LD data space.
 
-Using this terminology, in this example we are creating a **unified** data space in this example, since participants are using NGSI-LD for data exchange, but their underlying systems are different.
-
-
+Using this terminology, in this example we are creating a **unified** data space in this example, since participants are using NGSI-LD in common for data exchange, but their 
+underlying systems are different.
 
 
 # Prerequisites
@@ -199,11 +192,10 @@ persistence of the context data they hold. Therefore, the architecture will cons
     [NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/rep/NGSI-LD/NGSI-LD/raw/master/spec/updated/generated/full_api.json)
 -   The [Smart Supermarket Context Broker](https://fiware-orion.readthedocs.io/en/latest/) which will receive requests using
     [NGSI-v2](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/rep/NGSI-LD/NGSI-LD/raw/master/spec/updated/generated/full_api.json)
--   Two is instances of underlying [MongoDB](https://www.mongodb.com/) database
+-   Two  instances of underlying [MongoDB](https://www.mongodb.com/) database
      -   Used by both NGSI-v2 and NGSI-LD Context Brokers to hold context data information such as data entities, subscriptions and registrations
 -   The FIWARE [Lepus](https://github.com/jason-fox/lepus) proxy which will translate NGSI-LD to NGSI-v2 and vice-versa
 -   An HTTP **Web-Server** which offers static `@context` files defining the context entities within the system.
-
 
 Since all interactions between the two elements are initiated by HTTP requests, the elements can be containerized and
 run from exposed ports.
@@ -270,16 +262,25 @@ lepus:
 
 ```
 
-
 All containers are residing on the same network - the Orion-LD Context Broker is listening on Port `1026` and the first MongoDB is
 listening on the default port `27017`. The Orion NGSI-v2 Context Broker is listening on Port `1027` and second MongoDB is
 listening on port `27018`. Lepus uses port `3000`, but since that clashes with the the tutorial application, it has been amended externally to `3005`.
+
+Lepus is driven by the environment variables as shown:
+
+| Key                     | Value                                                              | Description                                                                         |
+| ----------------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| DEBUG                   | `adapter:*`                                                        | Debug flag used for logging                                                         |
+| NGSI_V2_CONTEXT_BROKER  | `http://orion2:1026`                                               | Hostname and port of the underlying NGSI-v2 context broker                          |
+| USER_CONTEXT_URL        | `http://context/fixed-context.jsonld`                              | The location of the User-defined `@context` file used to define the data models     |
+| CORE_CONTEXT_URL        | `https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld` | The location of the core `@context` file used to the structure of NGSI-LD entities  |
+| NOTIFICATION_RELAY_URL  | `http://adapter:3000/notify`                                       | Callback URL used for converting notification payloads from NGSI-v2 to NGSI-LD      |
 
 
 # Start Up
 
 All services can be initialised from the command-line by running the
-[services](https://github.com/FIWARE/tutorials.Linked-Data/blob/NGSI-v2/services) Bash script provided within the
+[services](https://github.com/FIWARE/tutorials.Linked-Data/blob/NGSI-LD/services) Bash script provided within the
 repository. Please clone the repository and create the necessary images by running the commands as shown:
 
 ```bash
@@ -299,7 +300,7 @@ git checkout NGSI-LD
 
 ---
 
-# Creating a "Powered by FIWARE" app based on Linked Data
+# Creating a NGSI-LD Data space based on Linked Data
 
 This tutorial recreates the same data entities as the initial _"Powered by FIWARE"_ supermarket finder app, but using
 NGSI-LD linked data entities rather than NGSI v2.
