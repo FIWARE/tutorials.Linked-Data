@@ -77,10 +77,10 @@ The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also a
 > ― Malcolm Gladwell, The Tipping Point
 
 The introduction to FIWARE [Getting Started tutorial](https://github.com/FIWARE/tutorials.Getting-Started) introduced
-the [NGSI v2](https://fiware.github.io/specifications/OpenAPI/ngsiv2) interface that is commonly used to create and
+the [NGSI v2](https://fiware.github.io/specifications/OpenAPI/ngsiv2) JSON-based interface that is commonly used to create and
 manipulate context data entities. An evolution of that interface has created a supplementary specification called
 [NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/rep/NGSI-LD/NGSI-LD/raw/master/spec/updated/generated/full_api.json)
-as a mechanism to enhance context data entities through adding the concept of **linked data**. This tutorial will
+as a mechanism to enhance context data entities through adding the concept of **linked data**using JSON-LD. This tutorial will
 introduce the background of the ideas behind the new interface and compare and contrast how to create and manipulate
 data entities as linked data.
 
@@ -499,7 +499,7 @@ Each subsequent entity must have a unique `id` for the given `type`
 
 ```console
 curl -iX POST \
-  http://localhost:1026/ngsi-ld/v1/entities/ \
+  'http://localhost:1026/ngsi-ld/v1/entities/' \
   -H 'Content-Type: application/ld+json' \
   -d '{
     "id": "urn:ngsi-ld:Building:store002",
@@ -1072,7 +1072,7 @@ If another attribute is to be used, an additional `geoproperty` parameter is req
 curl -G -X GET \
   'http://localhost:1026/ngsi-ld/v1/entities' \
   -H 'Link: <https://smart-data-models.github.io/dataModel.Building/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
-  -H 'Accept: application/json' \
+  -H 'Accept: application/ld+json' \
   -d 'type=Building' \
   -d 'geometry=Point' \
   -d 'coordinates=%5B13.3777,52.5162%5D' \
