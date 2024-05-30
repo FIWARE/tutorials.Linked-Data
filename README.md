@@ -10,7 +10,8 @@ is recreated using **NGSI-LD** and the differences between the **NGSI-v2** and *
 and discussed. The tutorial is a direct analogue of the original getting started tutorial but uses API calls from the
 **NGSI-LD** interface.
 
-The **NGSI-LD** shows how to encapsulate an existing **NGSI-v2** data source such as the Smart Supermarket buildings and use registrations to allow an **NGSI-v2** source to federate within an **NGSI-LD** system using a fixed `@context`.
+The **NGSI-LD** tutorial shows how to encapsulate an existing **NGSI-v2** data source (such as the Smart Supermarket buildings) and use registrations 
+to allow an **NGSI-v2** source to federate within an **NGSI-LD** system using a fixed `@context`.
 
 Both tutorials are available as [Postman documentation](https://www.postman.com/downloads/).
 
