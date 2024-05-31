@@ -1,5 +1,9 @@
-[![FIWARE Banner](https://fiware.github.io/tutorials.Linked-Data/img/fiware.png)](https://www.fiware.org/developers)
-[![NGSI LD](https://img.shields.io/badge/NGSI-LD-d6604d.svg)](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.08.01_60/gs_cim009v010801p.pdf)
+<h1  align="center">
+    <img src="https://fiware.github.io/tutorials.Step-by-Step/img/fiware-supermarket.png" />
+    <img src="https://img.shields.io/badge/NGSI-LD-d6604d.svg" width="90"/>
+</h1>
+
+## Linked Data
 
 [![FIWARE Core Context Management](https://nexus.lab.fiware.org/repository/raw/public/badges/chapters/core.svg)](https://github.com/FIWARE/catalogue/blob/master/core/README.md)
 [![License: MIT](https://img.shields.io/github/license/fiware/tutorials.Linked-Data.svg)](https://opensource.org/licenses/MIT)
