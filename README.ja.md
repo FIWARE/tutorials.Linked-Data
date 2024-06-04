@@ -38,7 +38,7 @@
         -   [NGSI v2 データ・モデル](#ngsi-ld-data-model)
 -   [前提条件](#prerequisites)
     -   [Docker](#docker)
-    -   [Cygwin](#cygwin)
+    -   [WSL](#wsl)
 -   [アーキテクチャ](#architecture)
 -   [起動](#start-up)
 -   [リンクト・データをベースとした "Powered by FIWARE" アプリの作成](#creating-a-powered-by-fiware-app-based-on-linked-data)
@@ -237,12 +237,10 @@ NGSI LD データ・エンティティ (スーパーマーケットなど) :
 できることを意味します。Docker Compose は、Docker for Windows および Docker for Mac の一部としてデフォルトでインストール
 されますが、Linux ユーザは[こちら](https://docs.docker.com/compose/install/)にある手順に従う必要があります。
 
-<a name="cygwin"></a>
-
-## Cygwin
+## WSL
 
 簡単な bash スクリプトを使ってサービスを開始します。Windows ユーザは、Windows 上の Linux ディストリビューションに
-似たコマンドライン機能を提供するために [cygwin](http://www.cygwin.com/) をダウンロードするべきです。
+似たコマンドライン機能を提供するために [を使用して Windows に Linux をインストールする方法](https://learn.microsoft.com/ja-jp/windows/wsl/install) をダウンロードするべきです。
 
 <a name="architecture"></a>
 
