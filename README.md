@@ -11,9 +11,10 @@
 [![JSON LD](https://img.shields.io/badge/JSON--LD-1.1-f06f38.svg)](https://w3c.github.io/json-ld-syntax/) <br/>
 [![Documentation](https://img.shields.io/readthedocs/ngsi-ld-tutorials.svg)](https://ngsi-ld-tutorials.rtfd.io)
 
-This tutorial introduces the idea of using an existing **NGSI-v2** Context Broker as a Context Source within an **NGSI-LD** data space, and how to combine both JSON-based
-and JSON-LD based context data into a unified structure through introducing a simple **NGSI-LD** façade pattern with a fixed `@context`. The tutorial re-uses the data from
-the  original **NGSI-v2** getting started tutorial but uses API calls from the **NGSI-LD** interface.
+This tutorial introduces the idea of using an existing **NGSI-v2** Context Broker as a Context Source within an
+**NGSI-LD** data space, and how to combine both JSON-based and JSON-LD based context data into a unified structure
+through introducing a simple **NGSI-LD** façade pattern with a fixed `@context`. The tutorial re-uses the data from the
+original **NGSI-v2** getting started tutorial but uses API calls from the **NGSI-LD** interface.
 
 The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also available as
 [Postman documentation](https://fiware.github.io/tutorials.Linked-Data/ngsi-ld.html)
@@ -21,17 +22,17 @@ The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also a
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/125db8d3a1ea3dab8e3f)
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/FIWARE/tutorials.Linked-Data/tree/NGSI-LD)
 
-
 > [!NOTE]
->  This tutorial is designed for exisiting **NGSI-v2** developers looking to attach existing **NGSI-v2** systems to an **NGSI-LD** federation. If you are building a linked data
-> system from scratch you should start from the beginnning of the [NGSI-LD developers tutorial](https://ngsi-ld-tutorials.readthedocs.io/) documentation.
 >
-> Similarly, if you an existing **NGSI-v2** developer and you just want to understand linked data concepts in general, checkout the equivalent
->  [**NGSI-v2** tutorial](https://github.com/FIWARE/tutorials.Linked-Data/tree/NGSI-v2) on upgrading **NGSI-v2** data sources to **NGSI-LD**
+> This tutorial is designed for exisiting **NGSI-v2** developers looking to attach existing **NGSI-v2** systems to an
+> **NGSI-LD** federation. If you are building a linked data system from scratch you should start from the beginnning of
+> the [NGSI-LD developers tutorial](https://ngsi-ld-tutorials.readthedocs.io/) documentation.
+>
+> Similarly, if you an existing **NGSI-v2** developer and you just want to understand linked data concepts in general,
+> checkout the equivalent [**NGSI-v2** tutorial](https://github.com/FIWARE/tutorials.Linked-Data/tree/NGSI-v2) on
+> upgrading **NGSI-v2** data sources to **NGSI-LD**
 
 ## Contents
-
-
 
 # Adding Linked Data concepts to FIWARE Data Entities.
 
@@ -39,39 +40,48 @@ The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also a
 >
 > ― Judy Garland
 
-The first introduction to FIWARE [Getting Started tutorial](https://github.com/FIWARE/tutorials.Getting-Started) introduced the [NGSI v2](https://fiware.github.io/specifications/OpenAPI/ngsiv2) 
-JSON-based interface that is commonly used to create and manipulate context data entities. 
-[NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/rep/NGSI-LD/NGSI-LD/raw/master/spec/updated/generated/full_api.json) is an evolution of that interface which enhances context data entities through adding the concept of **linked data**.
+The first introduction to FIWARE [Getting Started tutorial](https://github.com/FIWARE/tutorials.Getting-Started)
+introduced the [NGSI v2](https://fiware.github.io/specifications/OpenAPI/ngsiv2) JSON-based interface that is commonly
+used to create and manipulate context data entities.
+[NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/rep/NGSI-LD/NGSI-LD/raw/master/spec/updated/generated/full_api.json)
+is an evolution of that interface which enhances context data entities through adding the concept of **linked data**.
 
 There is a need for two separate interfaces since:
 
--  **NGSI-v2** offers [JSON](https://www.json.org/json-en.html) based interoperability used in individual Smart Systems
--  **NGSI-LD** offers [JSON-LD](https://json-ld.org/) based interoperability used for Federations and Data Spaces
+-   **NGSI-v2** offers [JSON](https://www.json.org/json-en.html) based interoperability used in individual Smart Systems
+-   **NGSI-LD** offers [JSON-LD](https://json-ld.org/) based interoperability used for Federations and Data Spaces
 
-**NGSI-v2** is ideal for creating individual applications offering interoperable interfaces for web services or IoT devices. It is easier to understand than NGSI-LD and does not require 
-a JSON-LD `@context`, However **NGSI-v2** without linked data falls short when attempting to offer federated data across a data space. Once multiple apps and organisations are involved 
-each individual data owner is no longer in control of the structure of the data used internally by the other participants within the data space. This is where the `@context` 
-of **NGSI-LD** comes in, acting as a mapping mechanism for attributes allowing the each local system to continue to use its own preferred terminology within the data it holds
-and for federated data from other users within the data space to be renamed using a standard expansion/compaction operation allowing each individual system understand data 
-holistically from across the whole data space.
+**NGSI-v2** is ideal for creating individual applications offering interoperable interfaces for web services or IoT
+devices. It is easier to understand than NGSI-LD and does not require a JSON-LD `@context`, However **NGSI-v2** without
+linked data falls short when attempting to offer federated data across a data space. Once multiple apps and
+organisations are involved each individual data owner is no longer in control of the structure of the data used
+internally by the other participants within the data space. This is where the `@context` of **NGSI-LD** comes in, acting
+as a mapping mechanism for attributes allowing the each local system to continue to use its own preferred terminology
+within the data it holds and for federated data from other users within the data space to be renamed using a standard
+expansion/compaction operation allowing each individual system understand data holistically from across the whole data
+space.
 
 ## Creating a common data space
 
 For example, imagine a simple "Buildings" data space consisting of two participants pooling their data together:
 
--  Details of a series of [supermarkets](https://fiware-tutorials.readthedocs.io/en/latest/) from the **NGSI-v2** tutorials.
--  Details of a series of [farms](https://ngsi-ld-tutorials.readthedocs.io/en/latest/) from the **NGSI-LD** tutorials.
+-   Details of a series of [supermarkets](https://fiware-tutorials.readthedocs.io/en/latest/) from the **NGSI-v2**
+    tutorials.
+-   Details of a series of [farms](https://ngsi-ld-tutorials.readthedocs.io/en/latest/) from the **NGSI-LD** tutorials.
 
-Although the two participants have agreed to use a common [data model](https://ngsi-ld-tutorials.readthedocs.io/en/latest/datamodels.html#building) between them, internally
-they hold their data in a slightly different structure.
+Although the two participants have agreed to use a common
+[data model](https://ngsi-ld-tutorials.readthedocs.io/en/latest/datamodels.html#building) between them, internally they
+hold their data in a slightly different structure.
 
 #### Farm (**NGSI-LD** Data)
 
-Within the **NGSI-LD** Smart Farm, all of the Building Entities are marked using `"type":"Building"` as a shortname which can be expanded to a full URI https://uri.fiware.org/ns/dataModels#Building` using JSON-LD expansion rules. All the attributes of each Building entity
-(such as `name`, `category` etc
-are defined using the [User `@context`](./data-models/ngsi-context.jsonld) and are structured as NGSI-LD attributes.
-The standard NGSI-LD Keywords are used to define the nature of each attribute - e.g. `Property`,
-`GeoProperty`, `VocabularyProperty`, `Relationship` and each of these terms is also defined within the [core `@context`](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld).
+Within the **NGSI-LD** Smart Farm, all of the Building Entities are marked using `"type":"Building"` as a shortname
+which can be expanded to a full URI https://uri.fiware.org/ns/dataModels#Building` using JSON-LD expansion rules. All
+the attributes of each Building entity (such as `name`, `category` etc are defined using the
+[User `@context`](./data-models/ngsi-context.jsonld) and are structured as NGSI-LD attributes. The standard NGSI-LD
+Keywords are used to define the nature of each attribute - e.g. `Property`, `GeoProperty`, `VocabularyProperty`,
+`Relationship` and each of these terms is also defined within the
+[core `@context`](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld).
 
 ```json
 {
@@ -110,10 +120,11 @@ The standard NGSI-LD Keywords are used to define the nature of each attribute - 
 
 #### Supermarket (**NGSI-v2** Data)
 
-Within the **NGSI-v2** Smart Supermarket, every entity must have a `id` and `type` - this is part of the data model and a prerequisite for joining the data space.
-However due to the backend systems used, the internal short name is `"type":"Store"`. Within an **NGSI-v2** system there is no concept of `@context` - every attribute
-has a `type` and a `value` and the attribute `type` is usually aligned with the datatype (e.g. `Text`, `PostalAddress`) although since **NGSI-LD** keyword types such as 
-`Relationship`, `VocabularyProperty` are also permissible and set by convention.
+Within the **NGSI-v2** Smart Supermarket, every entity must have a `id` and `type` - this is part of the data model and
+a prerequisite for joining the data space. However due to the backend systems used, the internal short name is
+`"type":"Store"`. Within an **NGSI-v2** system there is no concept of `@context` - every attribute has a `type` and a
+`value` and the attribute `type` is usually aligned with the datatype (e.g. `Text`, `PostalAddress`) although since
+**NGSI-LD** keyword types such as `Relationship`, `VocabularyProperty` are also permissible and set by convention.
 
 ```json
 {
@@ -150,22 +161,23 @@ has a `type` and a `value` and the attribute `type` is usually aligned with the 
 }
 ```
 
-
 ### Types of data space
 
-When joining a data space, a participant must abide by the rules that govern that data space. One of the first decisions a common data space must make is to defined
-the nature of the data space itself. There are three primary approaches to this, which can broadly be defined as follows:
+When joining a data space, a participant must abide by the rules that govern that data space. One of the first decisions
+a common data space must make is to defined the nature of the data space itself. There are three primary approaches to
+this, which can broadly be defined as follows:
 
--  An **Integrated** data space requires that every participant uses exactly the same payloads and infrastructure - for example _"Use Scorpio 4.1.15 only"_ . This could be a
-   requirement for a lottery ticketing system where every terminal sends ticket data in the same format.
--  A **unified** data space defines a common data format, but allows for the underlying infrastructure to differ between participants - for example _"Use NGSI-LD only
-   for all payloads"_
--  A **federated** data space is even looser and defines a common meta structure so each participants has more flexibility regarding it underlying technologies
-   for example "All payloads must be translatable as GeoJSON"_ for a combined GIS, NGSI-LD data space.
+-   An **Integrated** data space requires that every participant uses exactly the same payloads and infrastructure - for
+    example _"Use Scorpio 4.1.15 only"_ . This could be a requirement for a lottery ticketing system where every
+    terminal sends ticket data in the same format.
+-   A **unified** data space defines a common data format, but allows for the underlying infrastructure to differ
+    between participants - for example _"Use NGSI-LD only for all payloads"_
+-   A **federated** data space is even looser and defines a common meta structure so each participants has more
+    flexibility regarding it underlying technologies for example "All payloads must be translatable as GeoJSON"\_ for a
+    combined GIS, NGSI-LD data space.
 
-Using this terminology, in this example we are creating a **unified** data space in this example, since participants are using NGSI-LD in common for data exchange, but their 
-underlying systems are different.
-
+Using this terminology, in this example we are creating a **unified** data space in this example, since participants are
+using NGSI-LD in common for data exchange, but their underlying systems are different.
 
 # Prerequisites
 
@@ -184,21 +196,22 @@ configure the required services for the application. This means all container se
 command. Docker Compose is installed by default as part of Docker for Windows and Docker for Mac, however Linux users
 will need to follow the instructions found [here](https://docs.docker.com/compose/install/)
 
-
 # Architecture
 
-The demo application will send and receive NGSI-LD calls within a data space. This demo application will only make use of three
-FIWARE components.
+The demo application will send and receive NGSI-LD calls within a data space. This demo application will only make use
+of three FIWARE components.
 
-Currently, both Orion and Orion-LD Context Brokers rely on open source [MongoDB](https://www.mongodb.com/) technology to keep
-persistence of the context data they hold. Therefore, the architecture will consist of two elements:
+Currently, both Orion and Orion-LD Context Brokers rely on open source [MongoDB](https://www.mongodb.com/) technology to
+keep persistence of the context data they hold. Therefore, the architecture will consist of two elements:
 
 -   The [Smart Farm Context Broker](https://fiware-orion.readthedocs.io/en/latest/) which will receive requests using
     [NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/rep/NGSI-LD/NGSI-LD/raw/master/spec/updated/generated/full_api.json)
--   The [Smart Supermarket Context Broker](https://fiware-orion.readthedocs.io/en/latest/) which will receive requests using
+-   The [Smart Supermarket Context Broker](https://fiware-orion.readthedocs.io/en/latest/) which will receive requests
+    using
     [NGSI-v2](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/rep/NGSI-LD/NGSI-LD/raw/master/spec/updated/generated/full_api.json)
--   Two  instances of underlying [MongoDB](https://www.mongodb.com/) database
-     -   Used by both NGSI-v2 and NGSI-LD Context Brokers to hold context data information such as data entities, subscriptions and registrations
+-   Two instances of underlying [MongoDB](https://www.mongodb.com/) database
+    -   Used by both NGSI-v2 and NGSI-LD Context Brokers to hold context data information such as data entities,
+        subscriptions and registrations
 -   The FIWARE [Lepus](https://github.com/jason-fox/lepus) proxy which will translate NGSI-LD to NGSI-v2 and vice-versa
 -   An HTTP **Web-Server** which offers static `@context` files defining the context entities within the system.
 
@@ -207,7 +220,8 @@ run from exposed ports.
 
 ![](https://fiware.github.io/tutorials.Linked-Data/img/architecture-lepus.png)
 
-The necessary configuration information can be seen in the services section of the associated `common.yml` and `orion-ld.yml` files:
+The necessary configuration information can be seen in the services section of the associated `common.yml` and
+`orion-ld.yml` files:
 
 #### Orion-LD (NGSI-LD)
 
@@ -221,7 +235,7 @@ orion-ld:
     networks:
         - default
     ports:
-        - '1026:1026'
+        - "1026:1026"
     command: -dbhost mongo-db -logLevel DEBUG
     healthcheck:
         test: curl --fail -s http://orion:1026/version || exit 1
@@ -235,14 +249,14 @@ orion:
     hostname: orion2
     container_name: fiware-orion-v2
     depends_on:
-      - mongo-for-orion-v2
+        - mongo-for-orion-v2
     networks:
-      - default
+        - default
     ports:
-      - "1027:1026" # localhost:1026
+        - "1027:1026" # localhost:1026
     command: -dbhost mongo-db2 -logLevel DEBUG
     healthcheck:
-      test: curl --fail -s http://orion2:1026/version || exit 1
+        test: curl --fail -s http://orion2:1026/version || exit 1
 ```
 
 #### Lepus
@@ -253,34 +267,33 @@ lepus:
     hostname: adapter
     container_name: fiware-lepus
     networks:
-      - default
+        - default
     expose:
-      - "3005"
+        - "3005"
     ports:
-      - "3005:3000"
+        - "3005:3000"
     environment:
-      - DEBUG=adapter:*
-      - NGSI_V2_CONTEXT_BROKER=http://orion2:1026
-      - USER_CONTEXT_URL=http://context/fixed-context.jsonld
-      - CORE_CONTEXT_URL=https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld
-      - NOTIFICATION_RELAY_URL=http://adapter:3000/notify
-
+        - DEBUG=adapter:*
+        - NGSI_V2_CONTEXT_BROKER=http://orion2:1026
+        - USER_CONTEXT_URL=http://context/fixed-context.jsonld
+        - CORE_CONTEXT_URL=https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld
+        - NOTIFICATION_RELAY_URL=http://adapter:3000/notify
 ```
 
-All containers are residing on the same network - the Orion-LD Context Broker is listening on Port `1026` and the first MongoDB is
-listening on the default port `27017`. The Orion NGSI-v2 Context Broker is listening on Port `1027` and second MongoDB is
-listening on port `27018`. Lepus uses port `3000`, but since that clashes with the the tutorial application, it has been amended externally to `3005`.
+All containers are residing on the same network - the Orion-LD Context Broker is listening on Port `1026` and the first
+MongoDB is listening on the default port `27017`. The Orion NGSI-v2 Context Broker is listening on Port `1027` and
+second MongoDB is listening on port `27018`. Lepus uses port `3000`, but since that clashes with the the tutorial
+application, it has been amended externally to `3005`.
 
 Lepus is driven by the environment variables as shown:
 
-| Key                     | Value                                                              | Description                                                                         |
-| ----------------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
-| DEBUG                   | `adapter:*`                                                        | Debug flag used for logging                                                         |
-| NGSI_V2_CONTEXT_BROKER  | `http://orion2:1026`                                               | Hostname and port of the underlying NGSI-v2 context broker                          |
-| USER_CONTEXT_URL        | `http://context/fixed-context.jsonld`                              | The location of the User-defined `@context` file used to define the data models     |
-| CORE_CONTEXT_URL        | `https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld` | The location of the core `@context` file used to the structure of NGSI-LD entities  |
-| NOTIFICATION_RELAY_URL  | `http://adapter:3000/notify`                                       | Callback URL used for converting notification payloads from NGSI-v2 to NGSI-LD      |
-
+| Key                    | Value                                                              | Description                                                                        |
+| ---------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| DEBUG                  | `adapter:*`                                                        | Debug flag used for logging                                                        |
+| NGSI_V2_CONTEXT_BROKER | `http://orion2:1026`                                               | Hostname and port of the underlying NGSI-v2 context broker                         |
+| USER_CONTEXT_URL       | `http://context/fixed-context.jsonld`                              | The location of the User-defined `@context` file used to define the data models    |
+| CORE_CONTEXT_URL       | `https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld` | The location of the core `@context` file used to the structure of NGSI-LD entities |
+| NOTIFICATION_RELAY_URL | `http://adapter:3000/notify`                                       | Callback URL used for converting notification payloads from NGSI-v2 to NGSI-LD     |
 
 # Start Up
 
@@ -297,6 +310,7 @@ git checkout NGSI-LD
 ```
 
 > [!NOTE]
+>
 > If you want to clean up and start over again you can do so with the following command:
 >
 > ```
@@ -372,10 +386,11 @@ NGSI-LD, that it is added by default to any `@context` sent to a request.
 
 ### Smart Data Models
 
-[https://smart-data-models.github.io/dataModel.Building/context.jsonld](https://schema.lab.fiware.org/ld/context) refers to a User `@context` - a definition of
-a standard data models. Adding this to the `@context` will load a common definition of a **Building**
-[data model](https://smartdatamodels.org/) defined by the FIWARE Foundation in collaboration with other organizations
-such as GSMA or TM Forum. A summary of the FQNs related to **Building** can be seen below:
+[https://smart-data-models.github.io/dataModel.Building/context.jsonld](https://schema.lab.fiware.org/ld/context) refers
+to a User `@context` - a definition of a standard data models. Adding this to the `@context` will load a common
+definition of a **Building** [data model](https://smartdatamodels.org/) defined by the FIWARE Foundation in
+collaboration with other organizations such as GSMA or TM Forum. A summary of the FQNs related to **Building** can be
+seen below:
 
 ```json
 {
@@ -480,8 +495,9 @@ The first request will take some time, as the context broker must navigate and l
 `@context`.
 
 > [!NOTE]
->  if `https://smart-data-models.github.io/dataModel.Building/context.jsonld` is unavailable for some reason the request will
-> fail
+>
+> if `https://smart-data-models.github.io/dataModel.Building/context.jsonld` is unavailable for some reason the request
+> will fail
 >
 > For a working production system it is essential that the `@context` files are always available to ensure third parties
 > can read the context. High availability infrastructure has not been considered for this tutorial to keep the
@@ -552,6 +568,7 @@ The `type` of a _property_ attribute must be one of the following:
     strings encoded in the [ISO 8601 format](https://en.wikipedia.org/wiki/ISO_8601) - e.g. `YYYY-MM-DDThh:mm:ssZ`
 
 > [!NOTE]
+>
 > Note that for simplicity, this data entity has no relationships defined. Relationships must be given the
 > `type=Relationship` or one of its defined subtypes. Relationships will be discussed in a subsequent tutorial.
 
@@ -573,15 +590,17 @@ attribute. a `verified` flag indicates whether the address has been confirmed. T
 [Common Codes](http://wiki.goodrelations-vocabulary.org/Documentation/UN/CEFACT_Common_Codes) for Units of Measurement.
 
 > [!NOTE]
+>
 > A `valueType` _property-of-a-property_ can be used to describe the **Datatype** of an attribute.
 >
-> -  For Native JSON Properties, the `valueType` can align with a well-known **Datatype** schema, such as [schema.org](https://schema.org/DataType)  or
->    [XML Schema](https://www.w3.org/TR/2004/REC-xmlschema-2-20041028/) - typically values such as: `Time`, `Boolean`, `DateTime`, `Number`,
->    `Text`, `Date`, `Float`, `Integer` etc.
-> -  For other JSON Objects, where possible use a datatype from an existing ontology - for example `PostalAddress` aligns with `https://schema.org/PostalAddress`.
+> -   For Native JSON Properties, the `valueType` can align with a well-known **Datatype** schema, such as
+>     [schema.org](https://schema.org/DataType) or [XML Schema](https://www.w3.org/TR/2004/REC-xmlschema-2-20041028/) -
+>     typically values such as: `Time`, `Boolean`, `DateTime`, `Number`, `Text`, `Date`, `Float`, `Integer` etc.
+> -   For other JSON Objects, where possible use a datatype from an existing ontology - for example `PostalAddress`
+>     aligns with `https://schema.org/PostalAddress`.
 >
-> When using `valueType`, the mapping of the given short name value to a full URI should be placed in the User `@context`
-
+> When using `valueType`, the mapping of the given short name value to a full URI should be placed in the User
+> `@context`
 
 ## Querying Context Data
 
@@ -605,8 +624,8 @@ curl -G -X GET \
 
 #### Response:
 
-The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld`) and
-all attributes are expanded whenever possible.
+The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld`)
+and all attributes are expanded whenever possible.
 
 -   `id`, `type` and `location` are defined in the core context and are not expanded.
 -   `address` has been mapped to `http://smartdatamodels.org/address`
@@ -614,7 +633,8 @@ all attributes are expanded whenever possible.
 -   `category` has been mapped to `https://smartdatamodels.org/dataModel.Building/category`
 
 Note that if an attribute has not been not associated to an FQN when the entity was created, the short name will
-**always** be displayed - `verified` and `commercial` are examples of this since they were missing from the supplied user `@context` when inserting the context data.
+**always** be displayed - `verified` and `commercial` are examples of this since they were missing from the supplied
+user `@context` when inserting the context data.
 
 ```json
 [
@@ -643,10 +663,7 @@ Note that if an attribute has not been not associated to an FQN when the entity 
             "type": "GeoProperty",
             "value": {
                 "type": "Point",
-                "coordinates": [
-                    13.3986,
-                    52.5547
-                ]
+                "coordinates": [13.3986, 52.5547]
             }
         },
         "https://smartdatamodels.org/name": {
@@ -679,10 +696,7 @@ Note that if an attribute has not been not associated to an FQN when the entity 
             "type": "GeoProperty",
             "value": {
                 "type": "Point",
-                "coordinates": [
-                    13.3903,
-                    52.5075
-                ]
+                "coordinates": [13.3903, 52.5075]
             }
         },
         "https://smartdatamodels.org/name": {
@@ -707,8 +721,8 @@ curl -G -X GET \
 
 #### Response:
 
-The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld`) and
-all attributes are expanded whenever possible.
+The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld`)
+and all attributes are expanded whenever possible.
 
 ```json
 {
@@ -726,10 +740,7 @@ all attributes are expanded whenever possible.
     },
     "location": {
         "type": "Point",
-        "coordinates": [
-            13.3986,
-            52.5547
-        ]
+        "coordinates": [13.3986, 52.5547]
     },
     "https://smartdatamodels.org/name": "Bösebrücke Einkauf"
 }
@@ -783,7 +794,7 @@ used as the `@context` returned in the response.
         },
         "name": "Bösebrücke Einkauf",
         "category": {
-            "vocab" :"commercial"
+            "vocab": "commercial"
         },
         "location": {
             "type": "Point",
@@ -802,7 +813,7 @@ used as the `@context` returned in the response.
         },
         "name": "Checkpoint Markt",
         "category": {
-            "vocab" :"commercial"
+            "vocab": "commercial"
         },
         "location": {
             "type": "Point",
@@ -818,7 +829,7 @@ This example returns all `Building` entities with the `name` attribute _Checkpoi
 the `q` parameter - if a string has spaces in it, it can be URL encoded and held within double quote characters `"` =
 `%22`.
 
-#### 7️⃣  Request:
+#### 7️⃣ Request:
 
 ```console
 curl -G -X GET \
@@ -832,7 +843,8 @@ curl -G -X GET \
 
 #### Response:
 
-The `Link` header `https://smart-data-models.github.io/dataModel.Building/context.jsonld` includes the FIWARE Building model.
+The `Link` header `https://smart-data-models.github.io/dataModel.Building/context.jsonld` includes the FIWARE Building
+model.
 
 This means that use of the `Link` header and the `options=keyValues` parameter reduces the response to short form
 JSON-LD as shown:
@@ -851,7 +863,7 @@ JSON-LD as shown:
         },
         "name": "Checkpoint Markt",
         "category": {
-            "vocab" :"commercial"
+            "vocab": "commercial"
         },
         "location": {
             "type": "Point",
@@ -863,17 +875,17 @@ JSON-LD as shown:
 
 ### Filter context data by comparing the values of an attribute in an Array
 
-Within the standard `Building` model, the `category` attribute refers to an array of enumerated strings. This example returns all
-`Building` entities with a `category` attribute which contains either `commercial` or `office` strings. Filtering can be
-done using the `q` parameter, comma separating the acceptable values.
+Within the standard `Building` model, the `category` attribute refers to an array of enumerated strings. This example
+returns all `Building` entities with a `category` attribute which contains either `commercial` or `office` strings.
+Filtering can be done using the `q` parameter, comma separating the acceptable values.
 
 > [!NOTE]
 >
-> `category` has been defined as a **VocabularyProperty**, which would usually mean that the `vocab`
-> value should be a URI defined in the `@context`. The `expandValues` hint indicates that URI
-> expansion is required for the `category` attribute when querying the context data.
+> `category` has been defined as a **VocabularyProperty**, which would usually mean that the `vocab` value should be a
+> URI defined in the `@context`. The `expandValues` hint indicates that URI expansion is required for the `category`
+> attribute when querying the context data.
 
-#### 8️⃣  Request:
+#### 8️⃣ Request:
 
 ```console
 curl -G -X GET \
@@ -904,7 +916,7 @@ The response is returned in JSON-LD format with short form attribute names:
         },
         "name": "Bösebrücke Einkauf",
         "category": {
-            "vocab" :"commercial"
+            "vocab": "commercial"
         },
         "location": {
             "type": "Point",
@@ -923,7 +935,7 @@ The response is returned in JSON-LD format with short form attribute names:
         },
         "name": "Checkpoint Markt",
         "category": {
-            "vocab" :"commercial"
+            "vocab": "commercial"
         },
         "location": {
             "type": "Point",
@@ -970,7 +982,7 @@ Use of the `Link` header and the `options=keyValues` parameter reduces the respo
         },
         "name": "Checkpoint Markt",
         "category": {
-            "vocab" :"commercial"
+            "vocab": "commercial"
         },
         "location": {
             "type": "Point",
@@ -1019,7 +1031,7 @@ consists of JSON only without the attribute `type` and `metadata` elements.
         },
         "name": "Bösebrücke Einkauf",
         "category": {
-            "vocab" :"commercial"
+            "vocab": "commercial"
         },
         "location": {
             "type": "Point",
@@ -1038,7 +1050,7 @@ consists of JSON only without the attribute `type` and `metadata` elements.
         },
         "name": "Checkpoint Markt",
         "category": {
-            "vocab" :"commercial"
+            "vocab": "commercial"
         },
         "location": {
             "type": "Point",
@@ -1093,7 +1105,7 @@ consists of JSON only without the attribute `type` and `metadata` elements.
         },
         "name": "Checkpoint Markt",
         "category": {
-            "vocab" :"commercial"
+            "vocab": "commercial"
         },
         "location": {
             "type": "Point",
