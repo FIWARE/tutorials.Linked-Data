@@ -1,6 +1,8 @@
 <h1  align="center">
     <img src="https://fiware.github.io/tutorials.Step-by-Step/img/fiware-supermarket.png" />
     <img src="https://img.shields.io/badge/NGSI-LD-d6604d.svg" width="90"/>
+    <br/>
+    🍇 🍉 🍊 🍎 🍐 🍌 🍍 🍏 🍐 🍑 🍒 🍓 🫐
 </h1>
 
 ## Linked Data
