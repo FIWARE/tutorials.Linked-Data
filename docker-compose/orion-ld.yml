@@ -34,7 +34,7 @@ services:
     command: -dbhost mongo-db -logLevel DEBUG -forwarding -experimental -wip entityMaps
     healthcheck:
       test: curl --fail -s http://orion:${ORION_LD_PORT}/version || exit 1
-      interval: 60s
+      interval: 5s
      
   # Tutorial connects to the Orion-LD Broker
   tutorial:

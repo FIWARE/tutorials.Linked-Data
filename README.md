@@ -256,7 +256,7 @@ orion:
         - default
     ports:
         - "1027:1026" # localhost:1026
-    command: -dbhost mongo-db2 -logLevel DEBUG
+    command: -dbURI mongodb://mongo-db2 -logLevel DEBUG
     healthcheck:
         test: curl --fail -s http://orion2:1026/version || exit 1
 ```
