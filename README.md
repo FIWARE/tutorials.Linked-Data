@@ -784,7 +784,10 @@ used as the `@context` returned in the response.
 ```json
 [
     {
-        "@context": "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+        "@context": [
+            "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+        ],
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
         "address": {
@@ -803,7 +806,10 @@ used as the `@context` returned in the response.
         }
     },
     {
-        "@context": "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+        "@context": [
+            "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+        ],
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -853,7 +859,10 @@ JSON-LD as shown:
 ```json
 [
     {
-        "@context": "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+        "@context": [
+            "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+        ],
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -906,7 +915,10 @@ The response is returned in JSON-LD format with short form attribute names:
 ```json
 [
     {
-        "@context": "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+        "@context": [
+            "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+        ],
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
         "address": {
@@ -925,7 +937,10 @@ The response is returned in JSON-LD format with short form attribute names:
         }
     },
     {
-        "@context": "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+        "@context": [
+            "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+        ],
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -972,7 +987,10 @@ Use of the `Link` header and the `options=keyValues` parameter reduces the respo
 ```json
 [
     {
-        "@context": "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+        "@context": [
+            "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+        ],
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -1021,7 +1039,6 @@ consists of JSON only without the attribute `type` and `metadata` elements.
 ```json
 [
     {
-        "@context": "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
         "address": {
@@ -1040,7 +1057,6 @@ consists of JSON only without the attribute `type` and `metadata` elements.
         }
     },
     {
-        "@context": "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -1095,7 +1111,6 @@ consists of JSON only without the attribute `type` and `metadata` elements.
 ```json
 [
     {
-        "@context": "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {

@@ -820,7 +820,10 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
 ```json
 [
     {
-        "@context": "https://fiware.github.io/data-models/context.jsonld",
+        "@context": [
+            "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+        ],
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
         "address": {
@@ -842,7 +845,10 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
         }
     },
     {
-        "@context": "https://fiware.github.io/data-models/context.jsonld",
+        "@context": [
+            "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+        ],
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -907,7 +913,10 @@ curl -G -X GET \
 ```json
 [
     {
-        "@context": "https://fiware.github.io/data-models/context.jsonld",
+        "@context": [
+            "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+        ],
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -958,7 +967,10 @@ curl -G -X GET \
 ```json
 [
     {
-        "@context": "https://fiware.github.io/data-models/context.jsonld",
+        "@context": [
+            "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+        ],
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
         "address": {
@@ -980,7 +992,10 @@ curl -G -X GET \
         }
     },
     {
-        "@context": "https://fiware.github.io/data-models/context.jsonld",
+        "@context": [
+            "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+        ],
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -1032,7 +1047,10 @@ curl -G -X GET \
 ```json
 [
     {
-        "@context": "https://fiware.github.io/data-models/context.jsonld",
+        "@context": [
+            "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+        ],
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
@@ -1086,7 +1104,10 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
 ```json
 [
     {
-        "@context": "https://fiware.github.io/data-models/context.jsonld",
+        "@context": [
+            "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+        ],
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
         "address": {
@@ -1167,7 +1188,10 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
 ```json
 [
     {
-        "@context": "https://fiware.github.io/data-models/context.jsonld",
+        "@context": [
+            "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+        ],
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
         "address": {
