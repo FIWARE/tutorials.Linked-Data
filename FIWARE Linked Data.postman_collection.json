@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "a84b8f83-47e9-4a2b-bf68-653f7cc7e510",
 		"name": "NGSI-LD Linked Data",
-		"description": "This tutorial introduces linked data concepts to the FIWARE Platform. The supermarket chain’s store finder application\nis recreated using **NGSI-LD** the differences between the **NSGI v2** and **NGSI-LD** interfaces are highlighted and\ndiscussed. The tutorial is a direct analogue of the original getting started tutorial but uses API calls from the\n**NGSI-LD** interface.\n\nThe `docker-compose` files for this tutorial can be found on GitHub: \n\n![GitHub](https://fiware.github.io/tutorials.Linked-Data/icon/GitHub-Mark-32px.png) [FIWARE 601: Linked Data](https://github.com/Fiware/tutorials.Linked-Data)\n\n\n# Adding Linked Data concepts to FIWARE Data Entities.\n\n> “Six degrees of separation doesn't mean that everyone is linked to everyone else in just six steps. It means that a\n> very small number of people are linked to everyone else in a few steps, and the rest of us are linked to the world\n> through those special few.”\n>\n> ― Malcolm Gladwell, The Tipping Point\n\nThe introduction to FIWARE [Getting Started tutorial](https://github.com/FIWARE/tutorials.Getting-Started) introduced\nthe [NSGI v2](https://fiware.github.io/specifications/OpenAPI/ngsiv2) interface that is commonly used to create and\nmanipulate context data entities. An evolution of that interface has created a supplementary specification called\n[NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/spec/updated/full_api.json)\nas a mechanism to enhance context data entities though adding the concept of **linked data**. This tutorial will\nintroduce the background of the ideas behind the new interface and compare and contrast how to create and manipulate\ndata entites as linked data.\n\nAddtional tutorials in the series will further discuss data relationships an how to create context data entities using\nlinked data enabling the full knowledge graph to be traversed.\n\n## What is Linked Data?\n\nAll users of the Internet will be familiar with the concept of hypertext links, the way that a link on one web page is\nable to guide the browser to loading another page from a known location.\n\nWhilst humans are able to understand relationship discoverability and how links work, computers find this much more\ndifficult, and require a well-defined protocol to be able to traverse from one data element to another held in a\nseparate location.\n\nCreating a system of readable links for computers requires the use of a well defined data format\n([JSON-LD](http://json-ld.org/)) and assignation of unique IDs\n([URLs or URNs](https://stackoverflow.com/questions/4913343/what-is-the-difference-between-uri-url-and-urn)) for both\ndata entities and the relationships between entities so that semantic meaning can be programmatically retrieved from the\ndata itself.\n\nProperly defined linked data can be used to help answer big data questions, and the data relationships can be traversed\nto answer questions like _\"Which products are currently avaiable on the shelves of Store X and what prices are they sold\nat?\"_\n\n### Video: What is Linked Data?\n\n[![](http://img.youtube.com/vi/4x_xzT5eF5Q/0.jpg)](https://www.youtube.com/watch?v=4x_xzT5eF5Q \"Introduction\")\n\nClick on the image above to watch an introductory video on linked data concepts\n\nJSON-LD is an extension of JSON , it is a standard way of avoiding ambiguity when expressing linked data in JSON so that\nthe data is structured in a format which is parsable by machines. It is a method of ensuring that all data attributes\ncan be easily compared when coming from a multitude of separate data sources, which could have a different idea as to\nwhat each attribute means. For example, when two data entities have a `name` attribute how can the computer be certain\nthat is refers to a _\"Name of a thing\"_ in the same sense (rather than a **Username** or a **Surname** or something).\nURLs and datamodels are used to remove ambiguity by allowing attributes to have a both short form (such as `name`) and a\nfully specified long form (such `http://schema.org/name`) which means it is easy to discover which attribute have a\ncommon meaning within a data structure.\n\nJSON-LD introduces the concept of the `@context` element which provides additional information allowing the computer to\ninterpret the rest of the data with more clarity and depth.\n\nFurthermore the JSON-LD specification enables you to define a unique `@type` associating a well-defined\n[data model](https://fiware-datamodels.readthedocs.io/en/latest/guidelines/index.html) to the data itself.\n\n### Video: What is JSON-LD?\n\n[![](http://img.youtube.com/vi/vioCbTo3C-4/0.jpg)](https://www.youtube.com/watch?v=vioCbTo3C-4 \"JSON-LD\")\n\nClick on the image above to watch a video describing the basic concepts behind JSON-LD.\n\n## What is NGSI-LD?\n\n**NGSI-LD** is an evolution of the **NGSI v2** information model, which has been modified to improve support for linked\ndata (entity relationships), property graphs and semantics (exploiting the capabilities offered by JSON-LD). This work\nhas been conducted under the ETSI ISG CIM initiative and the updated specification hhas been branded as\n[NGSI-LD](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.03.01_60/gs_cim009v010301p.pdf). The main constructs\nof NGSI-LD are: _Entity_, _Property_ and _Relationship_. NGSI-LD Entities (instances) can be the subject of Properties\nor Relationships. In terms of the traditional NGSI v2 data model, Properties can be seen as the combination of an\nattribute and its value. Relationships allow to establish associations between instances using linked data.\n\n### NGSI v2 Data Model\n\nAs a reminder, the NGSI v2 data model is quite simple. It can be summarized as shown below:\n\n![](https://fiware.github.io/tutorials.Linked-Data/img/ngsi-v2.png)\n\nThe core element of NGSI v2 is the data _entity_, typically a real object with a changing state (such as a **Store**, a\n**Shelf** and so on). Entities have _attributes_ (such as `name` and `location`) and these in turn hold _metadata_ such\nas `accuracy` - i.e. the accuracy of a `location` reading.\n\nEvery _entity_ must have a `type` which defines the sort of thing the entity describes, but giving an NGSI v2 entity the\n`type=Store` is relatively meaningless as no-one is obliged to shape their own **Store** entities in the same fashion.\nSimilarly adding an attribute called `name` doesn't suddenly make it hold the same data as someone else's `name`\nattribute.\n\nRelationships can be defined using NGSI v2, but only so far as giving the attribute an appropriate attribute name\ndefined by convention ( e.g. starting with `ref`, such as `refManagedBy`) and assigning the attribute\n`type=Relationship` which again is purely a naming convention with no real semantic weight.\n\n### NGSI LD Data Model\n\nThe NGSI LD data model is more complex, with more rigid definitions of use which lead to a navigable knowledge graph.\n\n![](https://fiware.github.io/tutorials.Linked-Data/img/ngsi-ld.png)\n\nOnce again, _entity_ can be considered to be the core element. Every entity must use a unique `id`\n[URN](https://en.wikipedia.org/wiki/Uniform_resource_name), there is also a `type`, used to define the structure of the\ndata held, which is also a URN. This URN should correspond to a well-defined data model which can be found on the web.\nFor example the URN `https://uri.fiware.org/ns/datamodels/Building` is used to define common data model for a\n[Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html).\n\n_Entities_ can have _properties_ and _relationships_. Ideally the name of each _property_ should also be a well defined\nURN which corresponds to a common concept found across the web (e.g. `http://schema.org/address` is a common URN for the\nphysical address of an item). The _property_ will also have a value which will reflect the state of that property (e.g\n`name=\"Checkpoint Markt\"`). Finally a property may itself have further properties (a.k.a. _properties-of-properties_)\nwhich reflect further information about the property itself. Properties and relationships may in turn have a linked\nembedded structure (of _properties-of-properties_ or _properties-of-relationships or relationships-of-properties_ or\n_relationships-of-relationships_ etc.) which lead to the following:\n\nAn NGSI LD Data Entity (e.g. a supermarket):\n\n-   Has an `id` which must be unique. For example `urn:ngsi-ld:Building:store001`,\n-   Has `type` which should be a fully qualified URN of a well defined data model. For example\n    `https://uri.fiware.org/ns/datamodels#Building`\n-   Has _property_ of the entity, for example, an `address` attribute which holds the adress of the store. This can be\n    expanded into `http://schema.org/address`, which is known as a fully qualified name\n    ([FQN](https://en.wikipedia.org/wiki/Fully_qualified_name)).\n-   The `address`, like any _property_ will have a _value_ corresponding to the _property_ `address` (e.g. _Bornholmer\n    Straße 65, 10439 Prenzlauer Berg, Berlin_\n-   Has a _property-of-a-property_ of the entity, for example a `verified` field for the `address`.\n-   Has a _relationship_ of the entity, for example, a `managedBy` field where the relationship `managedBy` corresponds\n    to another data entity : `urn:ngsi-ld:Person:bob-the-manager`\n-   The relationship `managedBy`, may itself have a _property-of-a-relationship_ (e.g. `since`), this holds the date Bob\n    started working the store\n-   The relationship `managedBy`, may itself have a _relationship-of-a-relationship_ (e.g. `subordinateTo`), this holds\n    the URN of the area manager above Bob in the hierarchy.\n\nAs you can see the knowledge graph is well defined and can be expanded indefinitely.\n\nRelationships will be dealt with in more detail in a subsequent tutorial.\n\n# Prerequisites\n\n## Docker\n\nTo keep things simple all components will be run using [Docker](https://www.docker.com). **Docker** is a container\ntechnology which allows to different components isolated into their respective environments.\n\n-   To install Docker on Windows follow the instructions [here](https://docs.docker.com/docker-for-windows/)\n-   To install Docker on Mac follow the instructions [here](https://docs.docker.com/docker-for-mac/)\n-   To install Docker on Linux follow the instructions [here](https://docs.docker.com/install/)\n\n**Docker Compose** is a tool for defining and running multi-container Docker applications. A\n[YAML file](https://raw.githubusercontent.com/Fiware/tutorials.Identity-Management/master/docker-compose.yml) is used\nconfigure the required services for the application. This means all container services can be brought up in a single\ncommand. Docker Compose is installed by default as part of Docker for Windows and Docker for Mac, however Linux users\nwill need to follow the instructions found [here](https://docs.docker.com/compose/install/)\n\n## WSL\n\nWe will start up our services using a simple bash script. Windows users should download the [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install)\nto provide a command-line functionality similar to a Linux distribution on Windows.\n\n",
+		"description": "This tutorial introduces linked data concepts to the FIWARE Platform. The supermarket chain’s store finder application\nis recreated using **NGSI-LD** the differences between the **NSGI v2** and **NGSI-LD** interfaces are highlighted and\ndiscussed. The tutorial is a direct analogue of the original getting started tutorial but uses API calls from the\n**NGSI-LD** interface.\n\nThe `docker-compose` files for this tutorial can be found on GitHub: \n\n![GitHub](https://fiware.github.io/tutorials.Linked-Data/icon/GitHub-Mark-32px.png) [FIWARE 601: Linked Data](https://github.com/Fiware/tutorials.Linked-Data)\n\n\n# Adding Linked Data concepts to FIWARE Data Entities.\n\n> “Six degrees of separation doesn't mean that everyone is linked to everyone else in just six steps. It means that a\n> very small number of people are linked to everyone else in a few steps, and the rest of us are linked to the world\n> through those special few.”\n>\n> ― Malcolm Gladwell, The Tipping Point\n\nThe introduction to FIWARE [Getting Started tutorial](https://github.com/FIWARE/tutorials.Getting-Started) introduced\nthe [NSGI v2](https://fiware.github.io/specifications/OpenAPI/ngsiv2) interface that is commonly used to create and\nmanipulate context data entities. An evolution of that interface has created a supplementary specification called\n[NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/spec/updated/full_api.json)\nas a mechanism to enhance context data entities though adding the concept of **linked data**. This tutorial will\nintroduce the background of the ideas behind the new interface and compare and contrast how to create and manipulate\ndata entites as linked data.\n\nAddtional tutorials in the series will further discuss data relationships an how to create context data entities using\nlinked data enabling the full knowledge graph to be traversed.\n\n## What is Linked Data?\n\nAll users of the Internet will be familiar with the concept of hypertext links, the way that a link on one web page is\nable to guide the browser to loading another page from a known location.\n\nWhilst humans are able to understand relationship discoverability and how links work, computers find this much more\ndifficult, and require a well-defined protocol to be able to traverse from one data element to another held in a\nseparate location.\n\nCreating a system of readable links for computers requires the use of a well defined data format\n([JSON-LD](http://json-ld.org/)) and assignation of unique IDs\n([URLs or URNs](https://stackoverflow.com/questions/4913343/what-is-the-difference-between-uri-url-and-urn)) for both\ndata entities and the relationships between entities so that semantic meaning can be programmatically retrieved from the\ndata itself.\n\nProperly defined linked data can be used to help answer big data questions, and the data relationships can be traversed\nto answer questions like _\"Which products are currently avaiable on the shelves of Store X and what prices are they sold\nat?\"_\n\n### Video: What is Linked Data?\n\n[![](http://img.youtube.com/vi/4x_xzT5eF5Q/0.jpg)](https://www.youtube.com/watch?v=4x_xzT5eF5Q \"Introduction\")\n\nClick on the image above to watch an introductory video on linked data concepts\n\nJSON-LD is an extension of JSON , it is a standard way of avoiding ambiguity when expressing linked data in JSON so that\nthe data is structured in a format which is parsable by machines. It is a method of ensuring that all data attributes\ncan be easily compared when coming from a multitude of separate data sources, which could have a different idea as to\nwhat each attribute means. For example, when two data entities have a `name` attribute how can the computer be certain\nthat is refers to a _\"Name of a thing\"_ in the same sense (rather than a **Username** or a **Surname** or something).\nURLs and datamodels are used to remove ambiguity by allowing attributes to have a both short form (such as `name`) and a\nfully specified long form (such `http://schema.org/name`) which means it is easy to discover which attribute have a\ncommon meaning within a data structure.\n\nJSON-LD introduces the concept of the `@context` element which provides additional information allowing the computer to\ninterpret the rest of the data with more clarity and depth.\n\nFurthermore the JSON-LD specification enables you to define a unique `@type` associating a well-defined\n[data model](https://fiware-datamodels.readthedocs.io/en/latest/guidelines/index.html) to the data itself.\n\n### Video: What is JSON-LD?\n\n[![](http://img.youtube.com/vi/vioCbTo3C-4/0.jpg)](https://www.youtube.com/watch?v=vioCbTo3C-4 \"JSON-LD\")\n\nClick on the image above to watch a video describing the basic concepts behind JSON-LD.\n\n## What is NGSI-LD?\n\n**NGSI-LD** is an evolution of the **NGSI v2** information model, which has been modified to improve support for linked\ndata (entity relationships), property graphs and semantics (exploiting the capabilities offered by JSON-LD). This work\nhas been conducted under the ETSI ISG CIM initiative and the updated specification hhas been branded as\n[NGSI-LD](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.03.01_60/gs_cim009v010301p.pdf). The main constructs\nof NGSI-LD are: _Entity_, _Property_ and _Relationship_. NGSI-LD Entities (instances) can be the subject of Properties\nor Relationships. In terms of the traditional NGSI v2 data model, Properties can be seen as the combination of an\nattribute and its value. Relationships allow to establish associations between instances using linked data.\n\n### NGSI v2 Data Model\n\nAs a reminder, the NGSI v2 data model is quite simple. It can be summarized as shown below:\n\n![](https://fiware.github.io/tutorials.Linked-Data/img/ngsi-v2.png)\n\nThe core element of NGSI v2 is the data _entity_, typically a real object with a changing state (such as a **Store**, a\n**Shelf** and so on). Entities have _attributes_ (such as `name` and `location`) and these in turn hold _metadata_ such\nas `accuracy` - i.e. the accuracy of a `location` reading.\n\nEvery _entity_ must have a `type` which defines the sort of thing the entity describes, but giving an NGSI v2 entity the\n`type=Store` is relatively meaningless as no-one is obliged to shape their own **Store** entities in the same fashion.\nSimilarly adding an attribute called `name` doesn't suddenly make it hold the same data as someone else's `name`\nattribute.\n\nRelationships can be defined using NGSI v2, but only so far as giving the attribute an appropriate attribute name\ndefined by convention ( e.g. starting with `ref`, such as `refManagedBy`) and assigning the attribute\n`type=Relationship` which again is purely a naming convention with no real semantic weight.\n\n### NGSI LD Data Model\n\nThe NGSI LD data model is more complex, with more rigid definitions of use which lead to a navigable knowledge graph.\n\n![](https://fiware.github.io/tutorials.Linked-Data/img/ngsi-ld.png)\n\nOnce again, _entity_ can be considered to be the core element. Every entity must use a unique `id`\n[URN](https://en.wikipedia.org/wiki/Uniform_resource_name), there is also a `type`, used to define the structure of the\ndata held, which is also a URN. This URN should correspond to a well-defined data model which can be found on the web.\nFor example the URN `https://uri.fiware.org/ns/datamodels/Building` is used to define common data model for a\n[Building](https://fiware-datamodels.readthedocs.io/en/latest/Building/Building/doc/spec/index.html).\n\n_Entities_ can have _properties_ and _relationships_. Ideally the name of each _property_ should also be a well defined\nURN which corresponds to a common concept found across the web (e.g. `http://schema.org/address` is a common URN for the\nphysical address of an item). The _property_ will also have a value which will reflect the state of that property (e.g\n`name=\"Checkpoint Markt\"`). Finally a property may itself have further properties (a.k.a. _properties-of-properties_)\nwhich reflect further information about the property itself. Properties and relationships may in turn have a linked\nembedded structure (of _properties-of-properties_ or _properties-of-relationships or relationships-of-properties_ or\n_relationships-of-relationships_ etc.) which lead to the following:\n\nAn NGSI LD Data Entity (e.g. a supermarket):\n\n-   Has an `id` which must be unique. For example `urn:ngsi-ld:Building:store001`,\n-   Has `type` which should be a fully qualified URN of a well defined data model. For example\n    `https://uri.fiware.org/ns/datamodels#Building`\n-   Has _property_ of the entity, for example, an `address` attribute which holds the adress of the store. This can be\n    expanded into `http://schema.org/address`, which is known as a fully qualified name\n    ([FQN](https://en.wikipedia.org/wiki/Fully_qualified_name)).\n-   The `address`, like any _property_ will have a _value_ corresponding to the _property_ `address` (e.g. _Bornholmer\n    Straße 65, 10439 Prenzlauer Berg, Berlin_\n-   Has a _property-of-a-property_ of the entity, for example a `verified` field for the `address`.\n-   Has a _relationship_ of the entity, for example, a `managedBy` field where the relationship `managedBy` corresponds\n    to another data entity : `urn:ngsi-ld:Person:bob-the-manager`\n-   The relationship `managedBy`, may itself have a _property-of-a-relationship_ (e.g. `since`), this holds the date Bob\n    started working the store\n-   The relationship `managedBy`, may itself have a _relationship-of-a-relationship_ (e.g. `subordinateTo`), this holds\n    the URN of the area manager above Bob in the hierarchy.\n\nAs you can see the knowledge graph is well defined and can be expanded indefinitely.\n\nRelationships will be dealt with in more detail in a subsequent tutorial.\n\n# Prerequisites\n\n## Docker\n\nTo keep things simple all components will be run using [Docker](https://www.docker.com). **Docker** is a container\ntechnology which allows to different components isolated into their respective environments.\n\n-   To install Docker on Windows follow the instructions [here](https://docs.docker.com/docker-for-windows/)\n-   To install Docker on Mac follow the instructions [here](https://docs.docker.com/docker-for-mac/)\n-   To install Docker on Linux follow the instructions [here](https://docs.docker.com/install/)\n\n**Docker Compose** is a tool for defining and running multi-container Docker applications. A\n[YAML file](https://raw.githubusercontent.com/Fiware/tutorials.Identity-Management/master/docker-compose.yml) is used\nconfigure the required services for the application. This means all container services can be brought up in a single\ncommand. Docker Compose is installed by default as part of Docker for Windows and Docker for Mac, however Linux users\nwill need to follow the instructions found [here](https://docs.docker.com/compose/install/)\n\n## Cygwin\n\nWe will start up our services using a simple bash script. Windows users should download [cygwin](http://www.cygwin.com/)\nto provide a command-line functionality similar to a Linux distribution on Windows.\n\n",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "513743",
 		"_collection_link": "https://fiware.postman.co/workspace/NGSI-v2-Tutorials~56ef8b2e-ab05-408c-bbe9-7714cfe08cf6/collection/513743-a84b8f83-47e9-4a2b-bf68-653f7cc7e510?action=share&source=collection_link&creator=513743"
@@ -63,10 +63,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{scorpio}}/scorpio/v1/info/",
+							"raw": "http://{{context-broker}}/scorpio/v1/info/",
 							"protocol": "http",
 							"host": [
-								"{{scorpio}}"
+								"{{context-broker}}"
 							],
 							"path": [
 								"scorpio",
@@ -81,6 +81,60 @@
 				}
 			],
 			"description": "# Architecture\n\nThe demo application will send and receive NGSI-LD calls to a compliant context broker. Since both NSGI v2 and NSGI-LD\ninterfaces are available to an experimental version fo the\n[Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/), our demo application will only make use of one\nFIWARE component.\n\nCurrently, the Orion Context Broker relies on open source [MongoDB](https://www.mongodb.com/) technology to keep\npersistence of the context data it holds. Therefore, the architecture will consist of two elements:\n\n-   The [Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/) which will receive requests using\n    [NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/spec/updated/full_api.json)\n-   The underlying [MongoDB](https://www.mongodb.com/) database :\n    -   Used by the Orion Context Broker to hold context data information such as data entities, subscriptions and\n        registrations\n\nSince all interactions between the two elements are initiated by HTTP requests, the entities can be containerized and\nrun from exposed ports.\n\n![](https://fiware.github.io/tutorials.Linked-Data/img/architecture.png)\n\nThe necessary configuration information can be seen in the services section of the associated `docker-compose.yml` file:\n\n```yaml\norion:\n    image: fiware/orion-ld\n    hostname: orion\n    container_name: fiware-orion\n    depends_on:\n        - mongo-db\n    networks:\n        - default\n    ports:\n        - \"1026:1026\"\n    command: -dbhost mongo-db -logLevel DEBUG\n    healthcheck:\n        test: curl --fail -s http://orion:1026/version || exit 1\n```\n\n```yaml\nmongo-db:\n    image: mongo:3.6\n    hostname: mongo-db\n    container_name: db-mongo\n    expose:\n        - \"27017\"\n    ports:\n        - \"27017:27017\"\n    networks:\n        - default\n    command: --nojournal\n```\n\nBoth containers are residing on the same network - the Orion Context Broker is listening on Port `1026` and MongoDB is\nlistening on the default port `27071`. Both containers are also exposing the same ports externally - this is purely for\nthe tutorial access - so that cUrl or Postman can access them without being part of the same network. The command-line\ninitialization should be self explanatory.\n\nThe only notable difference to the introductory tutorials is that the required image name is currently\n`fiware/orion-ld`.\n\n# Start Up\n\nAll services can be initialised from the command-line by running the\n[services](https://github.com/FIWARE/tutorials.Linked-Data/blob/master/services) Bash script provided within the\nrepository. Please clone the repository and create the necessary images by running the commands as shown:\n\n```bash\ngit clone git@github.com:FIWARE/tutorials.Linked-Data.git\ncd tutorials.Linked-Data\n\n./services scorpio\n```\n\n\n> **Note:** If you want to clean up and start over again you can do so with the following command:\n>\n> ```\n> ./services stop\n> ```\n",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Linked Data using Stellio",
+			"item": [
+				{
+					"name": "Obtaining Version Information",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{context-broker}}/ngsi-ld/v1/entities/?type=X",
+							"protocol": "http",
+							"host": [
+								"{{context-broker}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								""
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "X"
+								}
+							]
+						},
+						"description": "This tutorial recreates the same data entities as the intial _\"Powered by FIWARE\"_ supermarket finder app, but using\nNGSI-LD linked data entities rather than NGSI v2.\n\n## Checking the service health\n\nAs usual, you can check if the Orion Context Broker is running by making an HTTP request to the exposed port.\n\nThe format of the response has not changed. The `release_date` must be 16th July 2019 or later to be able to\nwork with the requests defined below."
+					},
+					"response": []
+				}
+			],
+			"description": "# Architecture\n\nThe demo application will send and receive NGSI-LD calls to a compliant context broker. Since both NSGI v2 and NSGI-LD\ninterfaces are available to an experimental version fo the\n[Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/), our demo application will only make use of one\nFIWARE component.\n\nCurrently, the Orion Context Broker relies on open source [MongoDB](https://www.mongodb.com/) technology to keep\npersistence of the context data it holds. Therefore, the architecture will consist of two elements:\n\n-   The [Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/) which will receive requests using\n    [NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/spec/updated/full_api.json)\n-   The underlying [MongoDB](https://www.mongodb.com/) database :\n    -   Used by the Orion Context Broker to hold context data information such as data entities, subscriptions and\n        registrations\n\nSince all interactions between the two elements are initiated by HTTP requests, the entities can be containerized and\nrun from exposed ports.\n\n![](https://fiware.github.io/tutorials.Linked-Data/img/architecture.png)\n\nThe necessary configuration information can be seen in the services section of the associated `docker-compose.yml` file:\n\n```yaml\norion:\n    image: fiware/orion-ld\n    hostname: orion\n    container_name: fiware-orion\n    depends_on:\n        - mongo-db\n    networks:\n        - default\n    ports:\n        - \"1026:1026\"\n    command: -dbhost mongo-db -logLevel DEBUG\n    healthcheck:\n        test: curl --fail -s http://orion:1026/version || exit 1\n```\n\n```yaml\nmongo-db:\n    image: mongo:3.6\n    hostname: mongo-db\n    container_name: db-mongo\n    expose:\n        - \"27017\"\n    ports:\n        - \"27017:27017\"\n    networks:\n        - default\n    command: --nojournal\n```\n\nBoth containers are residing on the same network - the Orion Context Broker is listening on Port `1026` and MongoDB is\nlistening on the default port `27071`. Both containers are also exposing the same ports externally - this is purely for\nthe tutorial access - so that cUrl or Postman can access them without being part of the same network. The command-line\ninitialization should be self explanatory.\n\nThe only notable difference to the introductory tutorials is that the required image name is currently\n`fiware/orion-ld`.\n\n# Start Up\n\nAll services can be initialised from the command-line by running the\n[services](https://github.com/FIWARE/tutorials.Linked-Data/blob/master/services) Bash script provided within the\nrepository. Please clone the repository and create the necessary images by running the commands as shown:\n\n```bash\ngit clone git@github.com:FIWARE/tutorials.Linked-Data.git\ncd tutorials.Linked-Data\n\n./services orion\n```\n\n\n> **Note:** If you want to clean up and start over again you can do so with the following command:\n>\n> ```\n> ./services stop\n> ```\n",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -186,8 +240,8 @@
 				"header": [
 					{
 						"key": "Link",
-						"type": "text",
 						"value": "<{{datamodels-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+						"type": "text",
 						"disabled": true
 					},
 					{
@@ -277,14 +331,14 @@
 				"header": [
 					{
 						"key": "Link",
-						"type": "text",
-						"value": "<{{datamodels-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+						"value": "<{{datamodels-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+						"type": "text"
 					},
 					{
 						"key": "Accept",
 						"value": "application/ld+json",
-						"type": "text",
-						"name": "Accept"
+						"name": "Accept",
+						"type": "text"
 					}
 				],
 				"url": {
@@ -321,14 +375,14 @@
 				"header": [
 					{
 						"key": "Link",
-						"type": "text",
-						"value": "<{{datamodels-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+						"value": "<{{datamodels-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+						"type": "text"
 					},
 					{
 						"key": "Accept",
 						"value": "application/ld+json",
-						"type": "text",
-						"name": "Accept"
+						"name": "Accept",
+						"type": "text"
 					}
 				],
 				"url": {
@@ -370,18 +424,18 @@
 				"header": [
 					{
 						"key": "Link",
-						"type": "text",
-						"value": "<{{datamodels-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+						"value": "<{{datamodels-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+						"type": "text"
 					},
 					{
 						"key": "Accept",
 						"value": "application/ld+json",
-						"type": "text",
-						"name": "Accept"
+						"name": "Accept",
+						"type": "text"
 					}
 				],
 				"url": {
-					"raw": "http://{{context-broker}}/ngsi-ld/v1/entities/?type=Building&q=category==\"commercial\",\"office\"&options=keyValues",
+					"raw": "http://{{context-broker}}/ngsi-ld/v1/entities/?type=Building&q=category==\"commercial\",\"office\"&options=keyValues&expandValues=category",
 					"protocol": "http",
 					"host": [
 						"{{context-broker}}"
@@ -405,6 +459,10 @@
 							"key": "options",
 							"value": "keyValues",
 							"description": "* `keyValues` option in order to get a more compact and brief representation, including just attribute values\n* `values` option combined with a list of attribute values  `attrs`  for an ordered list of attributes only"
+						},
+						{
+							"key": "expandValues",
+							"value": "category"
 						}
 					]
 				},
@@ -419,8 +477,8 @@
 				"header": [
 					{
 						"key": "Link",
-						"type": "text",
-						"value": "<{{datamodels-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+						"value": "<{{datamodels-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+						"type": "text"
 					},
 					{
 						"key": "Accept",
@@ -467,8 +525,8 @@
 				"header": [
 					{
 						"key": "Link",
-						"type": "text",
-						"value": "<{{datamodels-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+						"value": "<{{datamodels-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+						"type": "text"
 					},
 					{
 						"key": "Accept",
@@ -515,8 +573,8 @@
 				"header": [
 					{
 						"key": "Link",
-						"type": "text",
-						"value": "<{{datamodels-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+						"value": "<{{datamodels-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+						"type": "text"
 					},
 					{
 						"key": "Accept",
