@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "16121a01-e085-4afd-8689-fea63a0d7246",
 		"name": "NGSI-v2 Linked Data",
-		"description": "This tutorial teaches **NGSI-LD** users about CRUD Operations. The tutorial outlines example usage of the various ways\nof amending context as detailed within the\n[NGSI-LD specification](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.03.01_60/gs_cim009v010301p.pdf). A\nseries of entities representing temperature sensors are created, modified and deleted based on the temperature sensor\nmodel defined in an [earlier tutorial](https://github.com/FIWARE/tutorials.Understanding-At-Context).\n\nThe `docker-compose` file for this tutorial can be found on GitHub: \n\n![GitHub](https://fiware.github.io/tutorials.NGSI-LD-Operations/icon/GitHub-Mark-32px.png) [FIWARE-LD 103: Manipulating Context Data through CRUD Operations ](https://github.com/FIWARE/tutorials.NGSI-LD-Operations)\n\n# NGSI-LD CRUD Operations\n\n> “Ninety-percent of everything is crud.”\n>\n> ― Theodore Sturgeon, Venture Science Fiction Magazine\n\n**CRUD** Operations (**Create**, **Read**, **Update** and **Delete**) are the four basic functions of persistent\nstorage. For a smart system based on **NGSI-LD**, **CRUD** actions allow the developer to manipulate the context data\nwithin the system. Every **CRUD** operation is clearly defined within the\n[NGSI-LD specification](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.03.01_60/gs_cim009v010301p.pdf), so all\nNGSI-LD compliant context brokers offer the same interface with the same NGSI-LD operations.\n\nThis tutorial will describe the rational behind each operation, when to use it and how to execute the various **CRUD**\noperations. Since **NGSI-LD** is based on **JSON-LD** passing of `@context` as part of each request in mandatory. For\n**CRUD** operations this is typically passed as a `Link` header, although as we have seen is also possible to pass an\n`@context` attribute as part of the body of the request if `Content-Type: application/ld+json`. However for GET\nrequests, the `@context` cannot be placed in the payload body technique as GET requests have no body.\n\n## Context Entity CRUD Operations\n\nThere are four endpoints used for CRUD operations on an individual data entity. These follow the usual rules for\nhierarchical entities within RESTful applications.\n\nFor operations where the `<entity-id>` is not yet known within the context, or is unspecified, the\n`/ngsi-ld/v1/entities` endpoint is used. As an example, this is used for creating new entities.\n\nOnce an `<entity-id>` is known within the context, individual data entities can be manipulated using the\n`/ngsi-ld/v1/entities/<entity-id>` endpoint.\n\nGeneral Attribute operations on a known entity occur on the `/ngsi-ld/v1/entities/<entity-id>/attrs` endpoint and\noperations on individual attributes occur on the `/ngsi-ld/v1/entities/<entity-id>/attrs/<attr-id>`.\n\nWhen requesting data or modifying individual entities, the various CRUD operations map naturally to HTTP verbs.\n\n-   **GET** - for reading data\n-   **POST** - for creating new entities and attributes\n-   **PATCH** - for amending entities and attributes\n-   **DELETE** - for deleting entities and attributes\n\n## Context Entity Batch Operations\n\nBatch operations allow users to modify multiple data entities with a single request. All batch operations are mapped to\nthe **POST** HTTP verb.\n\n-   `/entityOperations/create`\n-   `/entityOperations/update`\n-   `/entityOperations/upsert`\n-   `/entityOperations/delete`\n\n# Prerequisites\n\n## Docker\n\nTo keep things simple all components will be run using [Docker](https://www.docker.com). **Docker** is a container\ntechnology which allows to different components isolated into their respective environments.\n\n-   To install Docker on Windows follow the instructions [here](https://docs.docker.com/docker-for-windows/)\n-   To install Docker on Mac follow the instructions [here](https://docs.docker.com/docker-for-mac/)\n-   To install Docker on Linux follow the instructions [here](https://docs.docker.com/install/)\n\n**Docker Compose** is a tool for defining and running multi-container Docker applications. A\n[YAML file](https://raw.githubusercontent.com/Fiware/tutorials.NGSI-LD-Operations/master/docker-compose/orion-ld.yml) is\nused configure the required services for the application. This means all container services can be brought up in a\nsingle command. Docker Compose is installed by default as part of Docker for Windows and Docker for Mac, however Linux\nusers will need to follow the instructions found [here](https://docs.docker.com/compose/install/)\n\n## Cygwin\n\nWe will start up our services using a simple bash script. Windows users should download [cygwin](http://www.cygwin.com/)\nto provide a command-line functionality similar to a Linux distribution on Windows.\n\n# Architecture\n\nThe demo application will send and receive NGSI-LD calls to a compliant context broker. Since the standardized NGSI-LD\ninterface is available across multiple context brokers, so we only need to pick one - for example the\n[Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/). The application will therefore only make use of\none FIWARE component.\n\nCurrently, the Orion Context Broker relies on open source [MongoDB](https://www.mongodb.com/) technology to keep\npersistence of the context data it holds.\n\nTo promote interoperability of data exchange, NGSI-LD context brokers explicitly expose a\n[JSON-LD `@context` file](https://json-ld.org/spec/latest/json-ld/#the-context) to define the data held within the\ncontext entities. This defines a unique URI for every entity type and every attribute so that other services outside of\nthe NGSI domain are able to pick and choose the names of their data structures. Every `@context` file must be available\non the network. In our case the tutorial application will be used to host a series of static files.\n\nTherefore, the architecture will consist of three elements:\n\n-   The [Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/) which will receive requests using\n    [NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/spec/updated/full_api.json)\n-   The underlying [MongoDB](https://www.mongodb.com/) database :\n    -   Used by the Orion Context Broker to hold context data information such as data entities, subscriptions and\n        registrations\n-   The **Tutorial Application** does the following:\n    -   Offers static `@context` files defining the context entities within the system.\n\nSince all interactions between the three elements are initiated by HTTP requests, the elements can be containerized and\nrun from exposed ports.\n\n![](https://fiware.github.io/tutorials.NGSI-LD-Operations/img/architecture.png)\n\nThe necessary configuration information can be seen in the services section of the associated `orion-ld.yml` file:\n\n```yaml\norion:\n    image: fiware/orion-ld\n    hostname: orion\n    container_name: fiware-orion\n    depends_on:\n        - mongo-db\n    networks:\n        - default\n    ports:\n        - \"1026:1026\"\n    command: -dbhost mongo-db -logLevel DEBUG\n    healthcheck:\n        test: curl --fail -s http://orion:1026/version || exit 1\n```\n\n```yaml\nmongo-db:\n    image: mongo:3.6\n    hostname: mongo-db\n    container_name: db-mongo\n    expose:\n        - \"27017\"\n    ports:\n        - \"27017:27017\"\n    networks:\n        - default\n    command: --nojournal\n```\n\n```yaml\ntutorial:\n    image: fiware/tutorials.ngsi-ld\n    hostname: tutorial\n    container_name: fiware-tutorial\n    networks:\n        default:\n            aliases:\n                - context\n    expose:\n        - 3000\n```\n\nThe necessary configuration information can be seen in the services section of the associated `docker-compose.yml` file.\nIt has been described in a [previous tutorial](https://github.com/FIWARE/tutorials.Working-with-At-Context/)\n\n# Start Up\n\nAll services can be initialised from the command-line by running the\n[services](https://github.com/FIWARE/tutorials.NGSI-LD-Operations/blob/master/services) Bash script provided within the\nrepository. Please clone the repository and create the necessary images by running the commands as shown:\n\n```bash\ngit clone https://github.com/FIWARE/tutorials.NGSI-LD-Operations.git\ncd tutorials.NGSI-LD-Operations\n\n./services orion|scorpio\n```\n\n> **Note:** If you want to clean up and start over again you can do so with the following command:\n>\n> ```\n> ./services stop\n> ```",
+		"description": "This tutorial introduces the idea of using an existing **NGSI-v2** Context Broker as a Context Source within an\n**NGSI-LD** data space, and how to combine both JSON-based and JSON-LD based context data into a unified structure\nthrough introducing a simple **NGSI-LD** façade pattern with a fixed `@context`. The tutorial re-uses the data from the\noriginal **NGSI-v2** getting started tutorial but uses API calls from the **NGSI-LD** interface.\n\n\n> This tutorial is designed for exisiting **NGSI-v2** developers looking to attach existing **NGSI-v2** systems to an\n> **NGSI-LD** federation. If you are building a linked data system from scratch you should start from the beginnning of\n> the [NGSI-LD developers tutorial](https://ngsi-ld-tutorials.readthedocs.io/) documentation.\n>\n> Similarly, if you an existing **NGSI-v2** developer and you just want to understand linked data concepts in general,\n> checkout the equivalent [**NGSI-v2** tutorial](https://github.com/FIWARE/tutorials.Linked-Data/tree/NGSI-v2) on\n> upgrading **NGSI-v2** data sources to **NGSI-LD**\n\n## Contents\n\n# Adding Linked Data concepts to FIWARE Data Entities.\n\n> “Always be a first rate version of yourself and not a second rate version of someone else.”\n>\n> ― Judy Garland\n\nThe first introduction to FIWARE [Getting Started tutorial](https://github.com/FIWARE/tutorials.Getting-Started)\nintroduced the [NGSI v2](https://fiware.github.io/specifications/OpenAPI/ngsiv2) JSON-based interface that is commonly\nused to create and manipulate context data entities.\n[NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/rep/NGSI-LD/NGSI-LD/raw/master/spec/updated/generated/full_api.json)\nis an evolution of that interface which enhances context data entities through adding the concept of **linked data**.\n\nThere is a need for two separate interfaces since:\n\n-   **NGSI-v2** offers [JSON](https://www.json.org/json-en.html) based interoperability used in individual Smart Systems\n-   **NGSI-LD** offers [JSON-LD](https://json-ld.org/) based interoperability used for Federations and Data Spaces\n\n**NGSI-v2** is ideal for creating individual applications offering interoperable interfaces for web services or IoT\ndevices. It is easier to understand than NGSI-LD and does not require a JSON-LD `@context`, However **NGSI-v2** without\nlinked data falls short when attempting to offer federated data across a data space. Once multiple apps and\norganisations are involved each individual data owner is no longer in control of the structure of the data used\ninternally by the other participants within the data space. This is where the `@context` of **NGSI-LD** comes in, acting\nas a mapping mechanism for attributes allowing the each local system to continue to use its own preferred terminology\nwithin the data it holds and for federated data from other users within the data space to be renamed using a standard\nexpansion/compaction operation allowing each individual system understand data holistically from across the whole data\nspace.\n\n## Creating a common data space\n\nFor example, imagine a simple \"Buildings\" data space consisting of two participants pooling their data together:\n\n-   Details of a series of [supermarkets](https://fiware-tutorials.readthedocs.io/en/latest/) from the **NGSI-v2**\n    tutorials.\n-   Details of a series of [farms](https://ngsi-ld-tutorials.readthedocs.io/en/latest/) from the **NGSI-LD** tutorials.\n\nAlthough the two participants have agreed to use a common\n[data model](https://ngsi-ld-tutorials.readthedocs.io/en/latest/datamodels.html#building) between them, internally they\nhold their data in a slightly different structure.\n\n#### Farm (**NGSI-LD** Data)\n\nWithin the **NGSI-LD** Smart Farm, all of the Building Entities are marked using `\"type\":\"Building\"` as a shortname\nwhich can be expanded to a full URI https://uri.fiware.org/ns/dataModels#Building` using JSON-LD expansion rules. All\nthe attributes of each Building entity (such as `name`, `category` etc are defined using the\n[User `@context`](./data-models/ngsi-context.jsonld) and are structured as NGSI-LD attributes. The standard NGSI-LD\nKeywords are used to define the nature of each attribute - e.g. `Property`, `GeoProperty`, `VocabularyProperty`,\n`Relationship` and each of these terms is also defined within the\n[core `@context`](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld).\n\n```\n{\n    \"id\": \"urn:ngsi-ld:Building:farm001\",\n    \"type\": \"Building\",\n    \"category\": {\n        \"type\": \"VocabularyProperty\",\n        \"vocab\": \"farm\"\n    },\n    \"address\": {\n        \"type\": \"Property\",\n        \"value\": {\n            \"streetAddress\": \"Großer Stern 1\",\n            \"addressRegion\": \"Berlin\",\n            \"addressLocality\": \"Tiergarten\",\n            \"postalCode\": \"10557\"\n        }\n    },\n    \"location\": {\n        \"type\": \"GeoProperty\",\n        \"value\": {\n            \"type\": \"Point\",\n            \"coordinates\": [13.3505, 52.5144]\n        }\n    },\n    \"name\": {\n        \"type\": \"Property\",\n        \"value\": \"Victory Farm\"\n    },\n    \"owner\": {\n        \"type\": \"Relationship\",\n        \"object\": \"urn:ngsi-ld:Person:person001\"\n    }\n}\n```\n\n#### Supermarket (**NGSI-v2** Data)\n\nWithin the **NGSI-v2** Smart Supermarket, every entity must have a `id` and `type` - this is part of the data model and\na prerequisite for joining the data space. However due to the backend systems used, the internal short name is\n`\"type\":\"Store\"`. Within an **NGSI-v2** system there is no concept of `@context` - every attribute has a `type` and a\n`value` and the attribute `type` is usually aligned with the datatype (e.g. `Text`, `PostalAddress`) although since\n**NGSI-LD** keyword types such as `Relationship`, `VocabularyProperty` are also permissible and set by convention.\n\n```\n{\n    \"id\": \"urn:ngsi-ld:Store:001\",\n    \"type\": \"Store\",\n    \"address\": {\n        \"type\": \"PostalAddress\",\n        \"value\": {\n            \"streetAddress\": \"Bornholmer Straße 65\",\n            \"addressRegion\": \"Berlin\",\n            \"addressLocality\": \"Prenzlauer Berg\",\n            \"postalCode\": \"10439\"\n        }\n    },\n    \"category\": {\n        \"type\": \"VocabularyProperty\",\n        \"value\": \"supermarket\"\n    },\n    \"location\": {\n        \"type\": \"geo:json\",\n        \"value\": {\n            \"type\": \"Point\",\n            \"coordinates\": [13.3986, 52.5547]\n        }\n    },\n    \"name\": {\n        \"type\": \"Text\",\n        \"value\": \"Bösebrücke Einkauf\"\n    },\n    \"owner\": {\n        \"type\": \"Relationship\",\n        \"value\": \"urn:ngsi-ld:Person:person001\"\n    }\n}\n```\n\n### Types of data space\n\nWhen joining a data space, a participant must abide by the rules that govern that data space. One of the first decisions\na common data space must make is to defined the nature of the data space itself. There are three primary approaches to\nthis, which can broadly be defined as follows:\n\n-   An **Integrated** data space requires that every participant uses exactly the same payloads and infrastructure - for\n    example _\"Use Scorpio 4.1.15 only\"_ . This could be a requirement for a lottery ticketing system where every\n    terminal sends ticket data in the same format.\n-   A **unified** data space defines a common data format, but allows for the underlying infrastructure to differ\n    between participants - for example _\"Use NGSI-LD only for all payloads\"_\n-   A **federated** data space is even looser and defines a common meta structure so each participants has more\n    flexibility regarding it underlying technologies for example \"All payloads must be translatable as GeoJSON\"\\_ for a\n    combined GIS, NGSI-LD data space.\n\nUsing this terminology, in this example we are creating a **unified** data space in this example, since participants are\nusing NGSI-LD in common for data exchange, but their underlying systems are different.\n\n# Prerequisites\n\n## Docker\n\nTo keep things simple all components will be run using [Docker](https://www.docker.com). **Docker** is a container\ntechnology which allows to different components isolated into their respective environments.\n\n-   To install Docker on Windows follow the instructions [here](https://docs.docker.com/docker-for-windows/)\n-   To install Docker on Mac follow the instructions [here](https://docs.docker.com/docker-for-mac/)\n-   To install Docker on Linux follow the instructions [here](https://docs.docker.com/install/)\n\n**Docker Compose** is a tool for defining and running multi-container Docker applications. A\n[YAML file](https://raw.githubusercontent.com/Fiware/tutorials.Linked-Data/master/docker-compose/orion-ld.yml) is used\nconfigure the required services for the application. This means all container services can be brought up in a single\ncommand. Docker Compose is installed by default as part of Docker for Windows and Docker for Mac, however Linux users\nwill need to follow the instructions found [here](https://docs.docker.com/compose/install/)\n\n# Architecture\n\nThe demo application will send and receive NGSI-LD calls within a data space. This demo application will only make use\nof three FIWARE components.\n\nCurrently, both Orion and Orion-LD Context Brokers rely on open source [MongoDB](https://www.mongodb.com/) technology to\nkeep persistence of the context data they hold. Therefore, the architecture will consist of two elements:\n\n-   The [Smart Farm Context Broker](https://fiware-orion.readthedocs.io/en/latest/) which will receive requests using\n    [NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/rep/NGSI-LD/NGSI-LD/raw/master/spec/updated/generated/full_api.json)\n-   The [Smart Supermarket Context Broker](https://fiware-orion.readthedocs.io/en/latest/) which will receive requests\n    using\n    [NGSI-v2](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/rep/NGSI-LD/NGSI-LD/raw/master/spec/updated/generated/full_api.json)\n-   Two instances of underlying [MongoDB](https://www.mongodb.com/) database\n    -   Used by both NGSI-v2 and NGSI-LD Context Brokers to hold context data information such as data entities,\n        subscriptions and registrations\n-   The FIWARE [Lepus](https://github.com/jason-fox/lepus) proxy which will translate NGSI-LD to NGSI-v2 and vice-versa\n-   An HTTP **Web-Server** which offers static `@context` files defining the context entities within the system.\n\nSince all interactions between the two elements are initiated by HTTP requests, the elements can be containerized and\nrun from exposed ports.\n\n![](https://fiware.github.io/tutorials.Linked-Data/img/architecture-lepus.png)\n\nThe necessary configuration information can be seen in the services section of the associated `common.yml` and\n`orion-ld.yml` files:\n\n#### Orion-LD (NGSI-LD)\n\n```\norion-ld:\n    image: quay.io/fiware/orion-ld\n    hostname: orion\n    container_name: fiware-orion\n    depends_on:\n        - mongo-db\n    networks:\n        - default\n    ports:\n        - \"1026:1026\"\n    command: -dbhost mongo-db -logLevel DEBUG\n    healthcheck:\n        test: curl --fail -s http://orion:1026/version || exit 1\n```\n\n#### Orion (NGSI-v2)\n\n```\norion:\n    image: quay.io/fiware/orion\n    hostname: orion2\n    container_name: fiware-orion-v2\n    depends_on:\n        - mongo-for-orion-v2\n    networks:\n        - default\n    ports:\n        - \"1027:1026\" # localhost:1026\n    command: -dbURI mongodb://mongo-db2 -logLevel DEBUG\n    healthcheck:\n        test: curl --fail -s http://orion2:1026/version || exit 1\n```\n\n#### Lepus\n\n```\nlepus:\n    image: quay.io/fiware/lepus\n    hostname: adapter\n    container_name: fiware-lepus\n    networks:\n        - default\n    expose:\n        - \"3005\"\n    ports:\n        - \"3005:3000\"\n    environment:\n        - DEBUG=adapter:*\n        - NGSI_V2_CONTEXT_BROKER=http://orion2:1026\n        - USER_CONTEXT_URL=http://context/fixed-context.jsonld\n        - CORE_CONTEXT_URL=https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld\n        - NOTIFICATION_RELAY_URL=http://adapter:3000/notify\n```\n\nAll containers are residing on the same network - the Orion-LD Context Broker is listening on Port `1026` and the first\nMongoDB is listening on the default port `27017`. The Orion NGSI-v2 Context Broker is listening on Port `1027` and\nsecond MongoDB is listening on port `27018`. Lepus uses port `3000`, but since that clashes with the tutorial\napplication, it has been amended externally to `3005`.\n\nLepus is driven by the environment variables as shown:\n\n| Key                    | Value                                                              | Description                                                                        |\n| ---------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |\n| DEBUG                  | `adapter:*`                                                        | Debug flag used for logging                                                        |\n| NGSI_V2_CONTEXT_BROKER | `http://orion2:1026`                                               | Hostname and port of the underlying NGSI-v2 context broker                         |\n| USER_CONTEXT_URL       | `http://context/fixed-context.jsonld`                              | The location of the User-defined `@context` file used to define the data models    |\n| CORE_CONTEXT_URL       | `https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld` | The location of the core `@context` file used to the structure of NGSI-LD entities |\n| NOTIFICATION_RELAY_URL | `http://adapter:3000/notify`                                       | Callback URL used for converting notification payloads from NGSI-v2 to NGSI-LD     |\n\n# Start Up\n\nAll services can be initialised from the command-line by running the\n[services](https://github.com/FIWARE/tutorials.Linked-Data/blob/NGSI-LD/services) Bash script provided within the\nrepository. Please clone the repository and create the necessary images by running the commands as shown:\n\n```\ngit clone https://github.com/FIWARE/tutorials.Linked-Data.git\ncd tutorials.Linked-Data\ngit checkout NGSI-LD\n\n./services orion|scorpio|stellio\n```\n\n>\n> If you want to clean up and start over again you can do so with the following command:\n>\n> ```\n> ./services stop\n> ```\n\n---",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "513743",
 		"_collection_link": "https://fiware.postman.co/workspace/NGSI-LD-tutorials~60157bf9-a93f-4c6e-90d1-0917133c1872/collection/513743-16121a01-e085-4afd-8689-fea63a0d7246?action=share&source=collection_link&creator=513743"
@@ -27,7 +27,8 @@
 								"entities",
 								"urn:ngsi-ld:Store:001"
 							]
-						}
+						},
+						"description": "As usual, you can check if NGSI-v2 context broker holding the supermarket data is running by making an HTTP request to the exposed port, the request is in NGSI-v2 format. It does not require a `Link` header for the `@context`\n\nThe response will be in NGSI-v2 format.\n\nThe `type` attribute in NGSI-v2 is loosely defined, but in this case, with the exception of ordinary properties, we are using `type` to correspond to the terms used in NGSI-LD such as `Relationship` or `VocabularyProperty`. For ordinary NGSI-v2 properties, the `type` corresponds to a datatype such as `Text` or `PostalAddress`, each of these datatypes will need to be mapped to a JSON-LD `@context` if the data is to be understood in an NGSI-LD system."
 					},
 					"response": []
 				},
@@ -38,7 +39,7 @@
 						"header": [
 							{
 								"key": "Link",
-								"value": "<{{user-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json",
 								"type": "text"
 							},
 							{
@@ -59,7 +60,55 @@
 								"entities",
 								"urn:ngsi-ld:Store:001"
 							]
-						}
+						},
+						"description": "To read the data in NGSI-LD format, make an NGSI-LD request via the Lepus adaptor listening on port `` 3005` ``\n\nThe response will be in NGSI-LD format.\n\nIt should be noted that the `@context` supplied in the `Link` header has been totally ignored, and a fixed `@context` used configured for the adaptor has been returned instead. The Adaptor doesn't fully understand NGSI-LD, it merely formats the underlying NGSI-v2 as NGSI-LD. You will notice that the NGSI-v2 `\"type\": \"VocabularyProperty\", \"value\": \"supermarket\"` has been amended to a valid **VocabularyProperty** - `\"type\": \"VocabularyProperty\", \"vocab\": \"supermarket\"`, and similarly the **Relationship** is now using `object` and `objectType` as defined in the core `@context`"
+					},
+					"response": []
+				},
+				{
+					"name": "NGSI-v2 - Version",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{v2-broker}}/version",
+							"protocol": "http",
+							"host": [
+								"{{v2-broker}}"
+							],
+							"path": [
+								"version"
+							]
+						},
+						"description": "The `/version` endpoint on Orion returns information about the NGSI-v2 context broker."
+					},
+					"response": []
+				},
+				{
+					"name": "Adapter - Source identity Copy",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{adapter}}/ngsi-ld/v1/info/sourceIdentity",
+							"protocol": "http",
+							"host": [
+								"{{adapter}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"info",
+								"sourceIdentity"
+							]
+						},
+						"description": "The Lepus adaptor aims to offer all the endpoints of an NGSI-LD context broker, except that it has no understanding of JSON-LD `@context` - hence all terms must always be compacted.\n\nOne of the endpoints defined in the 1.8.1 NGSI-LD specification is `/info/sourceIdentity`, which gives informatation about the underlying context broker - uptime, aliasing and detailed information. In this case the adaptor is merely standardizing the data from the Orion broker's `/version` endpoint:"
 					},
 					"response": []
 				},
@@ -85,7 +134,8 @@
 									"value": "Store"
 								}
 							]
-						}
+						},
+						"description": "This request returns all of the `Store` entities found within the NGSI-v2 context broker. The response is in NGSI-v2 format"
 					},
 					"response": []
 				},
@@ -93,7 +143,14 @@
 					"name": "Adapter - Query as Linked Data",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Prefer",
+								"value": "ngsi-ld=1.6",
+								"type": "text",
+								"disabled": true
+							}
+						],
 						"url": {
 							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/?type=Store",
 							"protocol": "http",
@@ -112,7 +169,8 @@
 									"value": "Store"
 								}
 							]
-						}
+						},
+						"description": "This request  returns all of the `Store` entities found within the NGSI-v2 context broker using the NGSI-LD adapter. The response is in NGSI-LD format."
 					},
 					"response": []
 				},
@@ -123,7 +181,7 @@
 						"header": [
 							{
 								"key": "Link",
-								"value": "<{{user-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json",
 								"type": "text"
 							}
 						],
@@ -148,7 +206,8 @@
 								"csourceRegistrations",
 								""
 							]
-						}
+						},
+						"description": "This NGSI-LD **ContextSourceRegistration** example informs the NGSI-LD context broker, that data is also available from the adapter.\n\nThe registration is structured as follows:\n\n- `information.entities` is stating that `Building` entities are potentially available on the `endpoint`. The `Link` header holds a JSON-LD `@context` which is mapping the short name `Building` to the IRI `https://uri.fiware.org/ns/dataModels#Building`.\n- The `mode` of the registration is `inclusive`, which means that the context broker will add together `Building` data from all registered and combine it with any `Building` entities found locally.\n- The `operation` mode indicates the `endpoint` is capable of handling subscriptions and retrieval of entities only.\n- The `contextSourceInfo` holds key-value pairs which are used when forwarding requests to the `endpoint`:\n    -  `jsonldContext` is a special key, which is used to apply a JSON-LD compaction operation on the payload before forwarding to the registrant endpoint. This corresponds to the fixed terms used by Lepus itself and ensures that the NGSI-v2 broker behind it is always supplied with its preferred short name terms.\n    -  `Prefer` appends a `Prefer` header to the forwarded request, which ensures that Lepus only returns elements which correspond to the 1.6.1 NGSI-LD specification\n- The `endpoint` holds the location of the adaptor which is in front of the NGSI-v2 context broker"
 					},
 					"response": []
 				},
@@ -159,7 +218,7 @@
 						"header": [
 							{
 								"key": "Link",
-								"value": "<{{user-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json",
 								"type": "text"
 							}
 						],
@@ -175,7 +234,8 @@
 								"csourceRegistrations",
 								""
 							]
-						}
+						},
+						"description": "This request displays data about existing registrations found within the **NGSI-LD** context broker."
 					},
 					"response": []
 				},
@@ -186,7 +246,7 @@
 						"header": [
 							{
 								"key": "Link",
-								"value": "<{{user-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json",
 								"type": "text"
 							}
 						],
@@ -202,7 +262,36 @@
 								"entities",
 								"urn:ngsi-ld:Store:001"
 							]
-						}
+						},
+						"description": "Once a registration is in place, it is possible to read information about the NGSI-v2 Stores by querying the **NGSI-LD** FMIS system.\n\nBecause of `Prefer: ngsi-ld=1.6` had been set in the registration, the retrieved entity does not a **VocabularyProperty** and `objectType` has been quietly dropped from the response. This ensures backwards compatibility to context brokers conformant to an earlier version of the NGSI-LD specification - in this case version 1.6.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "NGSI-LD - Read as Linked Data Copy",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{context-broker}}/ngsi-ld/v1/entities/urn:ngsi-ld:Store:001",
+							"protocol": "http",
+							"host": [
+								"{{context-broker}}"
+							],
+							"path": [
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Store:001"
+							]
+						},
+						"description": "This example returns all known `Building` entities in the \"Supermarket\" `category`\n\nThe response returns all **Building** entities known locally, and all **Building** entities found on registered context brokers which match the query."
 					},
 					"response": []
 				},
@@ -229,7 +318,8 @@
 								"entities",
 								"urn:ngsi-ld:Store:001"
 							]
-						}
+						},
+						"description": "\nNeither Lepus nor the NGSI-v2 context broker able to handle alternative `@context` files, however, when requesting data from the NGSI-LD context broker, JSON-LD is fully supported, so a response can be returned using the preferred short names of the user agent.\n\nIn the example below, the **Building** entity `urn:ngsi-ld:Store:001` is requested using terms in German.\n\nThe response is returned in JSON format with short form attribute names in German. The true source of the entity (NGSI-v2 data via the adapter) is not visible to the end user."
 					},
 					"response": []
 				}
@@ -249,7 +339,7 @@
 							},
 							{
 								"key": "Link",
-								"value": "<{{user-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
 								"type": "text"
 							}
 						],
@@ -284,7 +374,7 @@
 							},
 							{
 								"key": "Link",
-								"value": "<{{user-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
 								"type": "text"
 							}
 						],
@@ -321,7 +411,7 @@
 							},
 							{
 								"key": "Link",
-								"value": "<{{user-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
 								"type": "text"
 							},
 							{
@@ -363,7 +453,7 @@
 							},
 							{
 								"key": "Link",
-								"value": "<{{user-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
 								"type": "text"
 							},
 							{
@@ -427,7 +517,7 @@
 						"header": [
 							{
 								"key": "Link",
-								"value": "<{{user-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
 								"type": "text"
 							}
 						],
@@ -461,7 +551,7 @@
 						"header": [
 							{
 								"key": "Link",
-								"value": "<{{user-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
 								"type": "text"
 							}
 						],
@@ -589,7 +679,7 @@
 						"header": [
 							{
 								"key": "Link",
-								"value": "<{{user-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
 								"type": "text"
 							},
 							{
@@ -804,7 +894,7 @@
 							},
 							{
 								"key": "Link",
-								"value": "<{{user-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
 								"type": "text"
 							}
 						],
@@ -842,7 +932,7 @@
 							},
 							{
 								"key": "Link",
-								"value": "<{{user-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
 								"type": "text"
 							}
 						],
@@ -879,7 +969,7 @@
 							},
 							{
 								"key": "Link",
-								"value": "<{{user-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
 								"type": "text"
 							}
 						],
@@ -921,7 +1011,7 @@
 							},
 							{
 								"key": "Link",
-								"value": "<{{user-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
 								"type": "text"
 							}
 						],
@@ -1007,7 +1097,7 @@
 						"header": [
 							{
 								"key": "Link",
-								"value": "<{{user-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
 								"type": "text"
 							}
 						],
@@ -1072,7 +1162,7 @@
 							},
 							{
 								"key": "Link",
-								"value": "<{{user-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
 								"type": "text"
 							}
 						],
@@ -1120,39 +1210,6 @@
 					}
 				}
 			]
-		},
-		{
-			"name": "NGSI-LD - Read as Linked Data Copy",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Link",
-						"value": "<{{user-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "http://{{context-broker}}/ngsi-ld/v1/entities/?type=Store",
-					"protocol": "http",
-					"host": [
-						"{{context-broker}}"
-					],
-					"path": [
-						"ngsi-ld",
-						"v1",
-						"entities",
-						""
-					],
-					"query": [
-						{
-							"key": "type",
-							"value": "Store"
-						}
-					]
-				}
-			},
-			"response": []
 		},
 		{
 			"name": "NGSI-v2  - Read Data directly Copy",
@@ -1204,11 +1261,6 @@
 		{
 			"key": "ngsi-context.jsonld",
 			"value": "http://context/ngsi-context.jsonld",
-			"type": "string"
-		},
-		{
-			"key": "user-context.jsonld",
-			"value": "http://context/user-context.jsonld",
 			"type": "string"
 		},
 		{
