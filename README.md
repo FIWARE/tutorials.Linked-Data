@@ -321,147 +321,93 @@ git checkout NGSI-LD
 
 ---
 
-# Creating a NGSI-LD Data space based on Linked Data
+# Offering NGSI-v2 Entities as part of an NGSI-LD Data Space
 
-This tutorial recreates the same data entities as the initial _"Powered by FIWARE"_ supermarket finder app, but using
-NGSI-LD linked data entities rather than NGSI v2.
+This tutorial starts up both the NGSI-LD Smart Farm (on port `1027`) and NGSI-v2 Smart Supermarket (on port `1027`) and thenoffers the NGSI-v2 entities into the building finder to the Smart Farm FMIS as part of a federated data space.
 
-## Checking the service health
+## Reading NGSI-v2 Data directly
 
-As usual, you can check if the Orion Context Broker is running by making an HTTP request to the exposed port:
+As usual, you can check if NGSI-v2 context broker holding the supermarket data is running by making an HTTP request to the exposed port, the request is in NGSI-v2 format. It does not require a `Link` header for the `@context`
 
 #### 1️⃣ Request:
 
 ```console
-curl -X GET \
-  'http://localhost:1026/version'
+curl -G -X GET \
+  'http://localhost:1027/v2/entities/urn:ngsi-ld:Store:001'
 ```
 
 #### Response:
 
-The response will look similar to the following:
+The response will be in NGSI-v2 format as follows:
 
 ```json
 {
-    "orion": {
-        "version": "1.15.0-next",
-        "uptime": "0 d, 3 h, 1 m, 51 s",
-        "git_hash": "af440c6e316075266094c2a5f3f4e4f8e3bb0668",
-        "compile_time": "Tue Jul 16 15:46:18 UTC 2019",
-        "compiled_by": "root",
-        "compiled_in": "51b4d802385a",
-        "release_date": "Tue Jul 16 15:46:18 UTC 2019",
-        "doc": "https://fiware-orion.readthedocs.org/en/master/"
+    "id": "urn:ngsi-ld:Store:001",
+    "type": "Store",
+    "address": {
+        "type": "PostalAddress",
+        "value": {
+            "streetAddress": "Bornholmer Straße 65",
+            "addressRegion": "Berlin",
+            "addressLocality": "Prenzlauer Berg",
+            "postalCode": "10439"
+        }, "metadata": {}
+    },
+    "category": {
+        "type": "VocabularyProperty", "value": "supermarket", "metadata": {}
+    },
+    "location": {
+        "type": "geo:json",
+        "value": {
+            "type": "Point",
+            "coordinates": [
+                13.3986,
+                52.5547
+            ]
+        }, "metadata": {}
+    },
+    "name": {
+        "type": "Text", "value": "Bösebrücke Einkauf", "metadata": {}
+    },
+    "owner": {
+        "type": "Relationship", "value": "urn:ngsi-ld:Person:001",
+        "metadata": {
+            "objectType": {
+                "type": "VocabularyProperty", "value": "Person"
+            }
+        }
     }
 }
 ```
 
-The format of the version response has not changed. The `release_date` must be 16th July 2019 or later to be able to
-work with the requests defined below.
+The `type` attribute in NGSI-v2 is loosely defined, but in this case, with the exception of ordinary properties, we are using `type` to correspond to the terms used in NGSI-LD such as `Relationship` or `VocabularyProperty`. For ordinary NGSI-v2 properties, the `type` corresponds to a datatype such as `Text` or `PostalAddress`, each of these datatypes will need to be mapped to a JSON-LD `@context` if the data is to be understood in an NGSI-LD system.
 
-## Creating Context Data
+## Reading NGSI-v2 Data in NGSI-LD format
 
-When creating linked data entities, it is important to use common data models. This will allow us to easily combine data
-from multiple sources and remove ambiguity when comparing data coming from different sources.
-
-Creating linked data using fully qualified names throughout would be painful, as each attribute would need to be a URI,
-so JSON-LD introduces the idea of an `@context` attribute which can hold pointers to context definitions. To add a Smart
-Data [Building](https://github.com/smart-data-models/dataModel.Building) data entity, the following `@context` would be
-required
-
-```json
-{
-    "id": "urn:ngsi-ld:Building:store001",
-    "type": "Building",
-    ...  other data attributes
-    "@context": "https://smart-data-models.github.io/dataModel.Building/context.jsonld"
-
-}
-```
-
-### Core Context
-
-[https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld)
-refers to the Core `@context` of NGSI-LD, this defines terms such as `id` and `type` which are common to all NGSI
-entities, as well as defining terms such as `Property` and `Relationship`. The core context is so fundamental to
-NGSI-LD, that it is added by default to any `@context` sent to a request.
-
-### Smart Data Models
-
-[https://smart-data-models.github.io/dataModel.Building/context.jsonld](https://schema.lab.fiware.org/ld/context) refers
-to a User `@context` - a definition of a standard data models. Adding this to the `@context` will load a common
-definition of a **Building** [data model](https://smartdatamodels.org/) defined by the FIWARE Foundation in
-collaboration with other organizations such as GSMA or TM Forum. A summary of the FQNs related to **Building** can be
-seen below:
-
-```json
-{
-    "@context": {
-        "Building": "https://smartdatamodels.org/dataModel.Building/Building",
-        ... etc
-
-        "address": "https://smartdatamodels.org/address",
-        "addressCountry": "https://smartdatamodels.org/addressCountry",
-        "addressLocality": "https://smartdatamodels.org/addressLocality",
-        "addressRegion": "https://smartdatamodels.org/addressRegion",
-        "category": "https://smartdatamodels.org/dataModel.Building/category",
-        "name": "https://smartdatamodels.org/name",
-        ...etc
-    }
-}
-```
-
-If we include this context definition, it means that we will be able to use short names for `Building`, `address`,
-`name` for our entities, but computers will also be able to read the FQNs when comparing with other sources.
-
-#### Context terms are IRIs not URLs
-
-It should be noted that According to the [JSON-LD Spec](https://www.w3.org/TR/json-ld/#the-context) : _"a context is
-used to map terms to IRIs."_ - An IRI (Internationalized Resource Identifier) is not necessarily a URL - see
-[here](https://fusion.cs.uni-jena.de/fusion/blog/2016/11/18/iri-uri-url-urn-and-their-differences/) and therefore it is
-not unexpected if elements such as `https://smartdatamodels.org/name` do not actually resolve to a web page. However
-many IRIs within JSON-LD `@context` files, such as `http://schema.org/address` do indeed return web pages with more
-information about themselves.
-
-If you take the NGSI-LD [Core @context](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld)
-
-```json
-{
-  "@context": {
-
-    "ngsi-ld": "https://uri.etsi.org/ngsi-ld/",
-    "geojson": "https://purl.org/geojson/vocab#",
-    "id": "@id",
-    "type": "@type",
-...
-    "@vocab": "https://uri.etsi.org/ngsi-ld/default-context/"
-  }
-}
-```
-
-You can see that any unresolved short-name for an attribute will be mapped onto the default context i.e.:
-
--   Unknown attribute `xxx` => `https://uri.etsi.org/ngsi-ld/default-context/xxx`
-
-And unsurprisingly these default-context IRIs don't exist as valid web pages either.
-
-To create a valid **Building** data entity in the context broker, make a POST request to the
-`http://localhost:1026/ngsi-ld/v1/entities` endpoint as shown below. It is essential that the appropriate
-`Content-Type: application/ld+json` is also used, so that the data entity is recognized as Linked data.
+To read the data in NGSI-LD format, make an NGSI-LD request via the Lepus adaptor listening on port `3005`
 
 #### 2️⃣ Request:
 
 ```console
-curl -iX POST \
-  'http://localhost:1026/ngsi-ld/v1/entities' \
-  -H 'Content-Type: application/ld+json' \
-  -d '{
-    "id": "urn:ngsi-ld:Building:store001",
-    "type": "Building",
-    "category": {
-        "type": "VocabularyProperty",
-        "vocab": "commercial"
-    },
+curl -G -X GET \
+  'http://localhost:3005/ngsi-ld/v1/entities/urn:ngsi-ld:Store:001' \
+-H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json' \
+-H 'Accept: application/ld+json'
+```
+
+#### Response:
+
+The response will be in NGSI-LD format as follows:
+
+
+```json
+{
+    "@context": [
+        "http://context/fixed-context.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
+    ],
+    "id": "urn:ngsi-ld:Store:001",
+    "type": "Store",
     "address": {
         "type": "Property",
         "value": {
@@ -469,656 +415,294 @@ curl -iX POST \
             "addressRegion": "Berlin",
             "addressLocality": "Prenzlauer Berg",
             "postalCode": "10439"
-        },
-        "verified": {
-            "type": "Property",
-            "value": true
         }
+    },
+    "category": {
+        "type": "VocabularyProperty", "vocab": "supermarket"
     },
     "location": {
         "type": "GeoProperty",
         "value": {
-             "type": "Point",
-             "coordinates": [13.3986, 52.5547]
+            "type": "Point",
+            "coordinates": [
+                13.3986,
+                52.5547
+            ]
         }
     },
     "name": {
-        "type": "Property",
-        "value": "Bösebrücke Einkauf"
+        "type": "Property", "value": "Bösebrücke Einkauf"
     },
-    "@context": [
-        "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
-    ]
-}'
+    "owner": {
+        "type": "Relationship", "object": "urn:ngsi-ld:Person:001", "objectType": "Person"
+    }
+}
 ```
 
-The first request will take some time, as the context broker must navigate and load all of the files mentioned in the
-`@context`.
+It should be noted that the `@context` supplied in the `Link` header has been totally ignored, and a fixed `@context` used configured for the adaptor has been returned instead. The Adaptor doesn't fully understand NGSI-LD, it merely formats the underlying NGSI-v2 as NGSI-LD. You will notice that the NGSI-v2 `"type": "VocabularyProperty", "value": "supermarket"` has been amended to a valid **VocabularyProperty** - `"type": "VocabularyProperty", "vocab": "supermarket"`, and similarly the **Relationship** is now using `object` and `objectType` as defined in the core `@context`
 
-> [!NOTE]
->
-> if `https://smart-data-models.github.io/dataModel.Building/context.jsonld` is unavailable for some reason the request
-> will fail
->
-> For a working production system it is essential that the `@context` files are always available to ensure third parties
-> can read the context. High availability infrastructure has not been considered for this tutorial to keep the
-> architecture simple.
+
 
 #### 3️⃣ Request:
 
-Each subsequent entity must have a unique `id` for the given `type`
+The `fixed-context` JSON-LD `@context` file fully defines all the terms found within the NGSI-v2 system in terms of IRIs - the file can be accessed as shown.
 
 ```console
-curl -iX POST \
-  http://localhost:1026/ngsi-ld/v1/entities/ \
-  -H 'Content-Type: application/ld+json' \
-  -d '{
-    "id": "urn:ngsi-ld:Building:store002",
-    "type": "Building",
-    "category": {
-        "type": "VocabularyProperty",
-        "vocab": "commercial"
-    },
-    "address": {
-        "type": "Property",
-        "value": {
-            "streetAddress": "Friedrichstraße 44",
-            "addressRegion": "Berlin",
-            "addressLocality": "Kreuzberg",
-            "postalCode": "10969"
-        },
-        "verified": {
-            "type": "Property",
-            "value": true
-        }
-    },
-     "location": {
-        "type": "GeoProperty",
-        "value": {
-             "type": "Point",
-              "coordinates": [13.3903, 52.5075]
-        }
-    },
-    "name": {
-        "type": "Property",
-        "value": "Checkpoint Markt"
-    },
-    "@context": [
-        "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
-    ]
-}'
+curl -L 'http://localhost:3004/fixed-context.jsonld'
 ```
 
-### Defining Properties within the NGSI-LD entity definition
+#### Response:
 
-The attributes `id` and `type` should be familiar to anyone who has used NGSI v2, and these have not changed. As
-mentioned above, the type should refer to an included data model, in this case `Building` is being used as a short name
-for the included URN `https://uri.fiware.org/ns/dataModels#Building`. Thereafter each _property_ is defined as a JSON
-element containing two attributes, a `type` and a `value`.
+The response is a valid JSON-LD `@context`. As can be seen the NGSI-v2 `Store` is being mapped to `fiware>Building` which corresponds to a `https://uri.fiware.org/ns/dataModels#Building`
 
-The `type` of a _property_ attribute must be one of the following:
+```json
+{
+    "@context": {
+        "type": "@type",
+        "id": "@id",
+        "ngsi-ld": "https://uri.etsi.org/ngsi-ld/",
+        "fiware": "https://uri.fiware.org/ns/dataModels#",
+        "schema": "https://schema.org/",
+        "tutorial": "https://fiware.github.io/tutorials.Step-by-Step/schema/",
+        "openstreetmap": "https://wiki.openstreetmap.org/wiki/Tag:building%3D",
+        "Bell": "tutorial:Bell",
+        "Store": "fiware:Building",
+        "Door": "tutorial:Door",
+        "Lamp": "tutorial:Lamp",
+        "Motion": "tutorial:Motion",
+        "Person": "fiware:Person",
+        "Product": "tutorial:Product",
+        "Shelf": "tutorial:Shelf",
+        "StockOrder": "tutorial:StockOrder",
+        "additionalName": "schema:additionalName",
+        "address": "schema:address",
+        "addressCountry": "schema:addressCountry",
+        "addressLocality": "schema:addressLocality",
+        "addressRegion": "schema:addressRegion",
+... etc
+    }
+}
+```
 
--   `"GeoProperty"`: `"http://uri.etsi.org/ngsi-ld/GeoProperty"` for locations. Locations should be specified as
-    Longitude-Latitude pairs in [GeoJSON format](https://tools.ietf.org/html/rfc7946). The preferred name for the
-    primary location attribute is `location`
--   `"VocabularyProperty"` holds enumerated values and is a mapping of a URI to a value within the user'`@context`
--   `"LanguageProperty"` holds a set of internationalized strings.
--   `"Property"`: `"http://uri.etsi.org/ngsi-ld/Property"` - for everything else.
--   For time-based values, `"Property"` shall be used as well, but the property value should be Date, Time or DateTime
-    strings encoded in the [ISO 8601 format](https://en.wikipedia.org/wiki/ISO_8601) - e.g. `YYYY-MM-DDThh:mm:ssZ`
 
-> [!NOTE]
->
-> Note that for simplicity, this data entity has no relationships defined. Relationships must be given the
-> `type=Relationship` or one of its defined subtypes. Relationships will be discussed in a subsequent tutorial.
-
-### Defining Properties-of-Properties within the NGSI-LD entity definition
-
-_Properties-of-Properties_ is the NGSI-LD equivalent of metadata (i.e. _"data about data"_), it is use to describe
-properties of the attribute value itself like accuracy, provider, or the units to be used. Some built-in metadata
-attributes already exist and these names are reserved:
-
--   `createdAt` (type: DateTime): attribute creation date as an ISO 8601 string.
--   `modifiedAt` (type: DateTime): attribute modification date as an ISO 8601 string.
-
-Additionally `observedAt`, `datasetId` and `instanceId` may optionally be added in some cases, and `location`,
-`observationSpace` and `operationSpace` have special meaning for Geoproperties.
-
-In the examples given above, one element of metadata (i.e. a _property-of-a-property_) can be found within the `address`
-attribute. a `verified` flag indicates whether the address has been confirmed. The commonest _property-of-a-property_ is
-`unitCode` which should be used to hold the UN/CEFACT
-[Common Codes](http://wiki.goodrelations-vocabulary.org/Documentation/UN/CEFACT_Common_Codes) for Units of Measurement.
-
-> [!NOTE]
->
-> A `valueType` _property-of-a-property_ can be used to describe the **Datatype** of an attribute.
->
-> -   For Native JSON Properties, the `valueType` can align with a well-known **Datatype** schema, such as
->     [schema.org](https://schema.org/DataType) or [XML Schema](https://www.w3.org/TR/2004/REC-xmlschema-2-20041028/) -
->     typically values such as: `Time`, `Boolean`, `DateTime`, `Number`, `Text`, `Date`, `Float`, `Integer` etc.
-> -   For other JSON Objects, where possible use a datatype from an existing ontology - for example `PostalAddress`
->     aligns with `https://schema.org/PostalAddress`.
->
-> When using `valueType`, the mapping of the given short name value to a full URI should be placed in the User
-> `@context`
-
-## Querying Context Data
-
-A consuming application can now request context data by making NGSI-LD HTTP requests to the Orion Context Broker. The
-existing NGSI-LD interface enables us to make complex queries and filter results and retrieve data with FQNs or with
-short names.
-
-### Obtain entity data by FQN Type
-
-This example returns the data of all `Building` entities within the context data The `type` parameter is mandatory for
-NGSI-LD and is used to filter the response. The Accept HTTP header is needed to retrieve JSON-LD content.
+The Lepus adaptor aims to offer all the endpoints of an NGSI-LD context broker, except that it has no understanding of JSON-LD `@context` - hence all terms must always be compacted - a query for all `Stores` would be `/ngsi-ld/v1/entities/?type=Store` for example. One of the endpoints defined in the 1.8.1 NGSI-LD specification is `/info/sourceIdentity`, which gives informatation about the underlying context broker - uptime, aliasing and detailed information. In this case the adaptor is merely standardizing the data from the Orion broker's `/version` endpoint:
 
 #### 4️⃣ Request:
 
 ```console
 curl -G -X GET \
-  'http://localhost:1026/ngsi-ld/v1/entities' \
-  -H 'Accept: application/ld+json' \
-  -d 'type=https%3A%2F%2Fsmartdatamodels.org%2FdataModel.Building%2FBuilding'
+    'http://localhost:3005/ngsi-ld/v1/info/sourceIdentity' \
+-H 'Accept: application/ld+json'
 ```
 
 #### Response:
 
-The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld`)
-and all attributes are expanded whenever possible.
-
--   `id`, `type` and `location` are defined in the core context and are not expanded.
--   `address` has been mapped to `http://smartdatamodels.org/address`
--   `name` has been mapped to `http://smartdatamodels.org/name`
--   `category` has been mapped to `https://smartdatamodels.org/dataModel.Building/category`
-
-Note that if an attribute has not been not associated to an FQN when the entity was created, the short name will
-**always** be displayed - `verified` and `commercial` are examples of this since they were missing from the supplied
-user `@context` when inserting the context data.
+The response holds an `contextSourceAlias` (or nickname) for the adapter as well as data corresponding to the uptime in ISO 8601 duration format, and also the server time. The attribute  `contextSourceExtras` is a freeform JSON object (defined as `"@type": "@JSON"`) which can hold any additional unspecified data about the context broker:
 
 ```json
-[
-    {
-        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
-        "id": "urn:ngsi-ld:Building:store001",
-        "type": "https://smartdatamodels.org/dataModel.Building/Building",
-        "https://smartdatamodels.org/dataModel.Building/category": {
-            "type": "VocabularyProperty",
-            "vocab": "commercial"
-        },
-        "https://smartdatamodels.org/address": {
-            "type": "Property",
-            "value": {
-                "streetAddress": "Bornholmer Straße 65",
-                "addressRegion": "Berlin",
-                "addressLocality": "Prenzlauer Berg",
-                "postalCode": "10439"
-            },
-            "verified": {
-                "type": "Property",
-                "value": true
-            }
-        },
-        "location": {
-            "type": "GeoProperty",
-            "value": {
-                "type": "Point",
-                "coordinates": [13.3986, 52.5547]
-            }
-        },
-        "https://smartdatamodels.org/name": {
-            "type": "Property",
-            "value": "Bösebrücke Einkauf"
-        }
+{
+    "id": "urn:ngsi-ld:ContextSourceIdentity:16d6f0c6-ce4d-4568-bd0b-c261135354ea",
+    "type": "ContextSourceIdentity",
+    "contextSourceExtras": {
+        "version": "4.0.0",
+        "uptime": "0 d, 0 h, 45 m, 58 s",
+        "git_hash": "4f9f34df07395c54387a53074f98bef00b1130a3",
+        "compile_time": "Thu Jun 6 07:35:47 UTC 2024",
+        "compiled_by": "root",
+        "compiled_in": "buildkitsandbox",
+        "release_date": "Thu Jun 6 07:35:47 UTC 2024",
+        "machine": "x86_64",
+        "doc": "https://fiware-orion.rtfd.io/en/4.0.0/"
     },
-    {
-        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
-        "id": "urn:ngsi-ld:Building:store002",
-        "type": "https://smartdatamodels.org/dataModel.Building/Building",
-        "https://smartdatamodels.org/dataModel.Building/category": {
-            "type": "VocabularyProperty",
-            "vocab": "commercial"
-        },
-        "https://smartdatamodels.org/address": {
-            "type": "Property",
-            "value": {
-                "https://smartdatamodels.org/streetAddress": "Friedrichstraße 44",
-                "https://smartdatamodels.org/addressRegion": "Berlin",
-                "https://smartdatamodels.org/addressLocality": "Kreuzberg",
-                "https://smartdatamodels.org/postalCode": "10969"
-            },
-            "verified": {
-                "type": "Property",
-                "value": true
-            }
-        },
-        "location": {
-            "type": "GeoProperty",
-            "value": {
-                "type": "Point",
-                "coordinates": [13.3903, 52.5075]
-            }
-        },
-        "https://smartdatamodels.org/name": {
-            "type": "Property",
-            "value": "Checkpoint Markt"
-        }
-    }
-]
+    "contextSourceUptime": "P0DT0H45M58S",
+    "contextSourceTimeAt": "2024-08-02T11:16:06.376Z",
+    "contextSourceAlias": "lepus",
+    "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
+}
 ```
 
-### Obtain entity data by ID
 
-This example returns the data of `urn:ngsi-ld:Building:store001`
+
+### Creating a federation registration
+
+This NGSI-LD **ContextSourceRegistration** example informs the NGSI-LD context broker, that data is also available from the adapter:
 
 #### 5️⃣ Request:
 
 ```console
-curl -G -X GET \
-   -H 'Accept: application/ld+json' \
-   'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Building:store001'
+curl -L 'http://localhost:1026/ngsi-ld/v1/csourceRegistrations/' \
+-H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json' \
+-H 'Content-Type: application/json' \
+-d '{
+    "type": "ContextSourceRegistration",
+    "information": [
+        {"entities": [{"type": "Building"}]}
+    ],
+    "contextSourceInfo": [
+        {"key": "jsonldContext","value": "http://context/fixed-context.jsonld"},
+        {"key": "Prefer", "value": "ngsi-ld=1.6"}
+    ],
+    "mode": "inclusive",
+    "operations": ["federationOps"],
+    "endpoint": "http://adapter:3000"
+}'
 ```
 
-#### Response:
+The registration is structured as follows:
 
-The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld`)
-and all attributes are expanded whenever possible.
+- `information.entities` is stating that `Building` entities are potentially available on the `endpoint`. The `Link` header holds a JSON-LD `@context` which is mapping the short name `Building` to the IRI `https://uri.fiware.org/ns/dataModels#Building`.
+- The `mode` of the registration is `inclusive`, which means that the context broker will add together `Building` data from all registered and combine it with any `Building` entities found locally.
+- The `operation` mode indicates the the `endpoint` is capable of handling subscriptions and retrieval of entities only.
+- The `contextSourceInfo` holds key-value pairs which are used when forwarding requests to the `endpoint`:
+    -  `jsonldContext` is a special key, which is used to apply a JSON-LD compaction operation on the payload before forwarding to the registrant endpoint. This corresponds to the fixed terms used by Lepus itself and ensures that the NGSI-v2 broker behind it is always supplied with its preferred short name terms.
+    -  `Prefer` appends a `Prefer` header to the forwarded request, which ensures that Lepus only returns elements which correspond to the 1.6.1 NGSI-LD specification
+- The `endpoint` holds the location of the adaptor which is in front of the NGSI-v2 context broker
 
-```json
-{
-    "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
-    "id": "urn:ngsi-ld:Building:store001",
-    "type": "https://smartdatamodels.org/dataModel.Building/Building",
-    "https://smartdatamodels.org/dataModel.Building/category": {
-        "vocab": "commercial"
-    },
-    "https://smartdatamodels.org/address": {
-        "streetAddress": "Bornholmer Straße 65",
-        "addressRegion": "Berlin",
-        "addressLocality": "Prenzlauer Berg",
-        "postalCode": "10439"
-    },
-    "location": {
-        "type": "Point",
-        "coordinates": [13.3986, 52.5547]
-    },
-    "https://smartdatamodels.org/name": "Bösebrücke Einkauf"
-}
-```
 
-### Obtain entity data by type
-
-If a reference to the supplied data is supplied, it is possible to return short name data and limit responses to a
-specific `type` of data. For example, the request below returns the data of all `Building` entities within the context
-data. Use of the `type` parameter limits the response to `Building` entities only, use of the `options=keyValues` query
-parameter reduces the response down to standard JSON-LD.
-
-A [`Link` header](https://www.w3.org/wiki/LinkHeader) must be supplied to associate the short form `type="Building"`
-with the FQN `https://uri.fiware.org/ns/data-models/Building`. The full link header syntax can be seen below:
-
-```text
-Link: <https://smart-data-models.github.io/dataModel.Building/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json
-```
-
-The standard HTTP `Link` header allows metadata (in this case the `@context`) to be passed in without actually touching
-the resource in question. In the case of NGSI-LD, the metadata is a file in `application/ld+json` format.
+Once a registration is in place, it is possible to read information about the NGSI-v2 Stores by querying the
+NGSI-LD FMIS system:
 
 #### 6️⃣ Request:
 
 ```console
-curl -G -X GET \
-  'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://smart-data-models.github.io/dataModel.Building/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
-    -H 'Accept: application/ld+json' \
-    -d 'type=Building' \
-    -d 'options=keyValues'
+curl -L 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Store:001' \
+-H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json'
 ```
 
 #### Response:
 
-Because of the use of the `options=keyValues`, the response consists of JSON only without the attribute definitions
-`type="Property"` or any _properties-of-properties_ elements. You can see that `Link` header from the request has been
-used as the `@context` returned in the response.
+Because of `Prefer: ngsi-ld=1.6` had been set in the registration, the retrieved entity does not a **VocabularyProperty** and `objectType` has been quietly dropped from the response. This ensures backwards compatibility to context brokers conformant to an earlier version of the NGSI-LD specification - in this case version 1.6.
 
 ```json
-[
-    {
-        "@context": "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-        "id": "urn:ngsi-ld:Building:store001",
-        "type": "Building",
-        "address": {
+{
+    "id": "urn:ngsi-ld:Store:001",
+    "type": "Building",
+    "address": {
+        "type": "Property",
+        "value": {
             "streetAddress": "Bornholmer Straße 65",
             "addressRegion": "Berlin",
             "addressLocality": "Prenzlauer Berg",
             "postalCode": "10439"
-        },
-        "name": "Bösebrücke Einkauf",
-        "category": {
-            "vocab": "commercial"
-        },
-        "location": {
-            "type": "Point",
-            "coordinates": [13.3986, 52.5547]
         }
     },
-    {
-        "@context": "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-        "id": "urn:ngsi-ld:Building:store002",
-        "type": "Building",
-        "address": {
-            "streetAddress": "Friedrichstraße 44",
-            "addressRegion": "Berlin",
-            "addressLocality": "Kreuzberg",
-            "postalCode": "10969"
-        },
-        "name": "Checkpoint Markt",
-        "category": {
-            "vocab": "commercial"
-        },
-        "location": {
+    "category": {"type": "Property", "value": "supermarket"},
+    "location": {
+        "type": "GeoProperty",
+        "value": {
             "type": "Point",
-            "coordinates": [13.3903, 52.5075]
+            "coordinates": [
+                13.3986,
+                52.5547
+            ]
         }
-    }
-]
+    },
+    "name": {"type": "Property", "value": "Bösebrücke Einkauf"},
+    "owner": {"type": "Relationship", "object": "urn:ngsi-ld:Person:001"}
+}
 ```
 
-### Filter context data by comparing the values of an attribute
+### Retrieve entities
 
-This example returns all `Building` entities with the `name` attribute _Checkpoint Markt_. Filtering can be done using
-the `q` parameter - if a string has spaces in it, it can be URL encoded and held within double quote characters `"` =
-`%22`.
+This example returns all known `Building` entities in the "Supermarket" `category`
 
 #### 7️⃣ Request:
 
 ```console
 curl -G -X GET \
     'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://smart-data-models.github.io/dataModel.Building/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+    -H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
     -H 'Accept: application/ld+json' \
     -d 'type=Building' \
-    -d 'q=name==%22Checkpoint%20Markt%22' \
+    -d 'q=category==%22supermarket%22' \
+    -d 'attrs=name' \
     -d 'options=keyValues'
 ```
 
 #### Response:
 
-The `Link` header `https://smart-data-models.github.io/dataModel.Building/context.jsonld` includes the FIWARE Building
-model.
+The response returns all **Building** entities known locally, and all **Building** entities found on registered context brokers.
 
-This means that use of the `Link` header and the `options=keyValues` parameter reduces the response to short form
-JSON-LD as shown:
 
 ```json
 [
     {
-        "@context": "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-        "id": "urn:ngsi-ld:Building:store002",
-        "type": "Building",
-        "address": {
-            "streetAddress": "Friedrichstraße 44",
-            "addressRegion": "Berlin",
-            "addressLocality": "Kreuzberg",
-            "postalCode": "10969"
-        },
-        "name": "Checkpoint Markt",
-        "category": {
-            "vocab": "commercial"
-        },
-        "location": {
-            "type": "Point",
-            "coordinates": [13.3903, 52.5075]
-        }
+        "id": "urn:ngsi-ld:Store:001",
+        "type": "Store",
+        "name": "Bösebrücke Einkauf"
+    },
+    {
+        "id": "urn:ngsi-ld:Store:002",
+        "type": "Store",
+        "name": "Checkpoint Markt"
+    },
+    {
+        "id": "urn:ngsi-ld:Store:003",
+        "type": "Store",
+        "name": "East Side Galleria"
+    },
+    {
+        "id": "urn:ngsi-ld:Store:004",
+        "type": "Store",
+        "name": "Tower Trödelmarkt"
     }
 ]
 ```
 
-### Filter context data by comparing the values of an attribute in an Array
+This can be checked using the FMIS system itself on `localhost:3000` where both farm buildings and supermarket stores can be accessed:
 
-Within the standard `Building` model, the `category` attribute refers to an array of enumerated strings. This example
-returns all `Building` entities with a `category` attribute which contains either `commercial` or `office` strings.
-Filtering can be done using the `q` parameter, comma separating the acceptable values.
+![](https://fiware.github.io//tutorials.Linked-Data/img/buildings.png)
 
-> [!NOTE]
->
-> `category` has been defined as a **VocabularyProperty**, which would usually mean that the `vocab` value should be a
-> URI defined in the `@context`. The `expandValues` hint indicates that URI expansion is required for the `category`
-> attribute when querying the context data.
+
+### Using an alternate `@context`
+
+Neither Lepus nor the NGSI-v2 context broker able to handle alternative `@context` files, however, when requesting data from the NGSI-LD context broker, JSON-LD is fully supported, so a response can be returned using the preferred short names of the user agent.
+
+In the example below, the **Building** entity `urn:ngsi-ld:Store:001` is requested using terms in German.
+
 
 #### 8️⃣ Request:
 
 ```console
 curl -G -X GET \
-    'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://smart-data-models.github.io/dataModel.Building/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
-    -H 'Accept: application/ld+json' \
-    -d 'type=Building' \
-    -d 'q=category==%22commercial%22,%22office%22' \
-    -d 'options=keyValues' \
-    -d 'expandValues=category'
+  'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Store:001' \
+-H 'Link: <http://context/alternate-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json'
 ```
 
 #### Response:
 
-The response is returned in JSON-LD format with short form attribute names:
+The response is returned in JSON format with short form attribute names in German. The true source of the entity (NGSI-v2 data via the adapter) is not visible to the end user.
 
 ```json
-[
-    {
-        "@context": "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-        "id": "urn:ngsi-ld:Building:store001",
-        "type": "Building",
-        "address": {
+{
+    "id": "urn:ngsi-ld:Store:001",
+    "type": "Gebäude",
+    "adresse": {
+        "type": "Property",
+        "value": {
             "streetAddress": "Bornholmer Straße 65",
             "addressRegion": "Berlin",
             "addressLocality": "Prenzlauer Berg",
             "postalCode": "10439"
-        },
-        "name": "Bösebrücke Einkauf",
-        "category": {
-            "vocab": "commercial"
-        },
-        "location": {
-            "type": "Point",
-            "coordinates": [13.3986, 52.5547]
         }
     },
-    {
-        "@context": "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-        "id": "urn:ngsi-ld:Building:store002",
-        "type": "Building",
-        "address": {
-            "streetAddress": "Friedrichstraße 44",
-            "addressRegion": "Berlin",
-            "addressLocality": "Kreuzberg",
-            "postalCode": "10969"
-        },
-        "name": "Checkpoint Markt",
-        "category": {
-            "vocab": "commercial"
-        },
-        "location": {
+    "kategorie": {"type": "Property", "value": "supermarket"},
+    "location": {
+        "type": "GeoProperty",
+        "value": {
             "type": "Point",
-            "coordinates": [13.3903, 52.5075]
-        }
-    }
-]
-```
-
-### Filter context data by comparing the values of a sub-attribute
-
-This example returns all stores found in the Kreuzberg District.
-
-Filtering can be done using the `q` parameter - sub-attributes are annotated using the bracket syntax e.g.
-`q=address[addressLocality]=="Kreuzberg"`. This differs from NGSI v2 where dot syntax was used.
-
-#### 9️⃣ Request:
-
-```console
-curl -G -X GET \
-    'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://smart-data-models.github.io/dataModel.Building/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
-    -H 'Accept: application/ld+json' \
-    -d 'type=Building' \
-    -d 'q=address%5BaddressLocality%5D==%22Kreuzberg%22' \
-    -d 'options=keyValues'
-```
-
-#### Response:
-
-Use of the `Link` header and the `options=keyValues` parameter reduces the response to JSON-LD.
-
-```json
-[
-    {
-        "@context": "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-        "id": "urn:ngsi-ld:Building:store002",
-        "type": "Building",
-        "address": {
-            "streetAddress": "Friedrichstraße 44",
-            "addressRegion": "Berlin",
-            "addressLocality": "Kreuzberg",
-            "postalCode": "10969"
-        },
-        "name": "Checkpoint Markt",
-        "category": {
-            "vocab": "commercial"
-        },
-        "location": {
-            "type": "Point",
-            "coordinates": [13.3903, 52.5075]
-        }
-    }
-]
-```
-
-### Filter context data by querying metadata
-
-This example returns the data of all `Building` entities with a verified address. The `verified` attribute is an example
-of a _Property-of-a-Property_
-
-Metadata queries (i.e. Properties of Properties) are annotated using the dot syntax e.g. `q=address.verified==true`.
-This supersedes the `mq` parameter from NGSI v2.
-
-#### 1️⃣0️⃣ Request:
-
-```console
-curl -G -X GET \
-    'http://localhost:1026/ngsi-ld/v1/entities' \
-    -H 'Link: <https://smart-data-models.github.io/dataModel.Building/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
-    -H 'Accept: application/json' \
-    -d 'type=Building' \
-    -d 'q=address.verified==true' \
-    -d 'options=keyValues'
-```
-
-#### Response:
-
-Because of the use of the `options=keyValues` together with the Accept HTTP header (`application/json`), the response
-consists of JSON only without the attribute `type` and `metadata` elements.
-
-```json
-[
-    {
-        "@context": "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-        "id": "urn:ngsi-ld:Building:store001",
-        "type": "Building",
-        "address": {
-            "streetAddress": "Bornholmer Straße 65",
-            "addressRegion": "Berlin",
-            "addressLocality": "Prenzlauer Berg",
-            "postalCode": "10439"
-        },
-        "name": "Bösebrücke Einkauf",
-        "category": {
-            "vocab": "commercial"
-        },
-        "location": {
-            "type": "Point",
-            "coordinates": [13.3986, 52.5547]
+            "coordinates": [
+                13.3986,
+                52.5547
+            ]
         }
     },
-    {
-        "@context": "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-        "id": "urn:ngsi-ld:Building:store002",
-        "type": "Building",
-        "address": {
-            "streetAddress": "Friedrichstraße 44",
-            "addressRegion": "Berlin",
-            "addressLocality": "Kreuzberg",
-            "postalCode": "10969"
-        },
-        "name": "Checkpoint Markt",
-        "category": {
-            "vocab": "commercial"
-        },
-        "location": {
-            "type": "Point",
-            "coordinates": [13.3903, 52.5075]
-        }
-    }
-]
+    "name": {"type": "Property", "value": "Bösebrücke Einkauf"},
+    "inhaber": {"type": "Relationship", "object": "urn:ngsi-ld:Person:001"}
+}
 ```
 
-### Filter context data by comparing the values of a geo:json attribute
-
-This example return all Stores within 2km the **Brandenburg Gate** in **Berlin** (_52.5162N 13.3777W_). To make a
-geo-query request, three parameters must be specified, `geometry`, `coordinates` and `georel`.
-
-The syntax for NGSI-LD has been updated, the `coordinates` parameter is now represented in
-[geoJSON](https://tools.ietf.org/html/rfc7946) including the square brackets rather than the simple lat-long pairs
-required in NGSI v2.
-
-Note that by default the geo-query will be applied to the `location` attribute, as this is default specified in NGSI-LD.
-If another attribute is to be used, an additional `geoproperty` parameter is required.
-
-#### 1️⃣1️⃣ Request:
-
-```console
-curl -G -X GET \
-  'http://localhost:1026/ngsi-ld/v1/entities' \
-  -H 'Link: <https://smart-data-models.github.io/dataModel.Building/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
-  -H 'Accept: application/json' \
-  -d 'type=Building' \
-  -d 'geometry=Point' \
-  -d 'coordinates=%5B13.3777,52.5162%5D' \
-  -d 'georel=near%3BmaxDistance==2000' \
-  -d 'options=keyValues'
-```
-
-#### Response:
-
-Because of the use of the `options=keyValues` together with the Accept HTTP header (`application/json`), the response
-consists of JSON only without the attribute `type` and `metadata` elements.
-
-```json
-[
-    {
-        "@context": "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-        "id": "urn:ngsi-ld:Building:store002",
-        "type": "Building",
-        "address": {
-            "streetAddress": "Friedrichstraße 44",
-            "addressRegion": "Berlin",
-            "addressLocality": "Kreuzberg",
-            "postalCode": "10969"
-        },
-        "name": "Checkpoint Markt",
-        "category": {
-            "vocab": "commercial"
-        },
-        "location": {
-            "type": "Point",
-            "coordinates": [13.3903, 52.5075]
-        }
-    }
-]
-```
-
----
 
 ## License
 
-[MIT](LICENSE) © 2019-2024 FIWARE Foundation e.V.
+[MIT](LICENSE) © 2024 FIWARE Foundation e.V.
