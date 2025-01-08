@@ -398,7 +398,7 @@ Smart Data [Building](https://github.com/smart-data-models/dataModel.Building) �
 
 ### コア・コンテキスト
 
-[https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld)
+[https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld)
 は NGSI-LD のコア `@context` を参照します。これはすべての NGSI エンティティに共通の `id` や `type` のような用語を定義し、
 `Property` や `Relationship` のような用語を定義します。コア・コンテキストは NGSI-LD にとって非常に基本的なもので、
 デフォルトでリクエストに送信された `@context` に追加されます。
@@ -438,7 +438,7 @@ FIWARE Foundation によって定義されたすべての[データモデル](ht
 ありません。ただし、`http://schema.org/address` などの JSON-LD `@context` ファイル内の多くの IRIs は、実際に、
 それ自体に関する詳細情報を含む Web ページを返します。
 
-NGSI-LD [Core @context](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld) を使用する場合、
+NGSI-LD [Core @context](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld) を使用する場合、
 
 ```json
 {
@@ -473,7 +473,7 @@ curl -iX POST \
     "id": "urn:ngsi-ld:Building:store001",
     "type": "Building",
     "category": {
-        "type": "VocabularyProperty",
+        "type": "VocabProperty",
         "vocab": "commercial"
     },
     "address": {
@@ -502,7 +502,7 @@ curl -iX POST \
     },
     "@context": [
         "https://fiware.github.io/data-models/context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
     ]
 }'
 ```
@@ -531,7 +531,7 @@ curl -iX POST \
     "id": "urn:ngsi-ld:Building:store002",
     "type": "Building",
     "category": {
-        "type": "VocabularyProperty",
+        "type": "VocabProperty",
         "vocab": "commercial"
     },
     "address": {
@@ -560,7 +560,7 @@ curl -iX POST \
     },
     "@context": [
         "https://fiware.github.io/data-models/context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
     ]
 }'
 ```
@@ -634,7 +634,7 @@ curl -G -X GET \
 
 #### レスポンス :
 
-レスポンスはデフォルト (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld`)
+レスポンスはデフォルト (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld`)
 でコアの `@context` を返し、すべての属性は可能な限り展開されます。
 
 -   `id`, `type`, `location`, `name` はコア・コンテキストで定義されており、展開されません
@@ -646,7 +646,7 @@ curl -G -X GET \
 ```json
 [
     {
-        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld",
         "id": "urn:ngsi-ld:Building:store001",
         "type": "https://uri.fiware.org/ns/dataModels#Building",
         "https://schema.org/address": {
@@ -667,7 +667,7 @@ curl -G -X GET \
             "value": "Bösebrücke Einkauf"
         },
         "https://smart-data-models.github.io/data-models/terms.jsonld#/definitions/category": {
-            "type": "VocabularyProperty",
+            "type": "VocabProperty",
             "vocab": "https://uri.fiware.org/ns/dataModels#commercial"
         },
         "location": {
@@ -682,7 +682,7 @@ curl -G -X GET \
         }
     },
     {
-        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "https://uri.fiware.org/ns/dataModels#Building",
         "https://schema.org/address": {
@@ -703,7 +703,7 @@ curl -G -X GET \
             "value": "Checkpoint Markt"
         },
         "https://smart-data-models.github.io/data-models/terms.jsonld#/definitions/category": {
-            "type": "VocabularyProperty",
+            "type": "VocabProperty",
             "vocab": "https://uri.fiware.org/ns/dataModels#commercial"
         },
         "location": {
@@ -737,12 +737,12 @@ curl -G -X GET \
 #### レスポンス :
 
 レスポンスはデフォルト
-(`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld`)
+(`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld`)
 で コアの `@context` を返し、すべての属性は可能な限り展開されます。
 
 ```json
 {
-    "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
+    "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld",
     "id": "urn:ngsi-ld:Building:store001",
     "type": "https://uri.fiware.org/ns/dataModels#Building",
     "https://schema.org/address": {
@@ -763,7 +763,7 @@ curl -G -X GET \
         "value": "Bösebrücke Einkauf"
     },
     "https://smart-data-models.github.io/data-models/terms.jsonld#/definitions/category": {
-        "type": "VocabularyProperty",
+        "type": "VocabProperty",
         "vocab": "https://uri.fiware.org/ns/dataModels#commercial"
     },
     "location": {
@@ -822,7 +822,7 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
     {
         "@context": [
             "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
         ],
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
@@ -847,7 +847,7 @@ _properties-of-properties_ 要素は含まれていません。リクエスト�
     {
         "@context": [
             "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
         ],
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
@@ -900,7 +900,7 @@ curl -G -X GET \
 {
     "@context": [
         "https://fiware.github.io/data-models/context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
     ]
 }
 ```
@@ -915,7 +915,7 @@ curl -G -X GET \
     {
         "@context": [
             "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
         ],
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
@@ -969,7 +969,7 @@ curl -G -X GET \
     {
         "@context": [
             "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
         ],
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
@@ -994,7 +994,7 @@ curl -G -X GET \
     {
         "@context": [
             "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
         ],
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
@@ -1049,7 +1049,7 @@ curl -G -X GET \
     {
         "@context": [
             "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
         ],
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
@@ -1106,7 +1106,7 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
     {
         "@context": [
             "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
         ],
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
@@ -1190,7 +1190,7 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
     {
         "@context": [
             "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
         ],
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
@@ -1226,4 +1226,4 @@ Accept HTTP ヘッダと一緒に `options=keyValues` を使用しているた�
 
 ## License
 
-[MIT](LICENSE) © 2019-2024 FIWARE Foundation e.V.
+[MIT](LICENSE) © 2019-2025 FIWARE Foundation e.V.

@@ -380,7 +380,7 @@ required
 
 ### Core Context
 
-[https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld)
+[https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld)
 refers to the Core `@context` of NGSI-LD, this defines terms such as `id` and `type` which are common to all NGSI
 entities, as well as defining terms such as `Property` and `Relationship`. The core context is so fundamental to
 NGSI-LD, that it is added by default to any `@context` sent to a request.
@@ -422,7 +422,7 @@ not unexpected if elements such as `https://smartdatamodels.org/name` do not act
 many IRIs within JSON-LD `@context` files, such as `http://schema.org/address` do indeed return web pages with more
 information about themselves.
 
-If you take the NGSI-LD [Core @context](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld)
+If you take the NGSI-LD [Core @context](https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld)
 
 ```json
 {
@@ -458,7 +458,7 @@ curl -iX POST \
     "id": "urn:ngsi-ld:Building:store001",
     "type": "Building",
     "category": {
-        "type": "VocabularyProperty",
+        "type": "VocabProperty",
         "vocab": "commercial"
     },
     "address": {
@@ -487,7 +487,7 @@ curl -iX POST \
     },
     "@context": [
         "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
     ]
 }'
 ```
@@ -516,7 +516,7 @@ curl -iX POST \
     "id": "urn:ngsi-ld:Building:store002",
     "type": "Building",
     "category": {
-        "type": "VocabularyProperty",
+        "type": "VocabProperty",
         "vocab": "commercial"
     },
     "address": {
@@ -545,7 +545,7 @@ curl -iX POST \
     },
     "@context": [
         "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
     ]
 }'
 ```
@@ -562,7 +562,7 @@ The `type` of a _property_ attribute must be one of the following:
 -   `"GeoProperty"`: `"http://uri.etsi.org/ngsi-ld/GeoProperty"` for locations. Locations should be specified as
     Longitude-Latitude pairs in [GeoJSON format](https://tools.ietf.org/html/rfc7946). The preferred name for the
     primary location attribute is `location`
--   `"VocabularyProperty"` holds enumerated values and is a mapping of a URI to a value within the user'`@context`
+-   `"VocabProperty"` holds enumerated values and is a mapping of a URI to a value within the user'`@context`
 -   `"LanguageProperty"` holds a set of internationalized strings.
 -   `"Property"`: `"http://uri.etsi.org/ngsi-ld/Property"` - for everything else.
 -   For time-based values, `"Property"` shall be used as well, but the property value should be Date, Time or DateTime
@@ -625,7 +625,7 @@ curl -G -X GET \
 
 #### Response:
 
-The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld`)
+The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld`)
 and all attributes are expanded whenever possible.
 
 -   `id`, `type` and `location` are defined in the core context and are not expanded.
@@ -640,11 +640,11 @@ user `@context` when inserting the context data.
 ```json
 [
     {
-        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld",
         "id": "urn:ngsi-ld:Building:store001",
         "type": "https://smartdatamodels.org/dataModel.Building/Building",
         "https://smartdatamodels.org/dataModel.Building/category": {
-            "type": "VocabularyProperty",
+            "type": "VocabProperty",
             "vocab": "commercial"
         },
         "https://smartdatamodels.org/address": {
@@ -673,11 +673,11 @@ user `@context` when inserting the context data.
         }
     },
     {
-        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld",
         "id": "urn:ngsi-ld:Building:store002",
         "type": "https://smartdatamodels.org/dataModel.Building/Building",
         "https://smartdatamodels.org/dataModel.Building/category": {
-            "type": "VocabularyProperty",
+            "type": "VocabProperty",
             "vocab": "commercial"
         },
         "https://smartdatamodels.org/address": {
@@ -722,12 +722,12 @@ curl -G -X GET \
 
 #### Response:
 
-The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld`)
+The response returns the Core `@context` by default (`https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld`)
 and all attributes are expanded whenever possible.
 
 ```json
 {
-    "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
+    "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld",
     "id": "urn:ngsi-ld:Building:store001",
     "type": "https://smartdatamodels.org/dataModel.Building/Building",
     "https://smartdatamodels.org/dataModel.Building/category": {
@@ -786,7 +786,7 @@ used as the `@context` returned in the response.
     {
         "@context": [
             "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
         ],
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
@@ -808,7 +808,7 @@ used as the `@context` returned in the response.
     {
         "@context": [
             "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
         ],
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
@@ -861,7 +861,7 @@ JSON-LD as shown:
     {
         "@context": [
             "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
         ],
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
@@ -891,7 +891,7 @@ Filtering can be done using the `q` parameter, comma separating the acceptable v
 
 > [!NOTE]
 >
-> `category` has been defined as a **VocabularyProperty**, which would usually mean that the `vocab` value should be a
+> `category` has been defined as a **VocabProperty**, which would usually mean that the `vocab` value should be a
 > URI defined in the `@context`. The `expandValues` hint indicates that URI expansion is required for the `category`
 > attribute when querying the context data.
 
@@ -917,7 +917,7 @@ The response is returned in JSON-LD format with short form attribute names:
     {
         "@context": [
             "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
         ],
         "id": "urn:ngsi-ld:Building:store001",
         "type": "Building",
@@ -939,7 +939,7 @@ The response is returned in JSON-LD format with short form attribute names:
     {
         "@context": [
             "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
         ],
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
@@ -989,7 +989,7 @@ Use of the `Link` header and the `options=keyValues` parameter reduces the respo
     {
         "@context": [
             "https://smart-data-models.github.io/dataModel.Building/context.jsonld",
-            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
         ],
         "id": "urn:ngsi-ld:Building:store002",
         "type": "Building",
@@ -1135,4 +1135,4 @@ consists of JSON only without the attribute `type` and `metadata` elements.
 
 ## License
 
-[MIT](LICENSE) © 2019-2024 FIWARE Foundation e.V.
+[MIT](LICENSE) © 2019-2025 FIWARE Foundation e.V.
