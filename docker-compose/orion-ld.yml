@@ -21,6 +21,7 @@ services:
   orion-ld:
     labels:
       org.fiware: 'tutorial'
+    platform: linux/amd64
     image: quay.io/fiware/orion-ld:${ORION_LD_VERSION}
     hostname: orion
     container_name: fiware-orion-ld
@@ -29,8 +30,8 @@ services:
     networks:
       - default
     ports:
-      - "${EXPOSED_PORT}:${ORION_LD_PORT}" # localhost:1026
-    command: -dbhost mongo-db -logLevel DEBUG -experimental
+      - ${EXPOSED_PORT:-1026}:${ORION_LD_PORT:-1026} # localhost:1026
+    command: -dbhost mongo-db -logLevel DEBUG -forwarding -mongocOnly
     healthcheck:
       test: curl --fail -s http://orion:${ORION_LD_PORT}/version || exit 1
       interval: 5s
@@ -49,13 +50,11 @@ services:
       - "${MONGO_DB_PORT}:${MONGO_DB_PORT}" # localhost:27017
     networks:
       - default
-    command: --nojournal
     volumes:
-      - mongo-db:/data
+      - mongo-db:/data/db
+      - mongo-config:/data/configdb
     healthcheck:
-      test: |
-        host=`hostname --ip-address || echo '127.0.0.1'`; 
-        mongo --quiet $host/test --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)' && echo 0 || echo 1
+      test: ["CMD","mongosh", "localhost:27017/test", "--quiet"]
       interval: 5s
     
 
@@ -69,3 +68,4 @@ networks:
 
 volumes:
   mongo-db: ~
+  mongo-config: ~
