@@ -19,7 +19,7 @@ curl -o /dev/null -X POST \
   "entities": [
   	{
   		"id":"urn:ngsi-ld:Store:001","type":"Store",
-      "category": {"type": "VocabularyProperty", "value": "supermarket"},
+      "category": {"type": "Property", "value": "supermarket"},
   		"address":{"type":"PostalAddress","value":{"streetAddress":"Bornholmer Straße 65","addressRegion":"Berlin","addressLocality":"Prenzlauer Berg","postalCode":"10439"}},
   		"location":{"type":"geo:json","value":{"type":"Point","coordinates":[13.3986,52.5547]}},
   		"name":{"type":"Text","value":"Bösebrücke Einkauf"},
@@ -27,27 +27,27 @@ curl -o /dev/null -X POST \
         "type":"Relationship", "value":"urn:ngsi-ld:Person:001", 
         "metadata": {
            "objectType": {
-              "type":"VocabularyProperty", "value": "Person"
+              "type":"Property", "value": "Person"
             }
         }
       }
   	},
   	{
   		"id":"urn:ngsi-ld:Store:002","type":"Store",
-      "category": {"type": "VocabularyProperty", "value": "supermarket"},
+      "category": {"type": "Property", "value": "supermarket"},
   		"address":{"type":"PostalAddress","value":{"streetAddress":"Friedrichstraße 44","addressRegion":"Berlin","addressLocality":"Kreuzberg","postalCode":"10969"}},
   		"location":{"type":"geo:json","value":{"type":"Point","coordinates":[13.3903,52.5075]}},
   		"name":{"type":"Text","value":"Checkpoint Markt"}},
   	{
   		"id":"urn:ngsi-ld:Store:003","type":"Store",
-      "category": {"type": "VocabularyProperty", "value": "supermarket"},
+      "category": {"type": "Property", "value": "supermarket"},
   		"address":{"type":"PostalAddress","value":{"streetAddress":"Mühlenstrasse 10","addressRegion":"Berlin","addressLocality":"Friedrichshain","postalCode":"10243"}},
   		"location":{"type":"geo:json","value":{"type":"Point","coordinates":[13.4447,52.5031]}},
   		"name":{"type":"Text","value":"East Side Galleria"}
   	},
   	{
   		"id":"urn:ngsi-ld:Store:004","type":"Store",
-      "category": {"type": "VocabularyProperty", "value": "supermarket"},
+      "category": {"type": "Property", "value": "supermarket"},
   		"address":{"type":"PostalAddress","value":{"streetAddress":"Panoramastraße 1A","addressRegion":"Berlin","addressLocality":"Mitte","postalCode":"10178"}},
   		"location":{"type":"geo:json","value":{"type":"Point","coordinates":[13.4094,52.5208]}},
   		"name":{"type":"Text","value":"Tower Trödelmarkt"}

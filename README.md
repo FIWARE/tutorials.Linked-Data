@@ -586,7 +586,7 @@ Because of `Prefer: ngsi-ld=1.6` had been set in the registration, the retrieved
             "postalCode": "10439"
         }
     },
-    "category": {"type": "Property", "value": "supermarket"},
+    "category": {"type": "VocabProperty", "vocab": "supermarket"},
     "location": {
         "type": "GeoProperty",
         "value": {
@@ -705,4 +705,4 @@ The response is returned in JSON format with short form attribute names in Germa
 
 ## License
 
-[MIT](LICENSE) © 2024 FIWARE Foundation e.V.
+[MIT](LICENSE) © 2024-2025 FIWARE Foundation e.V.
