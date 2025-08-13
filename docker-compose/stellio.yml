@@ -166,7 +166,15 @@ services:
       timeout: 5s
       retries: 20
       start_period: 10s
-      
+  
+  iot-agent:
+    depends_on:
+      - api-gateway
+    environment:
+      #- IOTA_DEFAULT_RESOURCE=/iot/d
+      - IOTA_CB_HOST=api-gateway # name of the context broker to update context
+      - IOTA_CB_PORT=${STELLIO_PORT} # port the context broker listens on to update context
+
   # Tutorial acts as a series of dummy IoT Sensors over HTTP and connects to the Stellio Broker
   tutorial:
     environment:
