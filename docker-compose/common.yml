@@ -214,6 +214,7 @@ volumes:
   mongo-db1: ~
   mongo-db2: ~
   mongo-config: ~
+  redis-data: ~
   data-models:
     driver: local
     driver_opts:
