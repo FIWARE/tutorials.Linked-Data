@@ -535,7 +535,7 @@
 							],
 							"query": [
 								{
-									"key": "options",
+									"key": "format",
 									"value": "sysAttrs"
 								}
 							]
@@ -574,7 +574,7 @@
 								}
 							]
 						},
-						"description": "This example reads the value of a single attribute (`temperature`) from an existing **TemperatureSensor** entity with a\nknown `id`.\n\nThe sensor `urn:ngsi-ld:TemperatureSensor:001` is reading at 25°C.\n\nBecause `options=keyValues` was not used this is the normalized response including the metadata such as `unitCode`.\nContext data can be retrieved by making a GET request to the `/ngsi-ld/v1/entities/<entity-id>` endpoint and selecting\nthe `attrs` using a comma separated list.\n"
+						"description": "This example reads the value of a single attribute (`temperature`) from an existing **TemperatureSensor** entity with a\nknown `id`.\n\nThe sensor `urn:ngsi-ld:TemperatureSensor:001` is reading at 25°C.\n\nBecause `format=simplified` was not used this is the normalized response including the metadata such as `unitCode`.\nContext data can be retrieved by making a GET request to the `/ngsi-ld/v1/entities/<entity-id>` endpoint and selecting\nthe `attrs` using a comma separated list.\n"
 					},
 					"response": []
 				},
@@ -596,7 +596,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/?options=keyValues",
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/?format=simplified",
 							"protocol": "http",
 							"host": [
 								"{{adapter}}"
@@ -610,13 +610,13 @@
 							],
 							"query": [
 								{
-									"key": "options",
-									"value": "keyValues",
-									"description": "* `keyValues` option in order to get a more compact and brief representation, including just attribute values\n* `values` option combined with a list of attribute values  `attrs`  for an ordered list of attributes only\n"
+									"key": "format",
+									"value": "simplified",
+									"description": "* `simplified` - the response consists of JSON only without attribute `type`/`value` wrapper elements\n"
 								}
 							]
 						},
-						"description": "This example reads the key-value pairs  from the context of an existing **TemperatureSensor** entities with a known `id`.\n\nThe response contains an unfiltered list of context data from an entity containing all of the attributes of the\n`urn:ngsi-ld:TemperatureSensor:001`. The payload body does not contain an `@context` attribute since the\n`Accept: application/json` was set.\n\nCombine the `options=keyValues` parameter with the `attrs` parameter to retrieve a limited set of key-value pairs."
+						"description": "This example reads the key-value pairs  from the context of an existing **TemperatureSensor** entities with a known `id`.\n\nThe response contains an unfiltered list of context data from an entity containing all of the attributes of the\n`urn:ngsi-ld:TemperatureSensor:001`. The payload body does not contain an `@context` attribute since the\n`Accept: application/json` was set.\n\nCombine the `format=simplified` parameter with the `attrs` parameter to retrieve a limited set of key-value pairs."
 					},
 					"response": []
 				},
@@ -638,7 +638,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/?options=keyValues&attrs=category,temperature",
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/?format=simplified&attrs=category,temperature",
 							"protocol": "http",
 							"host": [
 								"{{adapter}}"
@@ -652,9 +652,9 @@
 							],
 							"query": [
 								{
-									"key": "options",
-									"value": "keyValues",
-									"description": "* `keyValues` option in order to get a more compact and brief representation, including just attribute values\n* `values` option combined with a list of attribute values  `attrs`  for an ordered list of attributes only"
+									"key": "format",
+									"value": "simplified",
+									"description": "* `simplified` - the response consists of JSON only without attribute `type`/`value` wrapper elements"
 								},
 								{
 									"key": "attrs",
@@ -663,7 +663,7 @@
 								}
 							]
 						},
-						"description": "\nThis example reads the value of two attributes (`category` and `temperature`) from the context of an existing\n**TemperatureSensor** entity with a known ID.\n\nCombine the `options=keyValues` parameter and the `attrs` parameter to return a list of values."
+						"description": "\nThis example reads the value of two attributes (`category` and `temperature`) from the context of an existing\n**TemperatureSensor** entity with a known ID.\n\nCombine the `format=simplified` parameter and the `attrs` parameter to return a list of values."
 					},
 					"response": []
 				},
@@ -729,7 +729,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/?type=TemperatureSensor&options=keyValues&attrs=temperature",
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/?type=TemperatureSensor&format=simplified&attrs=temperature",
 							"protocol": "http",
 							"host": [
 								"{{adapter}}"
@@ -747,8 +747,8 @@
 									"description": "Entity type"
 								},
 								{
-									"key": "options",
-									"value": "keyValues"
+									"key": "format",
+									"value": "simplified"
 								},
 								{
 									"key": "attrs",
@@ -756,7 +756,7 @@
 								}
 							]
 						},
-						"description": "This example lists the `temperature` attribute of all **TemperatureSensor** entities.\n\nThe full context contains four sensors, they are returned in a random order.\n\nFull context data for a specified entity type can be retrieved by making a GET request to the `/ngsi-ld/v1/entities/` endpoint\nand supplying the `type` parameter, combine this with the `options=keyValues` parameter and the `attrs` parameter to\nretrieve key-values."
+						"description": "This example lists the `temperature` attribute of all **TemperatureSensor** entities.\n\nThe full context contains four sensors, they are returned in a random order.\n\nFull context data for a specified entity type can be retrieved by making a GET request to the `/ngsi-ld/v1/entities/` endpoint\nand supplying the `type` parameter, combine this with the `format=simplified` parameter and the `attrs` parameter to\nretrieve key-values."
 					},
 					"response": []
 				},
@@ -778,7 +778,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/?type=TemperatureSensor&options=keyValues&attrs=temperature",
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/?type=TemperatureSensor&format=simplified&attrs=temperature",
 							"protocol": "http",
 							"host": [
 								"{{adapter}}"
@@ -796,8 +796,8 @@
 									"description": "Entity type"
 								},
 								{
-									"key": "options",
-									"value": "keyValues"
+									"key": "format",
+									"value": "simplified"
 								},
 								{
 									"key": "attrs",
@@ -805,7 +805,7 @@
 								}
 							]
 						},
-						"description": "This example lists the `temperature` attribute of all **TemperatureSensor** entities.\n\nThe full context contains four sensors, they are returned in a random order.\n\nFull context data for a specified entity type can be retrieved by making a GET request to the `/ngsi-ld/v1/entities/` endpoint\nand supplying the `type` parameter, combine this with the `options=keyValues` parameter and the `attrs` parameter to\nretrieve key-values."
+						"description": "This example lists the `temperature` attribute of all **TemperatureSensor** entities.\n\nThe full context contains four sensors, they are returned in a random order.\n\nFull context data for a specified entity type can be retrieved by making a GET request to the `/ngsi-ld/v1/entities/` endpoint\nand supplying the `type` parameter, combine this with the `format=simplified` parameter and the `attrs` parameter to\nretrieve key-values."
 					},
 					"response": []
 				},
@@ -827,7 +827,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/?id=urn:ngsi-ld:TemperatureSensor:001,urn:ngsi-ld:TemperatureSensor:002&options=keyValues&attrs=temperature",
+							"raw": "http://{{adapter}}/ngsi-ld/v1/entities/?id=urn:ngsi-ld:TemperatureSensor:001,urn:ngsi-ld:TemperatureSensor:002&format=simplified&attrs=temperature",
 							"protocol": "http",
 							"host": [
 								"{{adapter}}"
@@ -844,8 +844,8 @@
 									"value": "urn:ngsi-ld:TemperatureSensor:001,urn:ngsi-ld:TemperatureSensor:002"
 								},
 								{
-									"key": "options",
-									"value": "keyValues"
+									"key": "format",
+									"value": "simplified"
 								},
 								{
 									"key": "attrs",
@@ -991,7 +991,7 @@
 							],
 							"query": [
 								{
-									"key": "options",
+									"key": "format",
 									"value": "update"
 								}
 							]
@@ -1033,7 +1033,7 @@
 							],
 							"query": [
 								{
-									"key": "options",
+									"key": "format",
 									"value": "replace"
 								}
 							]
